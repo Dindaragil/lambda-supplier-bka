@@ -1,0 +1,698 @@
+{
+	"info": {
+		"_postman_id": "91e96656-9321-4f4a-9bdb-c68edfe9cd21",
+		"name": "Holibob Supplier Manager - API Documentation",
+		"description": "This page contains information about the APIs we use to integrate with several vendors that have been integrated with Giift Supplier Manager. The requests are in the form of JSON which contains a request in the form of a Graphql query. There will be a variable list in every API to contain the required values to run the API.\n\n**Flow Holibob to place order:**\n\n1\\. Get Product List \n\n*   Request -> Don't need send any payload or request\n*   Response -> show the product list and take product id or product code\n    \n\n2\\. Get Product Status \n\n*   Request -> Send product id, start date (current date) until end date (specified date), \n*   Response -> Display a list of availabilityId of that product and take some availabilityId\n    \n\n3\\. Fetch Availability With Option List \n\n*   Request -> Send availabilityId, \n*   Response -> The respon display some question usually there are two questions, ticket type and start time and take some questionId\n    \n\n4\\. Input Availability With Option List\n\n*   Request -> Send availabilityId, questionId (array), answerId (array)\n*   Response -> the respon show like FetchAvailabilityWithOptionList method + with  \n    the questions has been answered\n    \n\n5\\. Fetch Availability With Option List method again to get pricing category list\n\n*   Request -> availabilityId\n*   Response -> show pricing category list\n    \n\n6\\. Input Availability With Option List method again\n\n*   Request -> send availabilityId, questionId (array), answerId (array)\n*   Response -> the respon show like FetchAvailabilityWithOptionList method + with  \n    The all questions has been answered\n    \n\nnotes: option list and pricing category list cannot fetch and fill in the same time because pricing list category list don't show if option list not filled first\n\n8\\. Create Booking\n\n*   Request -> Don't need send any payload or request\n*   Response -> Generate the bookingId, take the booking id\n    \n\n9\\. Add Availability To Booking\n\n*   Request -> Send availabilityId and bookingId\n*   Response -> AvailabilityId will connect to bookingId, and show the progress of transaction complete or not,\n    \n\n10\\. Fetch Booking\n\n*   Request -> send bookingId\n*   Response -> show the some question again like email, first name, last name, and state or status transaction => in staging/sandbox there are two state OPEN, PENDING and COMPLETE, in Production is OPEN, PENDING and CONFIRMED\n    \n\n11\\. Input Booking Answer to input the question\n\n*   Request -> Send bookingId, and input for answer the questions again\n*   Response -> show the some question again like email, first name, last name, and state or status transaction => in staging/sandbox there are two state OPEN, PENDING and COMPLETE, in Production is OPEN, PENDING and CONFIRMED\n    \n\n12\\. PlaceOrder\n\n*   Request -> send bookingId\n*   Response -> show state or status transaction PENDING\n    \n\n13\\. Get Order Status check frequently until state or status transaction is CONFIRMED\n\n*   Request -> send bookingId\n*   Response -> the voucher url will generate and the product ready to paid",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Import Product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { importProducts ( request: \\\"{\\\\\\\"schemaName\\\\\\\":\\\\\\\"All4GM\\\\\\\",\\\\\\\"readCacheFirst\\\\\\\":false,\\\\\\\"cacheExpireInSec\\\\\\\":86400,\\\\\\\"page\\\\\\\":1,\\\\\\\"limit\\\\\\\":10000,\\\\\\\"sort\\\\\\\":\\\\\\\"lastUpdateDate\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "Variable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| schemaName | required | string | \"default\" |  |\n| readCacheFirst | optional | boolean | false | Decide whether read data products from cache or hit the Get Product List API. For Import Products, the value has to be false because we have to get the latest Products List. |\n| cacheExpireInSec | optional | number | 1 |  |\n| limit | optional | number | 0 | Limit data that will bw inserted to database. 0 means no limit |\n| sort | optional | string | \"lastUpdateDate\" |  |"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Product List",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getProductList ( request: \\\"{\\\\\\\"schemaName\\\\\\\":\\\\\\\"All4GM\\\\\\\",\\\\\\\"readCacheFirst\\\\\\\":false,\\\\\\\"cacheExpireInSec\\\\\\\":86400,\\\\\\\"page\\\\\\\":1,\\\\\\\"limit\\\\\\\":10000,\\\\\\\"sort\\\\\\\":\\\\\\\"lastUpdateDate\\\\\\\",\\\\\\\"filter\\\\\\\":{\\\\\\\"hasStartTime\\\\\\\":false}}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "Variable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| schemaName | required | string | \"default\" |  |\n| readCacheFirst | optional | boolean | false | Decide whether read data products from cache or hit the Get Product List API. For Import Products, the value has to be false because we have to get the latest Products List. |\n| cacheExpireInSec | optional | number | 1 |  |\n| limit | optional | number | 0 | Limit data that will bw inserted to database. 0 means no limit |\n| sort | optional | string | \"lastUpdateDate\" |  |\n\nNote: ID from each product will be used as Availability Id in the Get Product Status."
+			},
+			"response": [
+				{
+					"name": "Get Product List",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getProductList ( request: \\\"{\\\\\\\"schemaName\\\\\\\":\\\\\\\"All4GM\\\\\\\",\\\\\\\"readCacheFirst\\\\\\\":false,\\\\\\\"cacheExpireInSec\\\\\\\":86400,\\\\\\\"page\\\\\\\":1,\\\\\\\"limit\\\\\\\":10000,\\\\\\\"sort\\\\\\\":\\\\\\\"lastUpdateDate\\\\\\\",\\\\\\\"filter\\\\\\\":{\\\\\\\"hasStartTime\\\\\\\":false}}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\"data\":{\"getProductList\":\"{\\\"status\\\":\\\"Success\\\",\\\"message\\\":\\\"Success\\\",\\\"rawData\\\":{\\\"originalQuery\\\":{\\\"schemaName\\\":\\\"All4GM\\\",\\\"readCacheFirst\\\":false,\\\"cacheExpireInSec\\\":86400,\\\"page\\\":1,\\\"limit\\\":10000,\\\"sort\\\":\\\"lastUpdateDate\\\",\\\"filter\\\":{\\\"hasStartTime\\\":false}},\\\"originalSpRespon\\\":[{\\\"id\\\":\\\"dfae4b89-525e-44c3-8696-e0fa5d0f62c2\\\",\\\"code\\\":\\\"452KF4\\\",\\\"provider\\\":{\\\"id\\\":\\\"e11a8ec8-f127-11e9-b729-06829e32ec62\\\",\\\"name\\\":\\\"My Tours in Italy\\\"},\\\"name\\\":\\\"\\\\t Italian Beef Experience Chianina Cooking Class\\\",\\\"supplier\\\":{\\\"name\\\":\\\"My Tours in Italy\\\"},\\\"description\\\":\\\"The True Tuscan Beef Italian Cooking ClassWhen it comes to food, Italy is the place to visit. No matter if you are a beginner or if you are an experienced cook, willing to prepare your next menu. Italy, and more specifically Tuscany, can offer you a wide range of opportunities regarding learning how to become a master chef. Join us in the heart of Florence to take part in an original cooking class that will make you able to prepare a full Italian meal. We will start from the basics, learning about quality raw food and how to maintain its sweetness and vital liquids. Then we will go deeper into recipes, like that of meat tartare, florentine stea[/k, grilled vegetables, and worldly-appreciated tiramisu.What you will get with this Italian Cooking ClassStop making it difficult. There are different kinds of meals being part of the Italian cooking tradition. In the beginning, you don’t need to start from the pasta making class. Learning what is the Italian approach towards flavor is essential. Italian cooking is not just about learning how to execute recipes. It is a mental approach that leads us to use our senses to get in touch with fats, spices, raw meats, and vegetables. At the beginning, in order to warm up, you will be served a glass of wine and a Tuscan typical starter. The lesson will start with a proper introduction to the Italian most famous breed of cattle.What does Chianina mean?The Chianina Beef, alongside the Piemontese, is without any doubt one of the best Italian beef varieties to be grilled. We will start describing the Chianina, the big white cow, a special breed of cattle that have been selected during centuries for its resistance during plowing and work in the countryside. Due to this particular history, the Chianina breed developed a huge muscle mass, that later defined its culinary success. Defended and promoted by a specific Protection Consortium (Consorzio di Tutela del Vitellone Bianco dell’Appennino Centrale), the Florentine steak made mandatorily with Chianina beef is low-fat meat, rich in flavors. In this cooking class, you will be introduced to the different cuts, being aware of the differences between steaks, Florentine bone steaks, t-bone steaks, and how cultural habits reflect on the preparation and the grilling phase.Take part in a unique Florentine Beef ExperienceFirst, you’ll learn how to prepare the famous meat tartare, dicing it properly with a knife. At the end, you’ll gain your Meat Cutter Diploma that you’ll be able to frame and show proudly back at home. Then, you’ll be trained to the Florentine bone-steak preparation, involving marinade, cutting, seasoning, and serving. Then it will come the time for grilled seasonal vegetables, how to cook them preserving their nutritional properties and what is the best dressing.The original Tiramisu Recipe and two special giftsThis special Italian cooking class will finish with the original tiramisu recipe. Tiramisu is one of the most famous icy Italian desserts, appreciated worldwide by kids and adults. Even if its ingredients are few and the preparation process may seem to be simple, the secret of this genuine Italian dessert relies on the traditional gestures and knowledge stored by the Italian nonnas (Italian grandmothers).Finally, you will be invited to sit down and relax, tasting the Florentine steak and the grilled vegetables you have prepared, alongside a glass of good Chianti red wine. As a gift, in addition to the diploma, you will receive a trendy apron and a chef's bandana.\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":58,\\\"grossFormattedText\\\":\\\"£ 58\\\",\\\"net\\\":48,\\\"netFormattedText\\\":\\\"£ 48\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2YzZjRmNDU1LWFiMWMtNDMzMC05ZmRjLTM2MDliN2U4OThkMiIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2YzZjRmNDU1LWFiMWMtNDMzMC05ZmRjLTM2MDliN2U4OThkMiIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"2984e1fd-910e-4903-a7ad-7eea71d25f43\\\",\\\"code\\\":\\\"GAT0B7\\\",\\\"provider\\\":{\\\"id\\\":\\\"7dc2e660-0081-408d-b77e-8fb4f771127e\\\",\\\"name\\\":\\\"Duca\\\"},\\\"name\\\":\\\"  Lisbon to Évora Private - Private Van Tour\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Duca\\\"},\\\"description\\\":\\\"\\\\nTake this day trip from Lisbon to see the beautiful UNESCO World Heritage city of Évora. Leaving your hotel, you'll roam the national roads that cross the Alentejo’s plains and visit some historical small towns to feel the real Portugal. We´ll visit the Cromlech of Almendres one of Europe's biggest groups of large vertical stones, called menhirs before heading to Évora.\\\\nIn Évora you'll have the opportunity to visit the beautiful and most renowned places such as the São Francisco Church, the famous Bone Chapel, Giraldo Square, Sé Cathedral and Diana´s Temple. Enjoy a meal in a typical restaurant and have the opportunity to do wine tasting in a winery. Before returning to your hotel we'll visit the gorgeous wall city of Monsaraz. \\\\n\\\\nThis private tour of up to seven people ensures you receive fully dedicated attention from your guide.\\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":284,\\\"grossFormattedText\\\":\\\"£ 284\\\",\\\"net\\\":219,\\\"netFormattedText\\\":\\\"£ 219\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2Y5M2Y2ZjQ4LWZjOGItMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2Y5M2Y2ZjQ4LWZjOGItMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"3dba8675-5e62-4fe8-b6cb-1c6850e5735d\\\",\\\"code\\\":\\\"T0BA80\\\",\\\"provider\\\":{\\\"id\\\":\\\"7dc2e660-0081-408d-b77e-8fb4f771127e\\\",\\\"name\\\":\\\"Duca\\\"},\\\"name\\\":\\\"  Sintra Full day private shared tour\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Duca\\\"},\\\"description\\\":\\\"Sintra is one of the most charming, surprising, and fascinating places in Portugal. Our guides will take you to hidden spots and reveal local secrets of this UNESCO World Heritage city\\\\nWith Duca Tours you can get to know the history and stories, the places and the secret spots. You don’t have to waste precious time in queues to buy tickets or in tourist traps.\\\\n\\\\nThis shared tour of up to 7 people ensures that you receive fully dedicated attention from your guide. If you'd like a private tour for Sintra, please contact us to geral@duca.pt\\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":42,\\\"grossFormattedText\\\":\\\"£ 42\\\",\\\"net\\\":32,\\\"netFormattedText\\\":\\\"£ 32\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzI1N2JkMDZhLWZjOTUtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzI1N2JkMDZhLWZjOTUtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"6c69a0c0-f6e7-480c-b1e4-d851cf317796\\\",\\\"code\\\":\\\"DREGR5\\\",\\\"provider\\\":{\\\"id\\\":\\\"0527629a-d93d-4bdc-9152-639623023061\\\",\\\"name\\\":\\\"Private Tours Greece\\\"},\\\"name\\\":\\\" 10 Day Greek Islands Hopping, Crete, Santorini, Milos from Athens\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Private Tours Greece\\\"},\\\"description\\\":\\\"10 day Greek Islands holidays tour is strongly suggested for travelers who wish to explore the must-see Greek islands!\\\\nStart your trip with a visit in Crete. Walk at the old market of Heraklion and then have a Greek coffee at Lion's Square or a delicious meal of Cretan - Mediterranean gastronomy, famous all over the world! Also have a private tour to Palace of Knossos and learn everything for the rich & prosperous life of ancient Greece began circa 2000 BC.\\\\nContinue in Santorini, famous for the world-known sunset, black and red beach, and the endless blue! Walk at the narrow streets above the rocks with panoramic view or get a cruise to walk at the rim of volcano.\\\\nVisit Milos to admire the little white houses with their colorful doors and windows open to the sea. Swim at the \\\\\\\"Sarakiniko beach” also called \\\\\\\"lunar beach\\\\\\\" as it looks like the lunar landscape!\\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":1248,\\\"grossFormattedText\\\":\\\"£ 1248\\\",\\\"net\\\":965,\\\"netFormattedText\\\":\\\"£ 965\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzBlYWM5YjVhLTFlM2UtNDAzYi04MmFmLWExNzNkZWFhYmM5ZiIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzBlYWM5YjVhLTFlM2UtNDAzYi04MmFmLWExNzNkZWFhYmM5ZiIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"e9266fc3-72ad-454b-bc5d-684a0e54237d\\\",\\\"code\\\":\\\"9G8JNC\\\",\\\"provider\\\":{\\\"id\\\":\\\"76cf115c-3156-4973-ac4a-93497db94614\\\",\\\"name\\\":\\\"ALAITOL SAFARI\\\"},\\\"name\\\":\\\" 10-DAY GRAND TRAVERSE - KILIMANJARO CLIMB     \\\",\\\"supplier\\\":{\\\"name\\\":\\\"ALAITOL SAFARI\\\"},\\\"description\\\":\\\"The extended version of Northern Circuit route includes two extra days to get proper acclimatization before overnight at Crater Camp. Situated close to the top of Mount Kilimanjaro at the altitude of 5790 m, this is the highest overnight possible at the equator, so we will do our utmost to make your Kilimanjaro climb comfortable, as well as unforgettable. Only a lucky few can lay claim to having seen the night skies at this altitude and they are indeed a sight to behold: Kilimanjaro Glaciers against the backdrop of the Milky Way! While such ascents are never without their risks, the Alaitol Safaris Team has both the expertise and equipment to ensure your safety at Kilimanjaro Crater Camp.\\\\nKILIMANJARO ROUTE HIGHLIGHTS\\\\nMaximum acclimatization time (the biggest contributor to summit success)Upgraded expanded height tentsCot beds with foam mattressesSmaller group sizesSpectacular views into Kenya (only possible on this route)Upgraded accommodations before your trek Two daytime summit opportunitiesPersonal porters available to all trekkers*\\\\n*Personal porter hire available for an additional fee. 10 days trekking, 12 days in Tanzania\\\\nExtend your trip with a safari!\\\\nVisit the Serengeti and Ngorongoro Crater a 5-days safari or a 7-day safari or call us for custom safari options   \\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":6601,\\\"grossFormattedText\\\":\\\"£ 6601\\\",\\\"net\\\":5308,\\\"netFormattedText\\\":\\\"£ 5308\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2UzYjM2NjNhLWZjOTQtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2UzYjM2NjNhLWZjOTQtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"9f833d3b-ce33-48bf-9e18-98cd3a8d4928\\\",\\\"code\\\":\\\"7WN8YT\\\",\\\"provider\\\":{\\\"id\\\":\\\"0527629a-d93d-4bdc-9152-639623023061\\\",\\\"name\\\":\\\"Private Tours Greece\\\"},\\\"name\\\":\\\" 2 Day Award Winning Private Tour to Delphi & Meteora from Athens\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Private Tours Greece\\\"},\\\"description\\\":\\\"Book this 2-day private tour package in Delphi and the magnificent Meteora and take this unique opportunity to visit some of the most important monuments of mainland Greece. Visit Meteora, the ageless monasteries standing between heaven and earth that combine both historical and religious treasures!\\\\n\\\\nVisit the Oracle of Delphi and the temple dedicated to Apollo, where it is said that Pythia delivered her oracles. You will also visit two picturesque traditional villages, Arahova and Kalambaka with their traditional Greek taverns, where you can taste the famous traditional Greek food and other local products!\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":171,\\\"grossFormattedText\\\":\\\"£ 171\\\",\\\"net\\\":132,\\\"netFormattedText\\\":\\\"£ 132\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzI1MGEyYjMyLWZjOGEtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzI1MGEyYjMyLWZjOGEtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"9cf97bed-3e4d-4352-bc2b-df2ce11e70f5\\\",\\\"code\\\":\\\"WCRJ2I\\\",\\\"provider\\\":{\\\"id\\\":\\\"bdb0c225-01e6-46d2-99b7-d81cb2ce6b1c\\\",\\\"name\\\":\\\"visit to ephesus\\\"},\\\"name\\\":\\\" 2 Days Private Ephesus and Pamukkale Tour from Kusadasi\\\",\\\"supplier\\\":{\\\"name\\\":\\\"visit to ephesus\\\"},\\\"description\\\":\\\"All TOUR GUIDES VACCINATED !! ( Please ask your guide Vaccination Certificate)\\\\nExplore Ephesus and Pamukkale from Kusadasi with this 2 days private tour.\\\\n\\\\nDay 1: Make a journey to the history by visiting Ephesus and House of Virgin Mary,\\\\n\\\\nDay 2: While exploring the ancient city of Hierapolis at the same time feel the warm waters of Pamukkale hot springs.\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":194,\\\"grossFormattedText\\\":\\\"£ 194\\\",\\\"net\\\":140,\\\"netFormattedText\\\":\\\"£ 140\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzgxZDdmYmVhLWZjODctMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzgxZDdmYmVhLWZjODctMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"b9a185c2-491d-44eb-8b1f-4d698e7e4c7e\\\",\\\"code\\\":\\\"NQEI4R\\\",\\\"provider\\\":{\\\"id\\\":\\\"56ab2d8f-34ec-40ab-8bd3-8392bc894ba1\\\",\\\"name\\\":\\\"Liberty Holidays Inc Pvt. Ltd.\\\"},\\\"name\\\":\\\" 3 Days Kathmandu Valley heritage sites KORA Tour\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Liberty Holidays Inc Pvt. Ltd.\\\"},\\\"description\\\":\\\"Be a part of amazing experience of KORA, circumambulating important historical, religious site, world heritage sites of Kathmandu valley done in a clockwise direction.\\\\n\\\\nStart the KORA by visiting Boudhanath Stupa, biggest stupa in Nepal.\\\\n\\\\nExperience Buddhism, by visiting Swayambhunath Stupa known as the monkey temple, Boudhanath Stupa the biggest Stupa in Nepal, Pharping sacred site of Yangleshö, famous for Buddhism where Guru Padmasambhava attained the level of Mahamudra vidyadhara. Enjoy a blissful time in these ancient places of worship away from the noise and chaos of the city.\\\\n\\\\nPay a visit to three Durbars square i.e. Kathmandu, Patan and Bhaktapur Durbar square. Discover yourself what differs these three Durbars.\\\\n\\\\nEnter the prime destination Bungmati and Kirtipur to learn about the Newar people, one of Nepal’s many distinct ethnic groups and the original inhabitants of the Kathmandu.\\\\n\\\\nWandering around Bungmati and Khorana’s winding streets. \\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":157,\\\"grossFormattedText\\\":\\\"£ 157\\\",\\\"net\\\":121,\\\"netFormattedText\\\":\\\"£ 121\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzEzYmZjMzFlLWZjOTgtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzEzYmZjMzFlLWZjOTgtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"24bceaa5-641d-4909-8d3f-1c09873267a6\\\",\\\"code\\\":\\\"2SHQYB\\\",\\\"provider\\\":{\\\"id\\\":\\\"ba036df0-fa64-4397-9364-c84ef6cc61ef\\\",\\\"name\\\":\\\"Perfect Wilderness Tours and Safaris\\\"},\\\"name\\\":\\\" 3 Days, 2 Nights Safari To Ngorongoro And Serengeti\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Perfect Wilderness Tours and Safaris\\\"},\\\"description\\\":\\\"SERENGETI NATIONAL PARK\\\\nSerengeti National Park, in northern Tanzania, is known for its massive annual migration of wildebeest and zebra. Seeking new pasture, the herds move north from their breeding grounds in the grassy southern plains. Many cross the marshy western corridor’s crocodile-infested Grumeti River. Others veer northeast to the Lobo Hills, home to black eagles. Black rhinos inhabit the granite outcrops of the Moru Kopjes.\\\\nNGORONGORO CONSERVATION AREA\\\\nNgorongoro Conservation Area is in northern Tanzania. It’s home to the vast, volcanic Ngorongoro Crater and “big 5” game (elephant, lion, leopard, buffalo, rhino). Huge herds of wildebeests and zebras traverse its plains during their annual migration. Livestock belonging to the semi-nomadic Maasai tribe graze alongside wild animals. Hominin fossils found in the Olduvai Gorge date back millions of years.\\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":1016,\\\"grossFormattedText\\\":\\\"£ 1016\\\",\\\"net\\\":786,\\\"netFormattedText\\\":\\\"£ 786\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2RhOThkMDdkLWZjOTAtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2RhOThkMDdkLWZjOTAtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"f3a74a06-24e2-4bf7-9043-e03a390874a5\\\",\\\"code\\\":\\\"TK3HYY\\\",\\\"provider\\\":{\\\"id\\\":\\\"a60a2b28-ebf8-44e7-9396-8923d07b9101\\\",\\\"name\\\":\\\"VoglioVolare Tour Operator\\\"},\\\"name\\\":\\\" 4 days between Naples and Pompeii: stay at the- slopes of Vesuvius;\\\",\\\"supplier\\\":{\\\"name\\\":\\\"VoglioVolare Tour Operator\\\"},\\\"description\\\":\\\"The art and flavours of Napolii, the remains of Ancient Pompeii and the majestic Royal Palace of Caserta. 4* hotel and quality catering included.\\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":280,\\\"grossFormattedText\\\":\\\"£ 280\\\",\\\"net\\\":231,\\\"netFormattedText\\\":\\\"£ 231\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2ZmY2MxOGRiLWZjOGYtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2ZmY2MxOGRiLWZjOGYtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"ef133fd2-8793-48d4-9d16-e85baa7a9823\\\",\\\"code\\\":\\\"JS4XYS\\\",\\\"provider\\\":{\\\"id\\\":\\\"768f0b1e-178d-4bf5-97f7-2359d0608820\\\",\\\"name\\\":\\\"Samson's Safaris\\\"},\\\"name\\\":\\\" 4*4 Safari Van with Pop Up Roof Top - in Nairobi\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Samson's Safaris\\\"},\\\"description\\\":\\\"Get a 4*4 Safari Vehicle for your Safari tours within Nairobi National park or other parks outside the City. All our vehicles have professional driver guides.\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":131,\\\"grossFormattedText\\\":\\\"£ 131\\\",\\\"net\\\":106,\\\"netFormattedText\\\":\\\"£ 106\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzFkNDJiNzJjLWZjOTQtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzFkNDJiNzJjLWZjOTQtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"f642c115-5661-421a-8823-f7e6b6bba1d3\\\",\\\"code\\\":\\\"OMWBMU\\\",\\\"provider\\\":{\\\"id\\\":\\\"0527629a-d93d-4bdc-9152-639623023061\\\",\\\"name\\\":\\\"Private Tours Greece\\\"},\\\"name\\\":\\\" 5 day Tour in Syros, Mykonos, Santorini, mix of Cycladic-Venetian Architecture\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Private Tours Greece\\\"},\\\"description\\\":\\\"5-day Greek Islands Hopping at the 3 most beautiful Islands in Greece. Visit Syros, Mykonos, Santorini in a 5 day self-guided tour including wonderful hotels, transportation and many of local tours & cruise.\\\\n\\\\nSummer in Greece means “sea, sun and sand”, as the old quote goes….And this tour, offers a quick taste of 3 Aegean Sea islands, famous for their natural beauties. Syros, the «Noblewoman of the Cyclades”. A unique mixture of Cycladic and Venetian architecture, where the blue and white colors of the Aegean Sea mix with the big mansions and the roman-catholic churches. Syros has retained its heritage, traditional cuisine and genuinely warm welcome. Mykonos, known worldwide for the lavish lifestyle of its rich and famous visitors but also for its sandy beaches and the beauty of Mykonos town. Santorini, with the breathtaking caldera views, the sleeping Volcano and the unforgettable sunsets.\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":877,\\\"grossFormattedText\\\":\\\"£ 877\\\",\\\"net\\\":678,\\\"netFormattedText\\\":\\\"£ 678\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzJiMTE0YWViLWZjOGEtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzJiMTE0YWViLWZjOGEtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"b16f9f1c-0530-41fe-8818-2f19027eaf9a\\\",\\\"code\\\":\\\"UBRLEX\\\",\\\"provider\\\":{\\\"id\\\":\\\"56ab2d8f-34ec-40ab-8bd3-8392bc894ba1\\\",\\\"name\\\":\\\"Liberty Holidays Inc Pvt. Ltd.\\\"},\\\"name\\\":\\\" 6 days Buddhist Pilgrimage with Kathmandu sightseeing Tour\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Liberty Holidays Inc Pvt. Ltd.\\\"},\\\"description\\\":\\\"Nepal is multicultural nation on the world, asides from a discovery of harmony of Buddhism and Hinduism and other religion; you are granted a chance to trace back to the life of the founder of Buddhism in Lumbini, which is believed to be a birthplace of Buddha. The remains of Stupa, monasteries as well as the important archeological sites make Limbini this scared pilgrimage site among Buddhists from around the world.\\\\n\\\\nVisiting here you will absorb a relaxing atmosphere of tranquility of around the world, Kindness and compassion among Buddhists and the serenity of the Buddhist pilgrimages have a mesmerizing effect on the tourists. Also providing you complete information about Buddhist Pilgrimage packages, destinations and the life of the Buddha, His birth place, place of His enlightenment and His teachings. The great Ashoka pillar, sacred pond, Temple of lords, Maya Devi temple and remains of Old monastery in Lumbini can fascinate you completely.\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":651,\\\"grossFormattedText\\\":\\\"£ 651\\\",\\\"net\\\":504,\\\"netFormattedText\\\":\\\"£ 504\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzIzMGEzMWY2LWZjOTgtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzIzMGEzMWY2LWZjOTgtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"4bb42b0f-214d-47b8-90cc-421e480a4308\\\",\\\"code\\\":\\\"VS1MN5\\\",\\\"provider\\\":{\\\"id\\\":\\\"76cf115c-3156-4973-ac4a-93497db94614\\\",\\\"name\\\":\\\"ALAITOL SAFARI\\\"},\\\"name\\\":\\\" 6 Days Honeymoon Safari in the Serengeti National Park\\\",\\\"supplier\\\":{\\\"name\\\":\\\"ALAITOL SAFARI\\\"},\\\"description\\\":\\\"Start your East Africa honeymoon safari in the Ngorongoro Crate, situated in the Ngorongoro Conservation Area in Tanzania. It is believed that the Ngorongoro Crater volcano was originally taller or as high as Mount Kilimanjaro - one of the highest mountains in the world. \\\\nWitness approximately 30,000 to 40,000 flamingos crowding the soda lakes, zebra, lions, leopards, giraffe, leopard, cheetah and eland. Travellers will also enjoy spotting endangered black rhino, giant-tusked elephants wandering the forest and black-maned lions stalk the grasslands. Aside from traditional vehicle safaris, hot-air ballooning over the Serengeti plains is one of the best way to view the Serengeti from above.   \\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":3145,\\\"grossFormattedText\\\":\\\"£ 3145\\\",\\\"net\\\":2529,\\\"netFormattedText\\\":\\\"£ 2529\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzAxNmQ4MjkzLWZjOTUtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzAxNmQ4MjkzLWZjOTUtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"a7f8c892-78b5-11ea-b518-06a7cae7ac14\\\",\\\"code\\\":\\\"Y0ZNYJ\\\",\\\"provider\\\":{\\\"id\\\":\\\"fed93747-78af-11ea-b518-06a7cae7ac14\\\",\\\"name\\\":\\\"Sicily By Experts\\\"},\\\"name\\\":\\\" A CULINARY EXPERIENCE WITH THE DUCHESS in PALERMO\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Sicily By Experts\\\"},\\\"description\\\":\\\"Meet our driver escort to start this special excursion visiting some of the great palaces in Palermo. This experience is not simply a cooking lesson in an extraordinary location, a 18th century palazzo by the sea. It's also a fascinating journey through Sicilian culture and food.\\\\nThe Duchess will take you early in the morning to a colorful local market to buy the freshest ingredients of the season, and share some hidden treasures of Palermo, one of the most intriguing cities of the Mediterranean.\\\\nIn the spacious and welcoming kitchen of the palazzo, you'll be able to create a whole Sicilian menu under the Duchess' guidance.\\\\nAfter lunch in the elegant dining room, a tour of the lush terrace and the beautifully restored palazzo.\\\\nThe day is not finished yet because it continues with the visit of Palazzo Mirto, one of the few in Palermo open to the public. The walls of its 21 rooms are covered in acres of silk and velvet wallpaper, with vast embroidered wall hangings, frescoed ceilings, gaudy chandeliers and floors paved in coloured marbles, maiolica tiles and mosaics. \\\\nThen to Palazzo Abetellis, recognized as one of the most impressive galleries in Europe, this year it celebrates its 61st anniversary as the National Gallery of Sicily. Visit and end of our excursion\\\\n\\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":225,\\\"grossFormattedText\\\":\\\"£ 225\\\",\\\"net\\\":186,\\\"netFormattedText\\\":\\\"£ 186\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2JhOWUyMjg2LWZjOGItMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2JhOWUyMjg2LWZjOGItMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"b6ba861d-0bb2-4026-a248-dfcd0ef84e97\\\",\\\"code\\\":\\\"8RTGNK\\\",\\\"provider\\\":{\\\"id\\\":\\\"fab958cc-c6ed-41e2-9f85-aee8d677ca09\\\",\\\"name\\\":\\\"Master Bali Tour\\\"},\\\"name\\\":\\\" A Ride Bali Bike Rural Tour Including Hotel Pick up\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Master Bali Tour\\\"},\\\"description\\\":\\\"\\\\nCycling in a rural area guided by local Balinese people makes you memorable and know about rural Balinese life .\\\\nThe participants will meet at the specified meeting point, relax and enjoy a coffee or tea dish along with Balinese snacks. Then the participants will be guided on a bike ride through the rural areas past local Balinese houses, rice paddies and hidden local waterfalls. Get a lot of impressions and memories in this biking tour experience. Friendly in service and warmly welcome you like our friends and family.\\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":44,\\\"grossFormattedText\\\":\\\"£ 44\\\",\\\"net\\\":32,\\\"netFormattedText\\\":\\\"£ 32\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzkzYzlkNTQ2LWZjOWEtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzkzYzlkNTQ2LWZjOWEtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"5ae5aba4-15ea-11ea-b729-06829e32ec62\\\",\\\"code\\\":\\\"YTXVDX\\\",\\\"provider\\\":{\\\"id\\\":\\\"5b10bae6-15ea-11ea-b729-06829e32ec62\\\",\\\"name\\\":\\\"Arctic Circle Snowmobile Park\\\"},\\\"name\\\":\\\" Arctic Circle Sleigh Ride pulled by Snowmobile \\\",\\\"supplier\\\":{\\\"name\\\":\\\"Arctic Circle Snowmobile Park\\\"},\\\"description\\\":\\\"The sledge ride safari pulled by Snowmobile is perfect for families or people without driver`s license, but also for friends or groups. It takes you deeper in to the Arctic Circle Forest pulled by a Snowmobile. This trip is magical, ideal to take great photos from the Lappish landscapes. \\\\nAfter pickup from your accommodation in central Rovaniemi you will be taken to Santa Claus Village to be properly dressed and equipped for this mystical journey through the Santa Claus backyards. Warm blankets will be provided. The sledge ride across the Arctic Circle will take about 1-hour. The guide will drive you across some of the most beautiful landscapes of the Arctic Circle. Prior experience is not needed as you will be seated on a sledge and you will receive thermal clothing to keep you warm! We will be pulled by snowmobile through an safe and easy route only accessed by professionals! \\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":46,\\\"grossFormattedText\\\":\\\"£ 46\\\",\\\"net\\\":38,\\\"netFormattedText\\\":\\\"£ 38\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2RkOTEzYmFkLWZjOGMtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2RkOTEzYmFkLWZjOGMtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"b7361f2b-2797-4643-8ed8-67e19b2fae97\\\",\\\"code\\\":\\\"L4J1B5\\\",\\\"provider\\\":{\\\"id\\\":\\\"f9be7894-0235-11ea-b729-06829e32ec62\\\",\\\"name\\\":\\\"Tour Altinkum Travel\\\"},\\\"name\\\":\\\" Best of Ephesus Guided Tour from / to Izmir\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Tour Altinkum Travel\\\"},\\\"description\\\":\\\"Meet your guide at your hotel's reception, Izmir port, Izmir Airport or a pre-arranged meeting point and receive a brief introduction from your English speaking and very knowledgable tour guide about the attractions in the Ephesus region. Together with your guide, decide the places you would like to see such as museums, local markets, and local restaurants, and then start your full-day tour. Discover the places in Ephesus that interest you, as the customer most, and learn about these spots from your own private guide.\\\\nTake the tour at your own pace, stopping as frequently and for as long as you like without the hassle and pressure of waiting or being rushed by other tourers. The tour is designed as a full day, by private van, walking tour.\\\\nAt the end of the tour return to your original departure point in the knowledge of having learned something new and exciting.\\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":198,\\\"grossFormattedText\\\":\\\"£ 198\\\",\\\"net\\\":164,\\\"netFormattedText\\\":\\\"£ 164\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2U5MGFmYzU0LWZjOWItMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2U5MGFmYzU0LWZjOWItMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"8efa115a-78a9-11ea-8583-06a7cae7ac14\\\",\\\"code\\\":\\\"S68AIE\\\",\\\"provider\\\":{\\\"id\\\":\\\"cac7e1e4-6470-4497-994b-86ed88db9453\\\",\\\"name\\\":\\\"Partnerr\\\"},\\\"name\\\":\\\" Bike tour from GardaLake to Verona the City of Love\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Partnerr\\\"},\\\"description\\\":\\\"Along dirt roads, cycle paths and countryside, along the Adige river we will reach the city of Romeo and Juliet, for a pleasant bike tour through the streets and squares of the city of Verona. We will stop for lunch in a typical tavern in the city center. Our certified guide will take you on the safest roads, while enjoying at the same time suggestive places and panoramas that characterize Lake Garda and our province.\\\\n• Safe payment with paypal or credit card\\\\n• Distance: about 60 km\\\\n• Booking limit: at least 24 hours in advance\\\\n• Level: 3, intermediate (2, beginner with electric bike)\\\\n• Possibility to rent muscle or electric bikes + helmet with the tour\\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":74,\\\"grossFormattedText\\\":\\\"£ 74\\\",\\\"net\\\":61,\\\"netFormattedText\\\":\\\"£ 61\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2MwYmZjYjlhLWZjOGUtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2MwYmZjYjlhLWZjOGUtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}},{\\\"id\\\":\\\"7982a3b6-af6a-437d-8bc0-4fbf727eeaab\\\",\\\"code\\\":\\\"X6UD59\\\",\\\"provider\\\":{\\\"id\\\":\\\"a345486c-453e-483a-af2c-e63cba75b823\\\",\\\"name\\\":\\\"Arbek Travel\\\"},\\\"name\\\":\\\" Boat Trip 12 Island from Sarigerme\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Arbek Travel\\\"},\\\"description\\\":\\\"A lazy relaxing day in the crystal clear waters of Gocek as you glide past the 12 Islands on our sailing boat.\\\\nGocek, a small town with a famous marina, has breathtaking scenery which will remind you that it is a million miles away from the hustle and bustle of mainland Turkey. Take time out for swimming, snorkelling, or simply relax and work on a tan. A light lunch will be served on the boat. You will be visiting five of the 12 islands including Flat Island, Dockyard Island & Red Island.\\\\nHighlights : \\\\n•    Embark on a day to remember - sailing in the crystal clear waters of Gocek Bay \\\\n•    Have a break at five of its 12 islands, including Flat Island, Dockyard Island & Red Island.\\\\n•    Take time out for swimming or snorkelling \\\\n•    Relax and work on your tan! \\\\n•    A light BBQ lunch (included) will be served on the boat \\\\n•    Perfect for the whole family\\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":33,\\\"grossFormattedText\\\":\\\"£ 33\\\",\\\"net\\\":26,\\\"netFormattedText\\\":\\\"£ 26\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2U4MjQ5ZmQ2LWZjOGMtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2U4MjQ5ZmQ2LWZjOGMtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"}}]}}\"}}"
+				}
+			]
+		},
+		{
+			"name": "Get Product Status",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getProductStatus ( request: \\\"{\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"Holibob\\\\\\\":\\\\\\\"8efa115a-78a9-11ea-8583-06a7cae7ac14\\\\\\\",\\\\\\\"start_date\\\\\\\":\\\\\\\"2022-01-11\\\\\\\",\\\\\\\"end_date\\\\\\\":\\\\\\\"2022-01-12\\\\\\\"}}}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "Variable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| Holibob | required | string |  | Product Id, which obtained from get product list. |\n| start_date | required | string |  | Checking start date |\n| end_date | required | string |  | Checking end date |\n\nNote: Ids that returned from this API will be used as Availability id in the other APIs"
+			},
+			"response": [
+				{
+					"name": "Get Product Status",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getProductStatus ( request: \\\"{\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"Holibob\\\\\\\":\\\\\\\"577e4c58-28dc-472f-8ee3-91d34e8061f3\\\\\\\",\\\\\\\"start_date\\\\\\\":\\\\\\\"2022-01-11\\\\\\\",\\\\\\\"end_date\\\\\\\":\\\\\\\"2022-01-12\\\\\\\"}}}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\"data\":{\"getProductStatus\":\"{\\\"status\\\":\\\"success\\\",\\\"active\\\":\\\"\\\",\\\"message\\\":{\\\"en-us\\\":\\\"success\\\"},\\\"rawData\\\":{\\\"origSupplierResponse\\\":{\\\"recordCount\\\":2,\\\"nodes\\\":[{\\\"id\\\":\\\"ff758992-03aa-44f3-aef8-5983e24a8561\\\",\\\"date\\\":\\\"2022-01-11\\\",\\\"soldOut\\\":false,\\\"guidePriceFormattedText\\\":\\\"£ 52\\\"},{\\\"id\\\":\\\"d21b2a45-0e76-43b7-a78f-35bf29bd3a44\\\",\\\"date\\\":\\\"2022-01-12\\\",\\\"soldOut\\\":false,\\\"guidePriceFormattedText\\\":\\\"£ 65\\\"}],\\\"status\\\":0}}}\"}}"
+				}
+			]
+		},
+		{
+			"name": "Fetch Availability with Option List",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { fetchAvailabilityWithOptionList ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"2147483648001\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"availability_id\\\\\\\":\\\\\\\"8fb7703a-91a9-4407-9519-ac8c12186cba\\\\\\\",\\\\\\\"book_id\\\\\\\":\\\\\\\"\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{\\\\\\\"receipt_id\\\\\\\":\\\\\\\"test\\\\\\\",\\\\\\\"branch_id\\\\\\\":\\\\\\\"test\\\\\\\"},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"xiebing@giift.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"bing xie\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"xie\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"bing\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"135024633118xiinl\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "Variable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| availability_id | required | string |  | Availability Id, which is obtained from Get Product Status response. |\n\nNotes:\n\n*   We will use optionList id and availableOptions value as a payload for **Input Availability with Option List**\n*   This API will be hit twice. First is to get the option list along with its value, and second is after **Input Availability with Option List** to get the pricing category list."
+			},
+			"response": [
+				{
+					"name": "Fetch Availability with Option List",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { fetchAvailabilityWithOptionList ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"2147483648001\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"availability_id\\\\\\\":\\\\\\\"8fb7703a-91a9-4407-9519-ac8c12186cba\\\\\\\",\\\\\\\"book_id\\\\\\\":\\\\\\\"\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{\\\\\\\"receipt_id\\\\\\\":\\\\\\\"test\\\\\\\",\\\\\\\"branch_id\\\\\\\":\\\\\\\"test\\\\\\\"},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"xiebing@giift.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"bing xie\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"xie\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"bing\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"135024633118xiinl\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\"data\":{\"fetchAvailabilityWithOptionList\":\"{\\\"status\\\":\\\"success\\\",\\\"message\\\":{\\\"en-us\\\":\\\"Success\\\"},\\\"rawData\\\":{\\\"origSupplierResponse\\\":{\\\"id\\\":\\\"8fb7703a-91a9-4407-9519-ac8c12186cba\\\",\\\"optionList\\\":{\\\"nodes\\\":[{\\\"id\\\":\\\"2bf4f7a1-3323-47d3-b211-fa74f179e652\\\",\\\"label\\\":\\\"Ticket Type\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"dataFormat\\\":null,\\\"availableOptions\\\":[{\\\"label\\\":\\\"E-bike + helmet rental\\\",\\\"value\\\":\\\"febdcae2-e4ae-4271-9d61-62be26e77a41\\\"},{\\\"label\\\":\\\"Muscle bike + helmet rental\\\",\\\"value\\\":\\\"e267a089-1574-41a7-977e-7df78617e0b6\\\"},{\\\"label\\\":\\\"Without bike rental\\\",\\\"value\\\":\\\"677b0837-5a79-4062-bf82-3a27bd3b563f\\\"}],\\\"answerValue\\\":null,\\\"answerFormattedText\\\":null}]},\\\"pricingCategoryList\\\":null,\\\"status\\\":0}}}\"}}"
+				},
+				{
+					"name": "Fetch Availability with Option List with selected Options",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { fetchAvailabilityWithOptionList ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"2147483648001\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"availability_id\\\\\\\":\\\\\\\"8fb7703a-91a9-4407-9519-ac8c12186cba\\\\\\\",\\\\\\\"book_id\\\\\\\":\\\\\\\"\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{\\\\\\\"receipt_id\\\\\\\":\\\\\\\"test\\\\\\\",\\\\\\\"branch_id\\\\\\\":\\\\\\\"test\\\\\\\"},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"xiebing@giift.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"bing xie\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"xie\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"bing\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"135024633118xiinl\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\"data\":{\"fetchAvailabilityWithOptionList\":\"{\\\"status\\\":\\\"success\\\",\\\"message\\\":{\\\"en-us\\\":\\\"Success\\\"},\\\"rawData\\\":{\\\"origSupplierResponse\\\":{\\\"id\\\":\\\"8fb7703a-91a9-4407-9519-ac8c12186cba\\\",\\\"optionList\\\":{\\\"nodes\\\":[{\\\"id\\\":\\\"2bf4f7a1-3323-47d3-b211-fa74f179e652\\\",\\\"label\\\":\\\"Ticket Type\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"dataFormat\\\":null,\\\"availableOptions\\\":[{\\\"label\\\":\\\"E-bike + helmet rental\\\",\\\"value\\\":\\\"febdcae2-e4ae-4271-9d61-62be26e77a41\\\"},{\\\"label\\\":\\\"Muscle bike + helmet rental\\\",\\\"value\\\":\\\"e267a089-1574-41a7-977e-7df78617e0b6\\\"},{\\\"label\\\":\\\"Without bike rental\\\",\\\"value\\\":\\\"677b0837-5a79-4062-bf82-3a27bd3b563f\\\"}],\\\"answerValue\\\":\\\"677b0837-5a79-4062-bf82-3a27bd3b563f\\\",\\\"answerFormattedText\\\":\\\"Without bike rental\\\"},{\\\"id\\\":\\\"773c70a8-c051-4f24-afc9-8513235672bf\\\",\\\"label\\\":\\\"Start Time\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"dataFormat\\\":null,\\\"availableOptions\\\":[{\\\"label\\\":\\\"09:00\\\",\\\"value\\\":\\\"d9b5dab0-a87a-43f3-8992-af506d6110a1\\\"}],\\\"answerValue\\\":\\\"d9b5dab0-a87a-43f3-8992-af506d6110a1\\\",\\\"answerFormattedText\\\":\\\"09:00\\\"}]},\\\"pricingCategoryList\\\":{\\\"nodes\\\":[{\\\"id\\\":\\\"acd98bfe-eddc-4fc7-8155-0fe70e843a8a\\\",\\\"label\\\":\\\"Adult\\\",\\\"minParticipants\\\":1,\\\"maxParticipants\\\":10,\\\"unitPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 82.58\\\",\\\"pricingData\\\":null},\\\"totalPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 0.00\\\"},\\\"units\\\":0},{\\\"id\\\":\\\"42155514-79b3-47b1-88f4-643ae9e1dd4b\\\",\\\"label\\\":\\\"Senior\\\",\\\"minParticipants\\\":1,\\\"maxParticipants\\\":10,\\\"unitPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 82.58\\\",\\\"pricingData\\\":null},\\\"totalPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 0.00\\\"},\\\"units\\\":0}]},\\\"status\\\":0}}}\"}}"
+				}
+			]
+		},
+		{
+			"name": "Input Availability with Option List",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"vendor\":\"Holibob\",\"query\":\"query { inputAvailabilityWithOptionList ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"2147483648011\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"availability_id\\\\\\\":\\\\\\\"8fb7703a-91a9-4407-9519-ac8c12186cba\\\\\\\",\\\\\\\"input\\\\\\\":{\\\\\\\"optionList\\\\\\\":[{\\\\\\\"id\\\\\\\":\\\\\\\"2bf4f7a1-3323-47d3-b211-fa74f179e652\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"677b0837-5a79-4062-bf82-3a27bd3b563f\\\\\\\"},{\\\\\\\"id\\\\\\\":\\\\\\\"773c70a8-c051-4f24-afc9-8513235672bf\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"d9b5dab0-a87a-43f3-8992-af506d6110a1\\\\\\\"}]},\\\\\\\"book_id\\\\\\\":\\\\\\\"\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{\\\\\\\"receipt_id\\\\\\\":\\\\\\\"test\\\\\\\",\\\\\\\"branch_id\\\\\\\":\\\\\\\"test\\\\\\\"},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"xiebing@giift.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"bing xie\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"xie\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"bing\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"135024633118xiinl\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "Variable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| availability_id | required | string |  | Availability Id, which is obtained from Get Product Status response. |\n| optionList id | required | string |  | Option List Id, which is obtained from Fetch Availability with Option List response. |\n| optionList value | required | string |  | Option List value, which is obtained from Fetch Availability with Option List response. |"
+			},
+			"response": [
+				{
+					"name": "Input Availability with Option List",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { inputAvailabilityWithOptionList ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"2147483648011\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"availability_id\\\\\\\":\\\\\\\"8fb7703a-91a9-4407-9519-ac8c12186cba\\\\\\\",\\\\\\\"input\\\\\\\":{\\\\\\\"optionList\\\\\\\":[{\\\\\\\"id\\\\\\\":\\\\\\\"2bf4f7a1-3323-47d3-b211-fa74f179e652\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"677b0837-5a79-4062-bf82-3a27bd3b563f\\\\\\\"}]},\\\\\\\"book_id\\\\\\\":\\\\\\\"\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{\\\\\\\"receipt_id\\\\\\\":\\\\\\\"test\\\\\\\",\\\\\\\"branch_id\\\\\\\":\\\\\\\"test\\\\\\\"},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"xiebing@giift.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"bing xie\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"xie\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"bing\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"135024633118xiinl\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\"data\":{\"inputAvailabilityWithOptionList\":\"{\\\"status\\\":\\\"success\\\",\\\"message\\\":{\\\"en-us\\\":\\\"Success\\\"},\\\"rawData\\\":{\\\"origSupplierResponse\\\":{\\\"id\\\":\\\"8fb7703a-91a9-4407-9519-ac8c12186cba\\\",\\\"optionList\\\":{\\\"isComplete\\\":true,\\\"nodes\\\":[{\\\"id\\\":\\\"2bf4f7a1-3323-47d3-b211-fa74f179e652\\\",\\\"answerValue\\\":\\\"677b0837-5a79-4062-bf82-3a27bd3b563f\\\",\\\"answerFormattedText\\\":\\\"Without bike rental\\\"},{\\\"id\\\":\\\"773c70a8-c051-4f24-afc9-8513235672bf\\\",\\\"answerValue\\\":\\\"d9b5dab0-a87a-43f3-8992-af506d6110a1\\\",\\\"answerFormattedText\\\":\\\"09:00\\\"}]},\\\"pricingCategoryList\\\":{\\\"nodes\\\":[{\\\"id\\\":\\\"acd98bfe-eddc-4fc7-8155-0fe70e843a8a\\\",\\\"label\\\":\\\"Adult\\\",\\\"minParticipants\\\":1,\\\"maxParticipants\\\":10,\\\"unitPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 82.58\\\"},\\\"totalPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 0.00\\\"},\\\"units\\\":0},{\\\"id\\\":\\\"42155514-79b3-47b1-88f4-643ae9e1dd4b\\\",\\\"label\\\":\\\"Senior\\\",\\\"minParticipants\\\":1,\\\"maxParticipants\\\":10,\\\"unitPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 82.58\\\"},\\\"totalPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 0.00\\\"},\\\"units\\\":0}]},\\\"status\\\":0}}}\"}}"
+				}
+			]
+		},
+		{
+			"name": "Input Fetch Availability With Pricing Category",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { inputAvailabilityWithOptionList ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"1109352784003\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"availability_id\\\\\\\":\\\\\\\"8fb7703a-91a9-4407-9519-ac8c12186cba\\\\\\\",\\\\\\\"input\\\\\\\":{\\\\\\\"pricingCategoryList\\\\\\\":[{\\\\\\\"id\\\\\\\":\\\\\\\"acd98bfe-eddc-4fc7-8155-0fe70e843a8a\\\\\\\",\\\\\\\"value\\\\\\\":1}]},\\\\\\\"book_id\\\\\\\":\\\\\\\"\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{\\\\\\\"receipt_id\\\\\\\":\\\\\\\"test\\\\\\\",\\\\\\\"branch_id\\\\\\\":\\\\\\\"test\\\\\\\"},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"xiebing@giift.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"bing xie\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"xie\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"bing\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"135024633118xiinl\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "Variable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| availability_id | required | string |  | Availability Id, which is obtained from Get Product Status response. |\n| pricingCategoryList id | required | string |  | Pricing Category Id, which is obtained from Fetch Availability with Option List response. |\n| pricingCategoryList value | required | number |  | The amount of product we want to purchase |"
+			},
+			"response": [
+				{
+					"name": "Input Fetch Availability With Pricing Category",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { inputAvailabilityWithOptionList ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"1109352784003\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"availability_id\\\\\\\":\\\\\\\"8fb7703a-91a9-4407-9519-ac8c12186cba\\\\\\\",\\\\\\\"input\\\\\\\":{\\\\\\\"pricingCategoryList\\\\\\\":[{\\\\\\\"id\\\\\\\":\\\\\\\"acd98bfe-eddc-4fc7-8155-0fe70e843a8a\\\\\\\",\\\\\\\"value\\\\\\\":1}]},\\\\\\\"book_id\\\\\\\":\\\\\\\"\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{\\\\\\\"receipt_id\\\\\\\":\\\\\\\"test\\\\\\\",\\\\\\\"branch_id\\\\\\\":\\\\\\\"test\\\\\\\"},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"xiebing@giift.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"bing xie\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"xie\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"bing\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"135024633118xiinl\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\"data\":{\"inputAvailabilityWithOptionList\":\"{\\\"status\\\":\\\"success\\\",\\\"message\\\":{\\\"en-us\\\":\\\"Success\\\"},\\\"rawData\\\":{\\\"origSupplierResponse\\\":{\\\"id\\\":\\\"8fb7703a-91a9-4407-9519-ac8c12186cba\\\",\\\"optionList\\\":{\\\"isComplete\\\":true,\\\"nodes\\\":[{\\\"id\\\":\\\"2bf4f7a1-3323-47d3-b211-fa74f179e652\\\",\\\"answerValue\\\":\\\"677b0837-5a79-4062-bf82-3a27bd3b563f\\\",\\\"answerFormattedText\\\":\\\"Without bike rental\\\"},{\\\"id\\\":\\\"773c70a8-c051-4f24-afc9-8513235672bf\\\",\\\"answerValue\\\":\\\"d9b5dab0-a87a-43f3-8992-af506d6110a1\\\",\\\"answerFormattedText\\\":\\\"09:00\\\"}]},\\\"pricingCategoryList\\\":{\\\"nodes\\\":[{\\\"id\\\":\\\"acd98bfe-eddc-4fc7-8155-0fe70e843a8a\\\",\\\"label\\\":\\\"Adult\\\",\\\"minParticipants\\\":1,\\\"maxParticipants\\\":10,\\\"unitPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 82.57\\\"},\\\"totalPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 82.57\\\"},\\\"units\\\":1},{\\\"id\\\":\\\"42155514-79b3-47b1-88f4-643ae9e1dd4b\\\",\\\"label\\\":\\\"Senior\\\",\\\"minParticipants\\\":1,\\\"maxParticipants\\\":10,\\\"unitPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 82.57\\\"},\\\"totalPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 0.00\\\"},\\\"units\\\":0}]},\\\"status\\\":0}}}\"}}"
+				}
+			]
+		},
+		{
+			"name": "Create Booking",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { createBooking ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"2147483648001\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"availability_id\\\\\\\":\\\\\\\"8fb7703a-91a9-4407-9519-ac8c12186cba\\\\\\\",\\\\\\\"book_id\\\\\\\":\\\\\\\"\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{\\\\\\\"receipt_id\\\\\\\":\\\\\\\"test\\\\\\\",\\\\\\\"branch_id\\\\\\\":\\\\\\\"test\\\\\\\"},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"xiebing@giift.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"bing xie\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"xie\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"bing\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"135024633118xiinl\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "Note:\n\n*   There is no required variable in this payload request.\n*   We will use the id as book_id and will be used in any other APIs."
+			},
+			"response": [
+				{
+					"name": "Create Booking",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { createBooking ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"2147483648001\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"availability_id\\\\\\\":\\\\\\\"8fb7703a-91a9-4407-9519-ac8c12186cba\\\\\\\",\\\\\\\"book_id\\\\\\\":\\\\\\\"\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{\\\\\\\"receipt_id\\\\\\\":\\\\\\\"test\\\\\\\",\\\\\\\"branch_id\\\\\\\":\\\\\\\"test\\\\\\\"},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"xiebing@giift.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"bing xie\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"xie\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"bing\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"135024633118xiinl\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\"data\":{\"createBooking\":\"{\\\"status\\\":\\\"success\\\",\\\"message\\\":{\\\"en-us\\\":\\\"Success\\\"},\\\"rawData\\\":{\\\"origSupplierResponse\\\":{\\\"id\\\":\\\"5bd4d15e-cd2a-47db-b018-ee98ff707b08\\\",\\\"state\\\":\\\"OPEN\\\",\\\"isComplete\\\":false,\\\"paymentState\\\":\\\"ON_ACCOUNT\\\",\\\"status\\\":0}}}\"}}"
+				}
+			]
+		},
+		{
+			"name": "Add Availability to Booking",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { addAvailabilityToBooking ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"2147483648004\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"availability_id\\\\\\\":\\\\\\\"8fb7703a-91a9-4407-9519-ac8c12186cba\\\\\\\",\\\\\\\"book_id\\\\\\\":\\\\\\\"5bd4d15e-cd2a-47db-b018-ee98ff707b08\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{\\\\\\\"receipt_id\\\\\\\":\\\\\\\"test\\\\\\\",\\\\\\\"branch_id\\\\\\\":\\\\\\\"test\\\\\\\"},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"xiebing@giift.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"bing xie\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"xie\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"bing\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"135024633118xiinl\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "Variable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| availability_id | required | string |  | Availability Id, which is obtained from Get Product Status response. |\n| book_id | required | string |  | Booking Id, which is obtained from Create Booking response. |"
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Booking",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getOrderStatus ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"2147483648005\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"availability_id\\\\\\\":\\\\\\\"61f0182d-f408-4ef0-9611-d3c444a1fdd0\\\\\\\",\\\\\\\"book_id\\\\\\\":\\\\\\\"5bd4d15e-cd2a-47db-b018-ee98ff707b08\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{\\\\\\\"receipt_id\\\\\\\":\\\\\\\"test\\\\\\\",\\\\\\\"branch_id\\\\\\\":\\\\\\\"test\\\\\\\"},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"xiebing@giift.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"bing xie\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"xie\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"bing\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"135024633118xiinl\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "Variable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| book_id | required | string |  | Booking Id, which is obtained from Create Booking response. |\n\nNote: The response will show some questions again like email, first name, last name, and state or status transaction => in staging/sandbox there are two state OPEN, PENDING and COMPLETE, in Production is OPEN, PENDING and CONFIRMED"
+			},
+			"response": []
+		},
+		{
+			"name": "Input Booking Answer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getOrderStatus ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"2147483648006\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"availability_id\\\\\\\":\\\\\\\"61f0182d-f408-4ef0-9611-d3c444a1fdd0\\\\\\\",\\\\\\\"input\\\\\\\":{\\\\\\\"answerList\\\\\\\":[{\\\\\\\"questionId\\\\\\\":\\\\\\\"8ea6157c-e49d-4960-98f2-b916e70fb577\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"Holibob\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"59fbd54a-4d08-4d3c-bfdb-f67f0d976821\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"Test\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"55deb483-b8e9-41e9-86c1-1255b660483f\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"+6281770649447\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"a9c7acf3-d6ac-4518-9c53-28b469d226ba\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"Test@gmail.com\\\\\\\"}]},\\\\\\\"book_id\\\\\\\":\\\\\\\"2d09b1b2-0da2-4ec5-9857-4722518920ae\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{\\\\\\\"receipt_id\\\\\\\":\\\\\\\"test\\\\\\\",\\\\\\\"branch_id\\\\\\\":\\\\\\\"test\\\\\\\"},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"xiebing@giift.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"bing xie\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"xie\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"bing\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"135024633118xiinl\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Place Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { placeOrder ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"2084796587007\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"availability_id\\\\\\\":\\\\\\\"61f0182d-f408-4ef0-9611-d3c444a1fdd0\\\\\\\",\\\\\\\"book_id\\\\\\\":\\\\\\\"2d09b1b2-0da2-4ec5-9857-4722518920ae\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{\\\\\\\"receipt_id\\\\\\\":\\\\\\\"test\\\\\\\",\\\\\\\"branch_id\\\\\\\":\\\\\\\"test\\\\\\\"},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"xiebing@giift.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"bing xie\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"xie\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"bing\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"088812\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"135024633118xiinl\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "Variable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| book_id | required | string |  | Booking Id, which is obtained from Create Booking response. |\n\nNote: The response will show state or status transaction PENDING"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Order Status",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getOrderStatus ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"1109352784008\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"availability_id\\\\\\\":\\\\\\\"61f0182d-f408-4ef0-9611-d3c444a1fdd0\\\\\\\",\\\\\\\"book_id\\\\\\\":\\\\\\\"5bd4d15e-cd2a-47db-b018-ee98ff707b08\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{\\\\\\\"receipt_id\\\\\\\":\\\\\\\"test\\\\\\\",\\\\\\\"branch_id\\\\\\\":\\\\\\\"test\\\\\\\"},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"xiebing@giift.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"bing xie\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"xie\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"bing\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"135024633118xiinl\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "Variable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| book_id | required | string |  | Booking Id, which is obtained from Create Booking response. |\n\nNote: The response will return voucher URL will generate and the product ready to pay"
+			},
+			"response": []
+		}
+	]
+}

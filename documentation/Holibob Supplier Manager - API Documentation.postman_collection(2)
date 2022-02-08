@@ -1,0 +1,1198 @@
+{
+	"info": {
+		"_postman_id": "91e96656-9321-4f4a-9bdb-c68edfe9cd21",
+		"name": "Holibob Supplier Manager - API Documentation",
+		"description": "This page contains information about the APIs we use to integrate with several vendors that have been integrated with Giift Supplier Manager. The requests are in the form of JSON which contains a request in the form of a Graphql query. There will be a variable list in every API to contain the required values to run the API.\n\n  \n**API Walkthrough:**\n\n1.  **Get Product List**  \n    Hit this API to get the list of all products.\n2.  **Get Product Status**  \n    After you have the product list, choose a product you want to purchase. Send the product id, start and end date to get the availability you can get from the product between the dates.\n3.  **Fetch Availability**  \n    After choosing one availability Id, you can fetch the availability to get the option that you have to answer for the order requirement.\n4.  **Input Availability With Option List**  \n    Input the options list id and its value. This step and step 3 may be executed multiple times until the options list isComplete value returns true.\n5.  **Input Availability With Pricing Category**  \n    After you complete the options list, the pricing category list may appear in the previous API response. Input the pricing category id and its value.  \n    Notes: options list and pricing category list cannot fetch and fill in the same time because the pricing list category list doesn't show if the option list is not filled first\n6.  **Create Booking**  \n    Create a booking Id.\n7.  **Add Availability To Booking**  \n    Add availability data into booking.\n8.  **Fetch Booking**  \n    Get all of the required questions for committing the order.\n9.  **Input Booking Answer**  \n    Answer all of the required questions.\n10.  **Place Order  \n    **Commit booking to the vendor as an order.\n11.  **Get Order Status**  \n    Check the latest order status",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Import Product",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('schemaName', 'All4VC')\r",
+							"pm.variables.set('readCacheFirst', false)\r",
+							"pm.variables.set('cacheExpireInSec', 86400)\r",
+							"pm.variables.set('page', 1)\r",
+							"pm.variables.set('limit', 0)\r",
+							"pm.variables.set('sort', \"lastUpdateDate\")\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { importProducts ( request: \\\"{\\\\\\\"schemaName\\\\\\\":\\\\\\\"{{schemaName}}\\\\\\\",\\\\\\\"readCacheFirst\\\\\\\":{{readCacheFirst}},\\\\\\\"cacheExpireInSec\\\\\\\":{{cacheExpireInSec}},\\\\\\\"page\\\\\\\":{{page}},\\\\\\\"limit\\\\\\\":{{limit}},\\\\\\\"sort\\\\\\\":\\\\\\\"{{sort}}\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "**Import products from Get Product List into our database.**\n\nVariable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Description** |\n| --- | --- | --- | --- |\n| schemaName | required | string | Import the vouchers into our VC, use the All4VC instead for request. |\n| readCacheFirst | optional | boolean | Decide whether read data products from cache or hit the Get Product List API. For Import Products, the value has to be **false** because we have to get the latest Products List. |\n| cacheExpireInSec | optional | number |  |\n| limit | optional | number | Limit data that will be inserted into the database. 0 means no limit |\n| page | optional | number |  |\n| sort | optional | string |  |"
+			},
+			"response": [
+				{
+					"name": "Import Product",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Giladiskon\",\r\n    \"query\": \"query { importProducts ( request: \\\"{\\\\\\\"schemaName\\\\\\\":\\\\\\\"All4VC\\\\\\\",\\\\\\\"readCacheFirst\\\\\\\":false,\\\\\\\"cacheExpireInSec\\\\\\\":86400,\\\\\\\"page\\\\\\\":1,\\\\\\\"limit\\\\\\\":0,\\\\\\\"sort\\\\\\\":\\\\\\\"lastUpdateDate\\\\\\\"}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"importProducts\": \"{\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Stage/Holibob/1642748212974_Holibob_All4GM_[1-100].csv\\\"}\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Product List",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('schemaName', 'All4VC')\r",
+							"pm.variables.set('readCacheFirst', false)\r",
+							"pm.variables.set('cacheExpireInSec', 86400)\r",
+							"pm.variables.set('page', 1)\r",
+							"pm.variables.set('limit', 0)\r",
+							"pm.variables.set('sort', \"lastUpdateDate\")\r",
+							"pm.variables.set('sortkey', \"isRecommended\")\r",
+							"pm.variables.set('sortval', \"asc\")\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getProductList ( request: \\\"{\\\\\\\"schemaName\\\\\\\":\\\\\\\"{{schemaName}}\\\\\\\",\\\\\\\"readCacheFirst\\\\\\\":{{readCacheFirst}},\\\\\\\"cacheExpireInSec\\\\\\\":{{cacheExpireInSec}},\\\\\\\"page\\\\\\\":{{page}},\\\\\\\"limit\\\\\\\":{{limit}},\\\\\\\"sort\\\\\\\":{\\\\\\\"{{sortKey}}\\\\\\\":\\\\\\\"{{sortVal}}\\\\\\\"}}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "**Get the list of all products.**\n\nVariable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Description** |\n| --- | --- | --- | --- |\n| schemaName | optional | string | Import the vouchers into our VC, use the All4VC instead for request. |\n| readCacheFirst | optional | boolean | Decide whether read data products from cache or hit the **Get Product List** API. |\n| cacheExpireInSec | optional | number |  |\n| limit | optional | number | Limit data that will be shown on every page. The default value will be set to 10. |\n| page | optional | number | Decide where the page we are in. The default value will be set to 1. |\n| tsortKey | optional | string | Sorting data key. The list of available sort keys is attached below. |\n| sortVal | optional | string | Sorting value could be asc or desc. |\n\nSorting Key List :\n\n*   availabilityCount\n*   guidePrice\n*   isRecommended\n*   name\n*   region\n*   supplierName\n*   type"
+			},
+			"response": [
+				{
+					"name": "Get Product List",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getProductList ( request: \\\"{\\\\\\\"schemaName\\\\\\\":\\\\\\\"All4VC\\\\\\\",\\\\\\\"readCacheFirst\\\\\\\":false,\\\\\\\"cacheExpireInSec\\\\\\\":86400,\\\\\\\"page\\\\\\\":27,\\\\\\\"limit\\\\\\\":10,\\\\\\\"sort\\\\\\\":{\\\\\\\"isRecommended\\\\\\\":\\\\\\\"asc\\\\\\\"}}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"getProductList\": \"{\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Success\\\",\\\"totalCount\\\":47683,\\\"pages\\\":4769,\\\"page\\\":27,\\\"limit\\\":10,\\\"data\\\":[{\\\"id\\\":\\\"18bfed96-f6e7-4992-aa58-55a36ac29ed0\\\",\\\"code\\\":\\\"CV3J5U\\\",\\\"provider\\\":null,\\\"name\\\":\\\"Full-Day: Via Ferrata and Zip Line\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Lima Tours\\\"},\\\"description\\\":\\\"Visit Pachar, located 8 kms. from Ollantaytambo, where you will find the Via Ferrata, a climbing route 300 meters high. Here you will have the opportunity to climb a mountain with a safety system permanently installed, for which you do not require any previous experience. While climbing, enjoy the mystical landscapes of the Sacred Valley of the Incas. Upon completing the ascent, enjoy an energyzing snack while you admire the spectacular scenery and recover your energies. Then climb 100 more mts until you reach the second cable of the canopy or zip-line, which will allow you to fly over the beautiful landscapes of the Sacred Valley of the Incas, in a very safe and fun way. Through a pulley suspended by 6 cables of 100 to 500 m (with a total of 2000 m), located in an inclination, you hook the cable through a pulley fixed to your harness and you will be impulsed by gravity, sliding from the top to the bottom, increasingly losing speed as you approach the end of the cable.\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":110,\\\"grossFormattedText\\\":\\\"£ 110\\\",\\\"net\\\":85,\\\"netFormattedText\\\":\\\"£ 85\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2FhN2YwN2NhLWZlODUtNDgyOS1hMWEzLTQ1N2Q2YmMwMmI4YyIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2FhN2YwN2NhLWZlODUtNDgyOS1hMWEzLTQ1N2Q2YmMwMmI4YyIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"},\\\"availabilityType\\\":\\\"DATE\\\"},{\\\"id\\\":\\\"e3f3a0dc-64ee-4540-aec2-623968b138a8\\\",\\\"code\\\":\\\"XJNEOY\\\",\\\"provider\\\":{\\\"id\\\":\\\"56ab2d8f-34ec-40ab-8bd3-8392bc894ba1\\\",\\\"name\\\":\\\"Liberty Holidays Inc Pvt. Ltd.\\\"},\\\"name\\\":\\\"2 Day Chitwan National Park Tour from Kathmandu\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Liberty Holidays Inc Pvt. Ltd.\\\"},\\\"description\\\":\\\"On this 2-day tour from Kathmandu, visit one of Nepal's most popular tourist destinations, Chitwan National Park. The park, located in the lowland of the Inner Terai Region, is a UNESCO World Heritage Site and is the habitat for 50 species of flora and 700 species of wild fauna. Every year it is visited by a large number of domestic and foreign tourists who want to see the natural wildlife and do jungle activities, like jeep safaris, bird watching, canoe riding, learning about Tharu culture, and more. The park has the easiest accessibility among the other national parks in Nepal. \\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":332,\\\"grossFormattedText\\\":\\\"£ 332\\\",\\\"net\\\":256,\\\"netFormattedText\\\":\\\"£ 256\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2YwYjZhNjJlLWZjOTctMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2YwYjZhNjJlLWZjOTctMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"},\\\"availabilityType\\\":\\\"DATE\\\"},{\\\"id\\\":\\\"b5a3d987-26aa-474e-8002-54040b764b8d\\\",\\\"code\\\":\\\"N1YDQ9\\\",\\\"provider\\\":{\\\"id\\\":\\\"ff739254-6ca5-4b29-abca-3e5198c97435\\\",\\\"name\\\":\\\"visitBerlin / Berlin WelcomeCard\\\"},\\\"name\\\":\\\"Berlin WelcomeCard with entrance to the Museum Island\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Musement\\\"},\\\"description\\\":\\\"The Berlin WelcomeCard with Museum Island ticket is your key to the city! It's providing not only entrance to the art collections on the famous Museum Island, but also reduced entry to many other top attractions, free travel with public transportation, as well as a useful guidebook and a city map.Your advantages at a glance:72 hours of unlimited travel with the public transportation network of Berlin-Brandenburg: suburban trains (S-Bahn), metros (U-Bahn), busses, trams, and regional trains, except the special tourist lines, includedChoice between AB transport zone (including the entire city of Berlin) or ABC transport zone (including Berlin Brandenburg Airport (BER))Free entry to all 5 museums on Museum Island: Pergamon Museum, Neues Museum, Altes Museum, Alte Nationalgalerie, and Bode MuseumDiscounts of 25-50% on nearly 200 Berlin sights, including museums, monuments, palaces and theaters, as well as on sightseeing tours, bike tours and river cruises:AquaDom & SEA LIFE BerlinMadame Tussauds BerlinLegoland Discovery Centre BerlinFriedrichstadt-PalastTV TowerDDR MuseumBrandenburg Gate & Unter den LindenReichstag & German ParliamentCheckpoint CharlieEast Side GalleryPotsdamer Platz & AlexanderplatzBerlin Wall Memorial …and many more!Discounts at city restaurants, bars, cafés, large stores, and souvenir shopsA pocket guidebook with handy lists, tips, and a city map (available in the Berlin Tourist Information Centers or here)Every adult card is valid for up to 3 children under the age of 15 years\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":46,\\\"grossFormattedText\\\":\\\"£ 46\\\",\\\"net\\\":42,\\\"netFormattedText\\\":\\\"£ 42\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzNjMTBjYzJhLTYxOWEtNDc0OC1iM2E2LTVlMmNjYjIwYmM0MCIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzNjMTBjYzJhLTYxOWEtNDc0OC1iM2E2LTVlMmNjYjIwYmM0MCIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"},\\\"availabilityType\\\":\\\"DATE\\\"},{\\\"id\\\":\\\"d24a08cd-9f9c-4e74-8f76-0ef291c3d70a\\\",\\\"code\\\":\\\"NKN8WK\\\",\\\"provider\\\":{\\\"id\\\":\\\"009fd3bd-c1c3-4dd1-9051-f2a920b3b8c6\\\",\\\"name\\\":\\\"Signature Tours\\\"},\\\"name\\\":\\\"4-Days Discovery at Unique Lake Region & Puerto Varas in Chile\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Signature Tours\\\"},\\\"description\\\":\\\"This is a unique experience to know the region of the Chilean lakes and Puerto Varas!\\\\n\\\\nGet to know this place full of pure nature and dreamy landscapes.\\\\nEnjoy breathtaking landscapes with mountains, rivers, valleys, lakes, its traditional culture and its impressive flora and fauna.\\\\n\\\\nIMPORTANT NOTE: According to the times we are living these days, this experience can be customized as per your interest and can also be provided in private service for an extra cost. If you are interested in doing this experience privately, please let us know and we will quote.\\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":474,\\\"grossFormattedText\\\":\\\"£ 474\\\",\\\"net\\\":391,\\\"netFormattedText\\\":\\\"£ 391\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzBjMTkyMmI5LWZjOTktMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzBjMTkyMmI5LWZjOTktMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"},\\\"availabilityType\\\":\\\"DATE\\\"},{\\\"id\\\":\\\"15a050fa-c85a-460f-a84a-0d9cf9271cca\\\",\\\"code\\\":\\\"P5AQJ6\\\",\\\"provider\\\":{\\\"id\\\":\\\"82d9d3f3-50e8-40ed-ae48-277a3f9399cd\\\",\\\"name\\\":\\\"EXPRESS TOLEDO TRADE AGREEMENT\\\"},\\\"name\\\":\\\"Discover Toledo, World Heritage Site, at your own pace\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Musement\\\"},\\\"description\\\":\\\"During the journey to Toledo, you'll be accompanied by an expert guide who will tell you the most astonishing facts and curiosities about Toledo, the old capital of the kingdom of Spain. You'll discover the wonders that Toledo, that was declared Heritage of Humanity by UNESCO in 1986, has to offer. You'll know all the magnificent monuments that you can’t miss in your visit and will be perfectly prepared to enjoy the city on your own.You'll have free hours to see the Cathedral of Toledo, the second richest Catholic building in the world after St. Peter’s Cathedral in Rome; visit the Alcázar, an impressive fortress; admire the most representative paintings of the famous artist El Greco. Enjoy the narrow streets of the old Jewish Quarter, don’t miss the Santa María la Blanca Synagogue, the Monastery of San Juan de Los Reyes, and the Mosque of the Christ of the Light. And don´t forget to taste the famous sweets marzipan made of almonds and honey!\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":21,\\\"grossFormattedText\\\":\\\"£ 21\\\",\\\"net\\\":17,\\\"netFormattedText\\\":\\\"£ 17\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2ZhYmM0MTExLWZjYjEtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2ZhYmM0MTExLWZjYjEtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"},\\\"availabilityType\\\":\\\"DATE\\\"},{\\\"id\\\":\\\"3c8f4902-9069-477f-afff-a33c7eef05ae\\\",\\\"code\\\":\\\"2I3NO6\\\",\\\"provider\\\":null,\\\"name\\\":\\\"Private Family Scavenger Hunt in Rome\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Travel Curious\\\"},\\\"description\\\":\\\"Experience the alleyways, monuments, and secrets of Rome in a stimulating way, through a family scavenger hunt! \\\\n\\\\nCommence your scavenger hunt at Piazza di Spagna Answer riddles and map out your route Journey through the historic centre of RomeMake a wish at the Trevi Fountain  See historical sights such as the Pantheon, and Navona Square This entertaining activity starts at Piazza di Spagna and the Spanish Steps, where you will be given advice and information before embarking on an adventure. Continue your hunt through the historic centre of Rome, and keep your eyes open for clues along the way- passing Trevi Fountain and paying a visit to the Pantheon.  This is a chance to explore Rome in a stimulating way, and invites kids to work together to win a prize. There is an ice-cream included too! \\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":418,\\\"grossFormattedText\\\":\\\"£ 418\\\",\\\"net\\\":354,\\\"netFormattedText\\\":\\\"£ 354\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzA1MGU1YTZiLWViMDUtNDBiNy04MzRhLWVhZmM2YmUxYTYyZCIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzA1MGU1YTZiLWViMDUtNDBiNy04MzRhLWVhZmM2YmUxYTYyZCIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"},\\\"availabilityType\\\":\\\"DATE\\\"},{\\\"id\\\":\\\"4e77836b-e0bd-4c09-991a-6629b8befc15\\\",\\\"code\\\":\\\"W6Z4D6\\\",\\\"provider\\\":{\\\"id\\\":\\\"c7ca093f-b6d6-4e26-baf1-55ceeb85ecc7\\\",\\\"name\\\":\\\"Go City Adventures\\\"},\\\"name\\\":\\\"Mumbai: Full-Day Elephanta Caves Tour\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Go City Adventures\\\"},\\\"description\\\":\\\"A guided tour to Elephanta Caves, collection of temples dedicated to Lord Shiva. Traveling on a cruise to reach this UNESCO world heritage site accompanied by your professional English speaking guide. You would also get a chance to visit Victorian-style architecture, Gateway of India.\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":32,\\\"grossFormattedText\\\":\\\"£ 32\\\",\\\"net\\\":25,\\\"netFormattedText\\\":\\\"£ 25\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzVlOTk4NzQwLWZjOTUtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzVlOTk4NzQwLWZjOTUtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"},\\\"availabilityType\\\":\\\"DATE\\\"},{\\\"id\\\":\\\"ac7afde9-2697-4181-8f9d-7eb01d19e536\\\",\\\"code\\\":\\\"BXCP9W\\\",\\\"provider\\\":{\\\"id\\\":\\\"444a4c0d-ee20-490f-a357-384da1705216\\\",\\\"name\\\":\\\"Localgrapher Supplier\\\"},\\\"name\\\":\\\"Bring Your Memories Home from Nairobi with a Unique Photographic Momento\\\",\\\"supplier\\\":{\\\"name\\\":\\\"Localgrapher Supplier\\\"},\\\"description\\\":\\\"Bring Your Memories Home from Nairobiwith a Unique Photographic Momento\\\\nStroll down the historic Old Town, explore the top sights, savor local delicacies and have it all captured in beautiful professional photographs!\\\\nTreat yourself to this unique experience that will leave you with amazing vacation snapshots you’ll cherish for many years to come! It’s not just exploring the spots you would normally miss but also about not worrying about missing out from the family photos, having awkwardly cropped pictures from a couple’s retreat or being forced to ask strangers to use your camera on a solo trip.\\\\nThis experience will simply leave you with the best souvenir one can possibly bring back from a trip toNairobi. Try it, you’ll love it!\\\\nHIGHLIGHTS:\\\\n\\\\nPrivate photo session with a local professional for your party only\\\\n100% money-back satisfaction guarantee\\\\nTop photo spots, outfits and the best time of the day recommendations\\\\nSpecial requests option\\\\nHD edited photo delivery in 4 business days\\\\nProfessional print and delivery to your doorstep option\\\\nHave this experience with as many people as you wish, the cost doesn’t change\\\\n\\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":185,\\\"grossFormattedText\\\":\\\"£ 185\\\",\\\"net\\\":162,\\\"netFormattedText\\\":\\\"£ 162\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2Y1OWE5Njg3LWZjNWQtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzL2Y1OWE5Njg3LWZjNWQtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"},\\\"availabilityType\\\":\\\"DATE\\\"},{\\\"id\\\":\\\"41b8cff8-9657-4a3c-a5e5-b01c45d38249\\\",\\\"code\\\":\\\"B4D7NE\\\",\\\"provider\\\":{\\\"id\\\":\\\"2a331dc1-9cf5-4e70-a205-b614ae817962\\\",\\\"name\\\":\\\"HotelBeds\\\"},\\\"name\\\":\\\"Rainforest Views and Montville Day Tour with Lunch\\\",\\\"supplier\\\":{\\\"name\\\":\\\"HotelBeds\\\"},\\\"description\\\":\\\"Today is a day to explore the amazing Sunshine Coast Hinterland Region. View the ancient volcanic peaks of the Glass House Mountains, walk through the lush rainforests, take in the breathtaking scenery - lose yourself in the natural beauty and serenity of the Sunshine Coast Hinterland.\\\\n\\\\n\\\\n\\\\nGinger Factory\\\\n\\\\nLearn to how Ginger is grown, harvested and turned into yummy foods on a Factory Tour, ride the Ginger Train or go on the Overboard Boat Ride (optional). You can also shop at speciality retail stores, enjoy a huge range of delicious foods or wander the sub-tropical garden filled surroundings. Whether you want to eat, shop or play – the Ginger Factory has something for all everyone.\\\\n\\\\n\\\\n\\\\nMontville Village\\\\n\\\\nWhen we arrive at the Hinterland Village of Montville, you can spend an hour checking out the delightful shops and boutiques, enjoying this picture-postcard village and its fresh mountain air.\\\\n\\\\n\\\\n\\\\nLunch at Secrets on the Lake or The Edge Restaurant\\\\n\\\\nDepending on availability, your gourmet lunch will be at either “Secrets on the Lake” which is set in the rainforest on the side of Lake Baroon. a popular foodie destination near Montville enjoying panoramic views of Lake Baroon, or “The Edge Café Bar and Restaurant” in Montville which is perched on the edge of the escarpment & offers panoramic views of the Sunshine coastline. Regardless of the lunch venue, you’ll enjoy a delicious 2-course meal included in the tour.\\\\n\\\\n\\\\n\\\\nGerrard’s Lookout\\\\n\\\\nOne of two scenic lookouts we stop at will be Gerrard’s Lookout, high on the hill land this lookout offers coastline views to Coolum, Maroochydore, Caloundra and Bribie Island. Nearby\\\\n\\\\n\\\\n\\\\nMary Cairncross Scenic Rainforest Reserve & Lookout\\\\n\\\\nAs we travel along the Blackall Range, we stop at Mary Cairncross Scenic Reserve, a scenic rainforest reserve set on 55 hectares of subtropical rainforest overlooking the stunning Glass House Mountains. Here you will have an opportunity to walk a flat and easy 1.7km trail through the pristine rainforest learning about the unique flora and fauna that abound here. Or alternatively, you can sit and enjoy a coffee overlooking the stunning Glass House Mountains instead of taking a walk through the rainforest.\\\\n\\\\n\\\\n\\\\nMapleton Falls Lookout\\\\n\\\\nThe Mapleton Falls lookout for some is a highlight of their day, a hidden treasure in the Hinterland region, this scenic lookout offers amazing views over the Obi Obi Valley and the top of lush rainforest canopy.\\\\n\\\\n\\\\n\\\\nPick-up Locations\\\\n\\\\nMooloolaba, Maroochydore, Alexandra Headlands, Cotton Tree, Coolum, Twin Waters, Marcoola, Peregian Beach, Sunshine Beach, Noosa, Noosaville, Tewantin\\\\n\\\\n\\\\n\\\\nPick-up Times\\\\n\\\\nMooloolaba 7.30 am\\\\n\\\\nMaroochydore, Alexandra Headlands, Cotton Tree 7.40 am\\\\n\\\\nTwin Waters, Marcoola, Coolum 7.55 am\\\\n\\\\nPeregian Beach, Sunshine Beach 8.05am\\\\n\\\\nNoosa 8. 15 am\\\\n\\\\nNoosaville, Tewantin 8.25 am\\\\n\\\\n\\\\n\\\\nInclusions\\\\n\\\\nVisit the Ginger Factory & Nutworks\\\\nMary Cairncross Scenic Rainforest Walk\\\\nFree time to explore Montville village\\\\nBelgian Chocolate Sampler Box\\\\nDelicious 2-Course gourmet lunch\\\\nAll transportation\\\\nLunch - (GFA) Gluten free available (VA) Vegetarian available (VGA) Vegan Available *Other dietary options available\\\\n\\\\nLanguages\\\\n\\\\nEnglish, Spanish and Italian\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":76,\\\"grossFormattedText\\\":\\\"£ 76\\\",\\\"net\\\":60,\\\"netFormattedText\\\":\\\"£ 60\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzliYTU0ODA3LWZjNjAtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzliYTU0ODA3LWZjNjAtMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"},\\\"availabilityType\\\":\\\"DATE\\\"},{\\\"id\\\":\\\"d2f50e8d-94d8-4626-8fd2-13093fe0b807\\\",\\\"code\\\":\\\"0DGZ6Q\\\",\\\"provider\\\":{\\\"id\\\":\\\"2a331dc1-9cf5-4e70-a205-b614ae817962\\\",\\\"name\\\":\\\"HotelBeds\\\"},\\\"name\\\":\\\"Tyskie Brewery and Museum Tour by private car\\\",\\\"supplier\\\":{\\\"name\\\":\\\"HotelBeds\\\"},\\\"description\\\":\\\"Explore Tyskie Brewery's carefully renovated buildings dating back to the to the 19th century and huge fermentation tanks, and finish off your tour with a beer tasting!\\\\n\\\\n\\\\n\\\\nTyskie Brewery Tour is an unforgettable journey . Your tour takes around 6 hours, with roughly 1 hour one-way drive.\\\\n\\\\n\\\\n\\\\nExplore renovated buildings, see packaging lines working at an impressive speed of 60 thousand bottles per hour and picturesque garden of former the royal brewery. One of the greatest attractions is a documentary film made in 3D to be seen in a special museum cinema. The film relates to Tyskie Brewery's history which dates back to the end of the 16th century.\\\\n\\\\n\\\\n\\\\nDirect door-to-door pick up and drop off are guaranteed in comfortable, modern, air-conditioned vehicles, as well as a friendly, English-speaking driver at your disposal. After the visit to the brewery and museum, you will participate in beer tasting.\\\\n\\\\n\\\\n\\\\nLanguages:\\\\n\\\\nEnglish\\\\n\\\",\\\"holibobGuidePrice\\\":{\\\"commission\\\":0,\\\"commissionFormattedText\\\":\\\"£ 0\\\",\\\"currency\\\":\\\"GBP\\\",\\\"gross\\\":59,\\\"grossFormattedText\\\":\\\"£ 59\\\",\\\"net\\\":46,\\\"netFormattedText\\\":\\\"£ 46\\\",\\\"pricingData\\\":null},\\\"previewImage\\\":{\\\"urlSmall\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzllNjEwOTUwLWZjNjctMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjozMDAsImhlaWdodCI6MTY4Ljc1fX19\\\",\\\"urlLarge\\\":\\\"https://images.holibob.tech/eyJrZXkiOiJwcm9kdWN0SW1hZ2VzLzllNjEwOTUwLWZjNjctMTFlYi04MDFmLTA2YjgxYWQ0YzU3OSIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciIsIndpZHRoIjoxMDAwLCJoZWlnaHQiOjU2Mi41fX19\\\"},\\\"availabilityType\\\":\\\"DATE\\\"}]}\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Product Status",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('productId', 'b16f9f1c-0530-41fe-8818-2f19027eaf9a')\r",
+							"pm.variables.set('startDate', '2022-01-11')\r",
+							"pm.variables.set('endDate', '2022-01-30')\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getProductStatus ( request: \\\"{\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"Holibob\\\\\\\":\\\\\\\"{{productId}}\\\\\\\",\\\\\\\"start_date\\\\\\\":\\\\\\\"{{startDate}}\\\\\\\",\\\\\\\"end_date\\\\\\\":\\\\\\\"{{endDate}}\\\\\\\"}}}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "**Get Availability List for a specific Product Id.**\n\nVariable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| productId | required | string |  | Your chosen Product Id, which was obtained from **Get Product List**. |\n| startDate | required | string |  | Checking start date |\n| endDate | required | string |  | Checking end date |\n\nNote: Ids that returned from this API will be used as Availability id in the other APIs"
+			},
+			"response": [
+				{
+					"name": "Get Product Status",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getProductStatus ( request: \\\"{\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"Holibob\\\\\\\":\\\\\\\"e3f3a0dc-64ee-4540-aec2-623968b138a8\\\\\\\",\\\\\\\"start_date\\\\\\\":\\\\\\\"2022-01-25\\\\\\\",\\\\\\\"end_date\\\\\\\":\\\\\\\"2022-01-31\\\\\\\"}}}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"getProductStatus\": \"{\\\"status\\\":\\\"success\\\",\\\"active\\\":\\\"\\\",\\\"message\\\":\\\"Success\\\",\\\"data\\\":[{\\\"id\\\":\\\"77e88fe2-8a95-497e-bf66-89c0f15aa120\\\",\\\"date\\\":\\\"2022-01-25\\\",\\\"soldOut\\\":false,\\\"guidePriceFormattedText\\\":\\\"£ 349\\\"},{\\\"id\\\":\\\"3bcbced9-8383-4f8a-8d80-607a83ffc456\\\",\\\"date\\\":\\\"2022-01-26\\\",\\\"soldOut\\\":false,\\\"guidePriceFormattedText\\\":\\\"£ 349\\\"},{\\\"id\\\":\\\"b6dc4393-ed27-410f-903c-3def0c9bfe8a\\\",\\\"date\\\":\\\"2022-01-27\\\",\\\"soldOut\\\":false,\\\"guidePriceFormattedText\\\":\\\"£ 349\\\"},{\\\"id\\\":\\\"4fd99dcb-c811-4595-9f56-0b0b88343909\\\",\\\"date\\\":\\\"2022-01-28\\\",\\\"soldOut\\\":false,\\\"guidePriceFormattedText\\\":\\\"£ 349\\\"},{\\\"id\\\":\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\",\\\"date\\\":\\\"2022-01-29\\\",\\\"soldOut\\\":false,\\\"guidePriceFormattedText\\\":\\\"£ 349\\\"},{\\\"id\\\":\\\"b8bed123-ea3d-433c-9199-f193f1527b85\\\",\\\"date\\\":\\\"2022-01-30\\\",\\\"soldOut\\\":false,\\\"guidePriceFormattedText\\\":\\\"£ 349\\\"},{\\\"id\\\":\\\"1d6c8846-e752-4bbd-9408-a876634cf5d2\\\",\\\"date\\\":\\\"2022-01-31\\\",\\\"soldOut\\\":false,\\\"guidePriceFormattedText\\\":\\\"£ 349\\\"}]}\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Fetch Availability",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('availabilityId', \"af40b560-5466-4e1b-a49f-c249fe5bd84a\")"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { fetchAvailabilityWithOptionList ( request: \\\"{\\\\\\\"availabilityId\\\\\\\":\\\\\\\"{{availabilityId}}\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "**Get the Options List and Pricing Category List that have to be answered.**\n\nVariable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| availabilityId | required | string |  | The chosen Availability Id from Get Product Status response. |\n\nNotes:\n\n*   We will use optionList id and availableOptions value as a payload for **Input Availability with Option List**\n*   This API will be hit multiple times. The First is to get the options list along with its value, and after **Input Availability with Option List** to get the other options list for the availability or to get the pricing category list."
+			},
+			"response": [
+				{
+					"name": "Fetch Availability",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { fetchAvailabilityWithOptionList ( request: \\\"{\\\\\\\"availabilityId\\\\\\\":\\\\\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\\\\\"}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"fetchAvailabilityWithOptionList\": \"{\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Success\\\",\\\"data\\\":{\\\"id\\\":\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\",\\\"optionList\\\":{\\\"isComplete\\\":false,\\\"nodes\\\":[{\\\"id\\\":\\\"abf22c70-62c9-4e17-a4a6-6fa4e5e820be\\\",\\\"label\\\":\\\"Ticket Type\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"dataFormat\\\":null,\\\"availableOptions\\\":[{\\\"label\\\":\\\"Standard rate\\\",\\\"value\\\":\\\"d2be8a5d-2ebe-49cc-9678-8f1f98d3d99d\\\"}],\\\"answerValue\\\":\\\"d2be8a5d-2ebe-49cc-9678-8f1f98d3d99d\\\",\\\"answerFormattedText\\\":\\\"Standard rate\\\"},{\\\"id\\\":\\\"73df3570-57d2-462e-982c-59230e38114e\\\",\\\"label\\\":\\\"Start Time\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"dataFormat\\\":null,\\\"availableOptions\\\":[{\\\"label\\\":\\\"06:00\\\",\\\"value\\\":\\\"56a4ca4b-cfec-46ea-9854-b52e92920cc2\\\"}],\\\"answerValue\\\":\\\"56a4ca4b-cfec-46ea-9854-b52e92920cc2\\\",\\\"answerFormattedText\\\":\\\"06:00\\\"},{\\\"id\\\":\\\"cef1b41c-9ee1-4710-b58e-ac2685b26380\\\",\\\"label\\\":\\\"Pick Up Location\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"dataFormat\\\":null,\\\"availableOptions\\\":[{\\\"label\\\":\\\"Custom Location\\\",\\\"value\\\":\\\"CUSTOM\\\"},{\\\"label\\\":\\\"Hotels inside Kathmandu city\\\",\\\"value\\\":\\\"87403\\\"},{\\\"label\\\":\\\"Kathmandu Domestic Airport\\\",\\\"value\\\":\\\"87390\\\"},{\\\"label\\\":\\\"Tribhuvan International Airport - KTM\\\",\\\"value\\\":\\\"87389\\\"}],\\\"answerValue\\\":null,\\\"answerFormattedText\\\":null}]},\\\"pricingCategoryList\\\":{}}}\"\n    }\n}"
+				},
+				{
+					"name": "Fetch Availability",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { fetchAvailabilityWithOptionList ( request: \\\"{\\\\\\\"availabilityId\\\\\\\":\\\\\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\\\\\"}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"fetchAvailabilityWithOptionList\": \"{\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Success\\\",\\\"data\\\":{\\\"id\\\":\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\",\\\"optionList\\\":{\\\"isComplete\\\":false,\\\"nodes\\\":[{\\\"id\\\":\\\"abf22c70-62c9-4e17-a4a6-6fa4e5e820be\\\",\\\"label\\\":\\\"Ticket Type\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"dataFormat\\\":null,\\\"availableOptions\\\":[{\\\"label\\\":\\\"Standard rate\\\",\\\"value\\\":\\\"d2be8a5d-2ebe-49cc-9678-8f1f98d3d99d\\\"}],\\\"answerValue\\\":\\\"d2be8a5d-2ebe-49cc-9678-8f1f98d3d99d\\\",\\\"answerFormattedText\\\":\\\"Standard rate\\\"},{\\\"id\\\":\\\"73df3570-57d2-462e-982c-59230e38114e\\\",\\\"label\\\":\\\"Start Time\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"dataFormat\\\":null,\\\"availableOptions\\\":[{\\\"label\\\":\\\"06:00\\\",\\\"value\\\":\\\"56a4ca4b-cfec-46ea-9854-b52e92920cc2\\\"}],\\\"answerValue\\\":\\\"56a4ca4b-cfec-46ea-9854-b52e92920cc2\\\",\\\"answerFormattedText\\\":\\\"06:00\\\"},{\\\"id\\\":\\\"cef1b41c-9ee1-4710-b58e-ac2685b26380\\\",\\\"label\\\":\\\"Pick Up Location\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"dataFormat\\\":null,\\\"availableOptions\\\":[{\\\"label\\\":\\\"Custom Location\\\",\\\"value\\\":\\\"CUSTOM\\\"},{\\\"label\\\":\\\"Hotels inside Kathmandu city\\\",\\\"value\\\":\\\"87403\\\"},{\\\"label\\\":\\\"Kathmandu Domestic Airport\\\",\\\"value\\\":\\\"87390\\\"},{\\\"label\\\":\\\"Tribhuvan International Airport - KTM\\\",\\\"value\\\":\\\"87389\\\"}],\\\"answerValue\\\":\\\"87403\\\",\\\"answerFormattedText\\\":\\\"Hotels inside Kathmandu city\\\"},{\\\"id\\\":\\\"bf473eb7-9b97-41e8-a571-6370459037a1\\\",\\\"label\\\":\\\"Drop Off Location\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"dataFormat\\\":null,\\\"availableOptions\\\":[{\\\"label\\\":\\\"Custom Location\\\",\\\"value\\\":\\\"CUSTOM\\\"},{\\\"label\\\":\\\"Hotels inside Kathmandu city\\\",\\\"value\\\":\\\"87403\\\"},{\\\"label\\\":\\\"Kathmandu Domestic Airport\\\",\\\"value\\\":\\\"87390\\\"},{\\\"label\\\":\\\"Tribhuvan International Airport - KTM\\\",\\\"value\\\":\\\"87389\\\"}],\\\"answerValue\\\":null,\\\"answerFormattedText\\\":null}]},\\\"pricingCategoryList\\\":{}}}\"\n    }\n}"
+				},
+				{
+					"name": "Fetch Availability Option List Complete",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { fetchAvailabilityWithOptionList ( request: \\\"{\\\\\\\"availabilityId\\\\\\\":\\\\\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\\\\\"}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"fetchAvailabilityWithOptionList\": \"{\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Success\\\",\\\"data\\\":{\\\"id\\\":\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\",\\\"optionList\\\":{\\\"isComplete\\\":true,\\\"nodes\\\":[{\\\"id\\\":\\\"abf22c70-62c9-4e17-a4a6-6fa4e5e820be\\\",\\\"label\\\":\\\"Ticket Type\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"dataFormat\\\":null,\\\"availableOptions\\\":[{\\\"label\\\":\\\"Standard rate\\\",\\\"value\\\":\\\"d2be8a5d-2ebe-49cc-9678-8f1f98d3d99d\\\"}],\\\"answerValue\\\":\\\"d2be8a5d-2ebe-49cc-9678-8f1f98d3d99d\\\",\\\"answerFormattedText\\\":\\\"Standard rate\\\"},{\\\"id\\\":\\\"73df3570-57d2-462e-982c-59230e38114e\\\",\\\"label\\\":\\\"Start Time\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"dataFormat\\\":null,\\\"availableOptions\\\":[{\\\"label\\\":\\\"06:00\\\",\\\"value\\\":\\\"56a4ca4b-cfec-46ea-9854-b52e92920cc2\\\"}],\\\"answerValue\\\":\\\"56a4ca4b-cfec-46ea-9854-b52e92920cc2\\\",\\\"answerFormattedText\\\":\\\"06:00\\\"},{\\\"id\\\":\\\"cef1b41c-9ee1-4710-b58e-ac2685b26380\\\",\\\"label\\\":\\\"Pick Up Location\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"dataFormat\\\":null,\\\"availableOptions\\\":[{\\\"label\\\":\\\"Custom Location\\\",\\\"value\\\":\\\"CUSTOM\\\"},{\\\"label\\\":\\\"Hotels inside Kathmandu city\\\",\\\"value\\\":\\\"87403\\\"},{\\\"label\\\":\\\"Kathmandu Domestic Airport\\\",\\\"value\\\":\\\"87390\\\"},{\\\"label\\\":\\\"Tribhuvan International Airport - KTM\\\",\\\"value\\\":\\\"87389\\\"}],\\\"answerValue\\\":\\\"87403\\\",\\\"answerFormattedText\\\":\\\"Hotels inside Kathmandu city\\\"},{\\\"id\\\":\\\"bf473eb7-9b97-41e8-a571-6370459037a1\\\",\\\"label\\\":\\\"Drop Off Location\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"dataFormat\\\":null,\\\"availableOptions\\\":[{\\\"label\\\":\\\"Custom Location\\\",\\\"value\\\":\\\"CUSTOM\\\"},{\\\"label\\\":\\\"Hotels inside Kathmandu city\\\",\\\"value\\\":\\\"87403\\\"},{\\\"label\\\":\\\"Kathmandu Domestic Airport\\\",\\\"value\\\":\\\"87390\\\"},{\\\"label\\\":\\\"Tribhuvan International Airport - KTM\\\",\\\"value\\\":\\\"87389\\\"}],\\\"answerValue\\\":\\\"87390\\\",\\\"answerFormattedText\\\":\\\"Kathmandu Domestic Airport\\\"}]},\\\"pricingCategoryList\\\":{\\\"nodes\\\":[{\\\"id\\\":\\\"e1810299-acfc-42b2-91e1-81803a45edf8\\\",\\\"label\\\":\\\"Adult\\\",\\\"minParticipants\\\":1,\\\"maxParticipants\\\":99999,\\\"unitPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 431.16\\\",\\\"pricingData\\\":null,\\\"currency\\\":\\\"GBP\\\"},\\\"units\\\":0}],\\\"errors\\\":[],\\\"totalPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 0.00\\\",\\\"currency\\\":\\\"GBP\\\"}}}}\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Input Availability with Option List",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('availabilityId', 'af40b560-5466-4e1b-a49f-c249fe5bd84a')\r",
+							"pm.variables.set('optionListId', '9d4cd0ef-d956-438c-a4b4-67ac375bcfae')\r",
+							"pm.variables.set('optionListValue', 'fe0a824b-4111-4190-813b-ce97356f49fd')"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { inputAvailabilityWithOptionList ( request: \\\"{\\\\\\\"availabilityId\\\\\\\":\\\\\\\"{{availabilityId}}\\\\\\\",\\\\\\\"input\\\\\\\":{\\\\\\\"optionList\\\\\\\":[{\\\\\\\"id\\\\\\\":\\\\\\\"{{optionListId}}\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"{{optionListValue}}\\\\\\\"}]}}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "**Answering the Options List.**\n\nVariable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| availabilityId | required | string |  | The chosen Availability Id from Get Product Status response. |\n| optionListId | required | string |  | Option List Id, which is obtained from Fetch Availability with Option List response. |\n| optionListValue | required | string |  | Option List Value to fill the option, which is obtained from Fetch Availability with Option List response. |\n\nNotes:\n\n*   Both for optionListId and optionListValue fields can be more than one.\n*   This API can be hit multiple times until the isComplete value returns true.\n*   You have to make sure that all of the options have been answered, by hitting the **Fetch Availability with Option List** and checking the isComplete field. If there is no new option that appears and isComplete value is true, you can continue to answer the pricing category in the **Input Availability with Pricing Category**."
+			},
+			"response": [
+				{
+					"name": "Input Availability with Option List",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { inputAvailabilityWithOptionList ( request: \\\"{\\\\\\\"availabilityId\\\\\\\":\\\\\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\\\\\",\\\\\\\"input\\\\\\\":{\\\\\\\"optionList\\\\\\\":[{\\\\\\\"id\\\\\\\":\\\\\\\"cef1b41c-9ee1-4710-b58e-ac2685b26380\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"87403\\\\\\\"}]}}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"inputAvailabilityWithOptionList\": \"{\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Success\\\",\\\"data\\\":{\\\"id\\\":\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\",\\\"optionList\\\":{\\\"isComplete\\\":false,\\\"nodes\\\":[{\\\"id\\\":\\\"abf22c70-62c9-4e17-a4a6-6fa4e5e820be\\\",\\\"answerValue\\\":\\\"d2be8a5d-2ebe-49cc-9678-8f1f98d3d99d\\\",\\\"answerFormattedText\\\":\\\"Standard rate\\\"},{\\\"id\\\":\\\"73df3570-57d2-462e-982c-59230e38114e\\\",\\\"answerValue\\\":\\\"56a4ca4b-cfec-46ea-9854-b52e92920cc2\\\",\\\"answerFormattedText\\\":\\\"06:00\\\"},{\\\"id\\\":\\\"cef1b41c-9ee1-4710-b58e-ac2685b26380\\\",\\\"answerValue\\\":\\\"87403\\\",\\\"answerFormattedText\\\":\\\"Hotels inside Kathmandu city\\\"},{\\\"id\\\":\\\"bf473eb7-9b97-41e8-a571-6370459037a1\\\",\\\"answerValue\\\":null,\\\"answerFormattedText\\\":null}]},\\\"pricingCategoryList\\\":null}}\"\n    }\n}"
+				},
+				{
+					"name": "Input Availability with Option List Copy",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\":\"query { inputAvailabilityWithOptionList ( request: \\\"{\\\\\\\"availabilityId\\\\\\\":\\\\\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\\\\\",\\\\\\\"input\\\\\\\":{\\\\\\\"optionList\\\\\\\":[{\\\\\\\"id\\\\\\\":\\\\\\\"bf473eb7-9b97-41e8-a571-6370459037a1\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"87390\\\\\\\"}]}}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"inputAvailabilityWithOptionList\": \"{\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Success\\\",\\\"data\\\":{\\\"id\\\":\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\",\\\"optionList\\\":{\\\"isComplete\\\":true,\\\"nodes\\\":[{\\\"id\\\":\\\"abf22c70-62c9-4e17-a4a6-6fa4e5e820be\\\",\\\"answerValue\\\":\\\"d2be8a5d-2ebe-49cc-9678-8f1f98d3d99d\\\",\\\"answerFormattedText\\\":\\\"Standard rate\\\"},{\\\"id\\\":\\\"73df3570-57d2-462e-982c-59230e38114e\\\",\\\"answerValue\\\":\\\"56a4ca4b-cfec-46ea-9854-b52e92920cc2\\\",\\\"answerFormattedText\\\":\\\"06:00\\\"},{\\\"id\\\":\\\"cef1b41c-9ee1-4710-b58e-ac2685b26380\\\",\\\"answerValue\\\":\\\"87403\\\",\\\"answerFormattedText\\\":\\\"Hotels inside Kathmandu city\\\"},{\\\"id\\\":\\\"bf473eb7-9b97-41e8-a571-6370459037a1\\\",\\\"answerValue\\\":\\\"87390\\\",\\\"answerFormattedText\\\":\\\"Kathmandu Domestic Airport\\\"}]},\\\"pricingCategoryList\\\":{\\\"nodes\\\":[{\\\"id\\\":\\\"e1810299-acfc-42b2-91e1-81803a45edf8\\\",\\\"label\\\":\\\"Adult\\\",\\\"minParticipants\\\":1,\\\"maxParticipants\\\":99999,\\\"unitPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 430.97\\\"},\\\"totalPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 0.00\\\"},\\\"units\\\":0}]}}}\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Input Availability With Pricing Category",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('availabilityId', 'af40b560-5466-4e1b-a49f-c249fe5bd84a')\r",
+							"pm.variables.set('pricingCategoryId1', 'f8387cb9-982a-43e5-b8b0-e0f4e034367f')\r",
+							"pm.variables.set('pricingCategoryId2', '46156713-af27-4dc4-909c-36f93b0d92f4')\r",
+							"pm.variables.set('pricingCategoryValue1', 2)\r",
+							"pm.variables.set('pricingCategoryValue2', 0)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { inputAvailabilityWithOptionList ( request: \\\"{\\\\\\\"availabilityId\\\\\\\":\\\\\\\"{{availabilityId}}\\\\\\\",\\\\\\\"input\\\\\\\":{\\\\\\\"pricingCategoryList\\\\\\\":[{\\\\\\\"id\\\\\\\":\\\\\\\"{{pricingCategoryId1}}\\\\\\\",\\\\\\\"value\\\\\\\":{{pricingCategoryValue1}}},{\\\\\\\"id\\\\\\\":\\\\\\\"{{pricingCategoryId2}}\\\\\\\",\\\\\\\"value\\\\\\\":{{pricingCategoryValue2}}}]}}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "**Answering the Pricing Category List.**\n\nVariable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| availabilityId | required | string |  | The chosen Availability Id from Get Product Status response. |\n| pricingCategoryId | required | string |  | Pricing Category Id, which is obtained from Fetch Availability with Option List response. |\n| pricingCategoryValue | required | number |  | The amount of product with the pricing category we want to purchase |\n\nNotes:\n\n*   Input all the pricing categories, if you just want to purchase one of the categories you can fill the value with 0.\n*   Both for pricingCategoryId and pricingCategoryValue fields can be more than one.\n*   You have to make sure that all of the pricing categories have been answered, by hitting the **Fetch Availability with Option List** and checking the units field. If it already matches the amount you have input you can continue to create a booking in the **Create Booking.**"
+			},
+			"response": [
+				{
+					"name": "Input Fetch Availability With Pricing Category",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\":\"query { inputAvailabilityWithOptionList ( request: \\\"{\\\\\\\"availabilityId\\\\\\\":\\\\\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\\\\\",\\\\\\\"input\\\\\\\":{\\\\\\\"pricingCategoryList\\\\\\\":[{\\\\\\\"id\\\\\\\":\\\\\\\"e1810299-acfc-42b2-91e1-81803a45edf8\\\\\\\",\\\\\\\"value\\\\\\\":1}]}}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"inputAvailabilityWithOptionList\": \"{\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Success\\\",\\\"data\\\":{\\\"id\\\":\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\",\\\"optionList\\\":{\\\"isComplete\\\":true,\\\"nodes\\\":[{\\\"id\\\":\\\"abf22c70-62c9-4e17-a4a6-6fa4e5e820be\\\",\\\"answerValue\\\":\\\"d2be8a5d-2ebe-49cc-9678-8f1f98d3d99d\\\",\\\"answerFormattedText\\\":\\\"Standard rate\\\"},{\\\"id\\\":\\\"73df3570-57d2-462e-982c-59230e38114e\\\",\\\"answerValue\\\":\\\"56a4ca4b-cfec-46ea-9854-b52e92920cc2\\\",\\\"answerFormattedText\\\":\\\"06:00\\\"},{\\\"id\\\":\\\"cef1b41c-9ee1-4710-b58e-ac2685b26380\\\",\\\"answerValue\\\":\\\"87403\\\",\\\"answerFormattedText\\\":\\\"Hotels inside Kathmandu city\\\"},{\\\"id\\\":\\\"bf473eb7-9b97-41e8-a571-6370459037a1\\\",\\\"answerValue\\\":\\\"87390\\\",\\\"answerFormattedText\\\":\\\"Kathmandu Domestic Airport\\\"}]},\\\"pricingCategoryList\\\":{\\\"nodes\\\":[{\\\"id\\\":\\\"e1810299-acfc-42b2-91e1-81803a45edf8\\\",\\\"label\\\":\\\"Adult\\\",\\\"minParticipants\\\":1,\\\"maxParticipants\\\":99999,\\\"unitPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 431.16\\\"},\\\"totalPrice\\\":{\\\"grossFormattedText\\\":\\\"£ 431.16\\\"},\\\"units\\\":1}]}}}\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Booking",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { createBooking ( request: \\\"{}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "**Create Booking**\n\nNotes:\n\n*   There is no required variable in this payload request.\n*   We will use the id as bookId and will be used in any other APIs."
+			},
+			"response": [
+				{
+					"name": "Create Booking",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { createBooking ( request: \\\"{}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"createBooking\": \"{\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Success\\\",\\\"data\\\":{\\\"id\\\":\\\"6e5dca62-c54e-4c4f-9910-82dde53ab876\\\",\\\"state\\\":\\\"OPEN\\\",\\\"isComplete\\\":false,\\\"paymentState\\\":\\\"ON_ACCOUNT\\\",\\\"status\\\":\\\"success\\\"}}\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Add Availability to Booking",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('availabilityId', 'af40b560-5466-4e1b-a49f-c249fe5bd84a')\r",
+							"pm.variables.set('bookId', '33b72e44-2f24-4f85-8843-8f8534f72360')"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { addAvailabilityToBooking ( request: \\\"{\\\\\\\"availabilityId\\\\\\\":\\\\\\\"{{availabilityId}}\\\\\\\",\\\\\\\"bookId\\\\\\\":\\\\\\\"{{bookId}}\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "**Add complete availability to the created booking.**\n\nVariable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| availabilityId | required | string |  | Availability Id, which is obtained from Get Product Status response and has been answered completely. |\n| bookId | required | string |  | Booking Id, which is obtained from Create Booking response. |\n\nNote: This API will connect availabilityId to bookId. The state which is returned from this API will be 'OPEN'."
+			},
+			"response": [
+				{
+					"name": "Add Availability to Booking",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\":\"query { addAvailabilityToBooking ( request: \\\"{\\\\\\\"availabilityId\\\\\\\":\\\\\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\\\\\",\\\\\\\"bookId\\\\\\\":\\\\\\\"6e5dca62-c54e-4c4f-9910-82dde53ab876\\\\\\\"}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"addAvailabilityToBooking\": \"{\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Success\\\",\\\"data\\\":{\\\"id\\\":\\\"6e5dca62-c54e-4c4f-9910-82dde53ab876\\\",\\\"isComplete\\\":false,\\\"isSandboxed\\\":true}}\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Fetch Booking",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('bookId', '33b72e44-2f24-4f85-8843-8f8534f72360')"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getOrderStatus ( request: \\\"{\\\\\\\"bookId\\\\\\\":\\\\\\\"{{bookId}}\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "**Fetch Booking to a get question list.**\n\nVariable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| bookId | required | string |  | Booking Id, which is obtained from Create Booking response. |\n\nNote:\n\n*   The response will show some booking detail, in staging/sandbox the state values are 'OPEN', 'PENDING' and 'COMPLETE', in Production are 'OPEN', 'PENDING' and 'CONFIRMED'.\n*   It also returns a question list that has to be answered in the next API."
+			},
+			"response": [
+				{
+					"name": "Fetch Booking",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\":\"query { getOrderStatus ( request: \\\"{\\\\\\\"bookId\\\\\\\":\\\\\\\"6e5dca62-c54e-4c4f-9910-82dde53ab876\\\\\\\"}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"getOrderStatus\": \"{\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Success\\\",\\\"data\\\":{\\\"id\\\":\\\"6e5dca62-c54e-4c4f-9910-82dde53ab876\\\",\\\"code\\\":\\\"FTAU3J\\\",\\\"state\\\":\\\"OPEN\\\",\\\"voucherUrl\\\":null,\\\"isSandboxed\\\":true,\\\"partnerChannelBookingUrl\\\":\\\"https://giift.booking.holibob.tech\\\",\\\"paymentState\\\":\\\"ON_ACCOUNT\\\",\\\"questionList\\\":[{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"b38360f0-4161-45aa-872a-7e13cf6f9eca\\\",\\\"label\\\":\\\"First name\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":null,\\\"isAnswered\\\":false},{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"6f021683-94af-4e49-8d17-2d4eeba8bad4\\\",\\\"label\\\":\\\"Last name\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":null,\\\"isAnswered\\\":false},{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"b0bef45f-958b-46c4-88f7-5db512a7877e\\\",\\\"label\\\":\\\"Your email address\\\",\\\"dataFormat\\\":\\\"EMAIL_ADDRESS\\\",\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":null,\\\"isAnswered\\\":false},{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"22b8a904-3aab-4ecb-8457-5755c40e422a\\\",\\\"label\\\":\\\"Gender\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"OPTIONS\\\",\\\"availableOptions\\\":[{\\\"label\\\":\\\"Female\\\",\\\"value\\\":\\\"f\\\"},{\\\"label\\\":\\\"Male\\\",\\\"value\\\":\\\"m\\\"}],\\\"answerValue\\\":null,\\\"isAnswered\\\":false},{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"c87882ef-f78e-4c44-96cc-49276fd55fcc\\\",\\\"label\\\":\\\"Nationality\\\",\\\"dataFormat\\\":\\\"COUNTRY\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"availableOptions\\\":[{\\\"label\\\":\\\"Afghanistan\\\",\\\"value\\\":\\\"AF\\\"},{\\\"label\\\":\\\"Albania\\\",\\\"value\\\":\\\"AL\\\"},{\\\"label\\\":\\\"Algeria\\\",\\\"value\\\":\\\"DZ\\\"},{\\\"label\\\":\\\"American Samoa\\\",\\\"value\\\":\\\"AS\\\"},{\\\"label\\\":\\\"Andorra\\\",\\\"value\\\":\\\"AD\\\"},{\\\"label\\\":\\\"Angola\\\",\\\"value\\\":\\\"AO\\\"},{\\\"label\\\":\\\"Anguilla\\\",\\\"value\\\":\\\"AI\\\"},{\\\"label\\\":\\\"Antarctica\\\",\\\"value\\\":\\\"AQ\\\"},{\\\"label\\\":\\\"Antigua and Barbuda\\\",\\\"value\\\":\\\"AG\\\"},{\\\"label\\\":\\\"Argentina\\\",\\\"value\\\":\\\"AR\\\"},{\\\"label\\\":\\\"Armenia\\\",\\\"value\\\":\\\"AM\\\"},{\\\"label\\\":\\\"Aruba\\\",\\\"value\\\":\\\"AW\\\"},{\\\"label\\\":\\\"Australia\\\",\\\"value\\\":\\\"AU\\\"},{\\\"label\\\":\\\"Austria\\\",\\\"value\\\":\\\"AT\\\"},{\\\"label\\\":\\\"Azerbaijan\\\",\\\"value\\\":\\\"AZ\\\"},{\\\"label\\\":\\\"Bahamas\\\",\\\"value\\\":\\\"BS\\\"},{\\\"label\\\":\\\"Bahrain\\\",\\\"value\\\":\\\"BH\\\"},{\\\"label\\\":\\\"Bangladesh\\\",\\\"value\\\":\\\"BD\\\"},{\\\"label\\\":\\\"Barbados\\\",\\\"value\\\":\\\"BB\\\"},{\\\"label\\\":\\\"Belarus\\\",\\\"value\\\":\\\"BY\\\"},{\\\"label\\\":\\\"Belgium\\\",\\\"value\\\":\\\"BE\\\"},{\\\"label\\\":\\\"Belize\\\",\\\"value\\\":\\\"BZ\\\"},{\\\"label\\\":\\\"Benin\\\",\\\"value\\\":\\\"BJ\\\"},{\\\"label\\\":\\\"Bermuda\\\",\\\"value\\\":\\\"BM\\\"},{\\\"label\\\":\\\"Bhutan\\\",\\\"value\\\":\\\"BT\\\"},{\\\"label\\\":\\\"Bolivia\\\",\\\"value\\\":\\\"BO\\\"},{\\\"label\\\":\\\"Bonaire, Sint Eustatius and Saba\\\",\\\"value\\\":\\\"BQ\\\"},{\\\"label\\\":\\\"Bosnia and Herzegovina\\\",\\\"value\\\":\\\"BA\\\"},{\\\"label\\\":\\\"Botswana\\\",\\\"value\\\":\\\"BW\\\"},{\\\"label\\\":\\\"Bouvet Island\\\",\\\"value\\\":\\\"BV\\\"},{\\\"label\\\":\\\"Brazil\\\",\\\"value\\\":\\\"BR\\\"},{\\\"label\\\":\\\"British Indian Ocean Territory\\\",\\\"value\\\":\\\"IO\\\"},{\\\"label\\\":\\\"British Virgin Islands\\\",\\\"value\\\":\\\"VG\\\"},{\\\"label\\\":\\\"Brunei\\\",\\\"value\\\":\\\"BN\\\"},{\\\"label\\\":\\\"Bulgaria\\\",\\\"value\\\":\\\"BG\\\"},{\\\"label\\\":\\\"Burkina Faso\\\",\\\"value\\\":\\\"BF\\\"},{\\\"label\\\":\\\"Burundi\\\",\\\"value\\\":\\\"BI\\\"},{\\\"label\\\":\\\"Cambodia\\\",\\\"value\\\":\\\"KH\\\"},{\\\"label\\\":\\\"Cameroon\\\",\\\"value\\\":\\\"CM\\\"},{\\\"label\\\":\\\"Canada\\\",\\\"value\\\":\\\"CA\\\"},{\\\"label\\\":\\\"Cape Verde\\\",\\\"value\\\":\\\"CV\\\"},{\\\"label\\\":\\\"Cayman Islands\\\",\\\"value\\\":\\\"KY\\\"},{\\\"label\\\":\\\"Central African Republic\\\",\\\"value\\\":\\\"CF\\\"},{\\\"label\\\":\\\"Chad\\\",\\\"value\\\":\\\"TD\\\"},{\\\"label\\\":\\\"Chile\\\",\\\"value\\\":\\\"CL\\\"},{\\\"label\\\":\\\"China\\\",\\\"value\\\":\\\"CN\\\"},{\\\"label\\\":\\\"Christmas Island\\\",\\\"value\\\":\\\"CX\\\"},{\\\"label\\\":\\\"Cocos Islands\\\",\\\"value\\\":\\\"CC\\\"},{\\\"label\\\":\\\"Colombia\\\",\\\"value\\\":\\\"CO\\\"},{\\\"label\\\":\\\"Comoros\\\",\\\"value\\\":\\\"KM\\\"},{\\\"label\\\":\\\"Congo\\\",\\\"value\\\":\\\"CG\\\"},{\\\"label\\\":\\\"Cook Islands\\\",\\\"value\\\":\\\"CK\\\"},{\\\"label\\\":\\\"Costa Rica\\\",\\\"value\\\":\\\"CR\\\"},{\\\"label\\\":\\\"Croatia\\\",\\\"value\\\":\\\"HR\\\"},{\\\"label\\\":\\\"Cuba\\\",\\\"value\\\":\\\"CU\\\"},{\\\"label\\\":\\\"Curaçao\\\",\\\"value\\\":\\\"CW\\\"},{\\\"label\\\":\\\"Cyprus\\\",\\\"value\\\":\\\"CY\\\"},{\\\"label\\\":\\\"Czech Republic\\\",\\\"value\\\":\\\"CZ\\\"},{\\\"label\\\":\\\"Côte d'Ivoire\\\",\\\"value\\\":\\\"CI\\\"},{\\\"label\\\":\\\"Denmark\\\",\\\"value\\\":\\\"DK\\\"},{\\\"label\\\":\\\"Djibouti\\\",\\\"value\\\":\\\"DJ\\\"},{\\\"label\\\":\\\"Dominica\\\",\\\"value\\\":\\\"DM\\\"},{\\\"label\\\":\\\"Dominican Republic\\\",\\\"value\\\":\\\"DO\\\"},{\\\"label\\\":\\\"Ecuador\\\",\\\"value\\\":\\\"EC\\\"},{\\\"label\\\":\\\"Egypt\\\",\\\"value\\\":\\\"EG\\\"},{\\\"label\\\":\\\"El Salvador\\\",\\\"value\\\":\\\"SV\\\"},{\\\"label\\\":\\\"Equatorial Guinea\\\",\\\"value\\\":\\\"GQ\\\"},{\\\"label\\\":\\\"Eritrea\\\",\\\"value\\\":\\\"ER\\\"},{\\\"label\\\":\\\"Estonia\\\",\\\"value\\\":\\\"EE\\\"},{\\\"label\\\":\\\"Ethiopia\\\",\\\"value\\\":\\\"ET\\\"},{\\\"label\\\":\\\"Falkland Islands\\\",\\\"value\\\":\\\"FK\\\"},{\\\"label\\\":\\\"Faroe Islands\\\",\\\"value\\\":\\\"FO\\\"},{\\\"label\\\":\\\"Fiji\\\",\\\"value\\\":\\\"FJ\\\"},{\\\"label\\\":\\\"Finland\\\",\\\"value\\\":\\\"FI\\\"},{\\\"label\\\":\\\"France\\\",\\\"value\\\":\\\"FR\\\"},{\\\"label\\\":\\\"French Guiana\\\",\\\"value\\\":\\\"GF\\\"},{\\\"label\\\":\\\"French Polynesia\\\",\\\"value\\\":\\\"PF\\\"},{\\\"label\\\":\\\"French Southern Territories\\\",\\\"value\\\":\\\"TF\\\"},{\\\"label\\\":\\\"Gabon\\\",\\\"value\\\":\\\"GA\\\"},{\\\"label\\\":\\\"Gambia\\\",\\\"value\\\":\\\"GM\\\"},{\\\"label\\\":\\\"Georgia\\\",\\\"value\\\":\\\"GE\\\"},{\\\"label\\\":\\\"Germany\\\",\\\"value\\\":\\\"DE\\\"},{\\\"label\\\":\\\"Ghana\\\",\\\"value\\\":\\\"GH\\\"},{\\\"label\\\":\\\"Gibraltar\\\",\\\"value\\\":\\\"GI\\\"},{\\\"label\\\":\\\"Greece\\\",\\\"value\\\":\\\"GR\\\"},{\\\"label\\\":\\\"Greenland\\\",\\\"value\\\":\\\"GL\\\"},{\\\"label\\\":\\\"Grenada\\\",\\\"value\\\":\\\"GD\\\"},{\\\"label\\\":\\\"Guadeloupe\\\",\\\"value\\\":\\\"GP\\\"},{\\\"label\\\":\\\"Guam\\\",\\\"value\\\":\\\"GU\\\"},{\\\"label\\\":\\\"Guatemala\\\",\\\"value\\\":\\\"GT\\\"},{\\\"label\\\":\\\"Guernsey\\\",\\\"value\\\":\\\"GG\\\"},{\\\"label\\\":\\\"Guinea\\\",\\\"value\\\":\\\"GN\\\"},{\\\"label\\\":\\\"Guinea-Bissau\\\",\\\"value\\\":\\\"GW\\\"},{\\\"label\\\":\\\"Guyana\\\",\\\"value\\\":\\\"GY\\\"},{\\\"label\\\":\\\"Haiti\\\",\\\"value\\\":\\\"HT\\\"},{\\\"label\\\":\\\"Heard Island And McDonald Islands\\\",\\\"value\\\":\\\"HM\\\"},{\\\"label\\\":\\\"Honduras\\\",\\\"value\\\":\\\"HN\\\"},{\\\"label\\\":\\\"Hong Kong\\\",\\\"value\\\":\\\"HK\\\"},{\\\"label\\\":\\\"Hungary\\\",\\\"value\\\":\\\"HU\\\"},{\\\"label\\\":\\\"Iceland\\\",\\\"value\\\":\\\"IS\\\"},{\\\"label\\\":\\\"India\\\",\\\"value\\\":\\\"IN\\\"},{\\\"label\\\":\\\"Indonesia\\\",\\\"value\\\":\\\"ID\\\"},{\\\"label\\\":\\\"Iran\\\",\\\"value\\\":\\\"IR\\\"},{\\\"label\\\":\\\"Iraq\\\",\\\"value\\\":\\\"IQ\\\"},{\\\"label\\\":\\\"Ireland\\\",\\\"value\\\":\\\"IE\\\"},{\\\"label\\\":\\\"Isle Of Man\\\",\\\"value\\\":\\\"IM\\\"},{\\\"label\\\":\\\"Israel\\\",\\\"value\\\":\\\"IL\\\"},{\\\"label\\\":\\\"Italy\\\",\\\"value\\\":\\\"IT\\\"},{\\\"label\\\":\\\"Jamaica\\\",\\\"value\\\":\\\"JM\\\"},{\\\"label\\\":\\\"Japan\\\",\\\"value\\\":\\\"JP\\\"},{\\\"label\\\":\\\"Jersey\\\",\\\"value\\\":\\\"JE\\\"},{\\\"label\\\":\\\"Jordan\\\",\\\"value\\\":\\\"JO\\\"},{\\\"label\\\":\\\"Kazakhstan\\\",\\\"value\\\":\\\"KZ\\\"},{\\\"label\\\":\\\"Kenya\\\",\\\"value\\\":\\\"KE\\\"},{\\\"label\\\":\\\"Kiribati\\\",\\\"value\\\":\\\"KI\\\"},{\\\"label\\\":\\\"Kuwait\\\",\\\"value\\\":\\\"KW\\\"},{\\\"label\\\":\\\"Kyrgyzstan\\\",\\\"value\\\":\\\"KG\\\"},{\\\"label\\\":\\\"Laos\\\",\\\"value\\\":\\\"LA\\\"},{\\\"label\\\":\\\"Latvia\\\",\\\"value\\\":\\\"LV\\\"},{\\\"label\\\":\\\"Lebanon\\\",\\\"value\\\":\\\"LB\\\"},{\\\"label\\\":\\\"Lesotho\\\",\\\"value\\\":\\\"LS\\\"},{\\\"label\\\":\\\"Liberia\\\",\\\"value\\\":\\\"LR\\\"},{\\\"label\\\":\\\"Libya\\\",\\\"value\\\":\\\"LY\\\"},{\\\"label\\\":\\\"Liechtenstein\\\",\\\"value\\\":\\\"LI\\\"},{\\\"label\\\":\\\"Lithuania\\\",\\\"value\\\":\\\"LT\\\"},{\\\"label\\\":\\\"Luxembourg\\\",\\\"value\\\":\\\"LU\\\"},{\\\"label\\\":\\\"Macao\\\",\\\"value\\\":\\\"MO\\\"},{\\\"label\\\":\\\"Macedonia\\\",\\\"value\\\":\\\"MK\\\"},{\\\"label\\\":\\\"Madagascar\\\",\\\"value\\\":\\\"MG\\\"},{\\\"label\\\":\\\"Malawi\\\",\\\"value\\\":\\\"MW\\\"},{\\\"label\\\":\\\"Malaysia\\\",\\\"value\\\":\\\"MY\\\"},{\\\"label\\\":\\\"Maldives\\\",\\\"value\\\":\\\"MV\\\"},{\\\"label\\\":\\\"Mali\\\",\\\"value\\\":\\\"ML\\\"},{\\\"label\\\":\\\"Malta\\\",\\\"value\\\":\\\"MT\\\"},{\\\"label\\\":\\\"Marshall Islands\\\",\\\"value\\\":\\\"MH\\\"},{\\\"label\\\":\\\"Martinique\\\",\\\"value\\\":\\\"MQ\\\"},{\\\"label\\\":\\\"Mauritania\\\",\\\"value\\\":\\\"MR\\\"},{\\\"label\\\":\\\"Mauritius\\\",\\\"value\\\":\\\"MU\\\"},{\\\"label\\\":\\\"Mayotte\\\",\\\"value\\\":\\\"YT\\\"},{\\\"label\\\":\\\"Mexico\\\",\\\"value\\\":\\\"MX\\\"},{\\\"label\\\":\\\"Micronesia\\\",\\\"value\\\":\\\"FM\\\"},{\\\"label\\\":\\\"Moldova\\\",\\\"value\\\":\\\"MD\\\"},{\\\"label\\\":\\\"Monaco\\\",\\\"value\\\":\\\"MC\\\"},{\\\"label\\\":\\\"Mongolia\\\",\\\"value\\\":\\\"MN\\\"},{\\\"label\\\":\\\"Montenegro\\\",\\\"value\\\":\\\"ME\\\"},{\\\"label\\\":\\\"Montserrat\\\",\\\"value\\\":\\\"MS\\\"},{\\\"label\\\":\\\"Morocco\\\",\\\"value\\\":\\\"MA\\\"},{\\\"label\\\":\\\"Mozambique\\\",\\\"value\\\":\\\"MZ\\\"},{\\\"label\\\":\\\"Myanmar\\\",\\\"value\\\":\\\"MM\\\"},{\\\"label\\\":\\\"Namibia\\\",\\\"value\\\":\\\"NA\\\"},{\\\"label\\\":\\\"Nauru\\\",\\\"value\\\":\\\"NR\\\"},{\\\"label\\\":\\\"Nepal\\\",\\\"value\\\":\\\"NP\\\"},{\\\"label\\\":\\\"Netherlands\\\",\\\"value\\\":\\\"NL\\\"},{\\\"label\\\":\\\"Netherlands Antilles\\\",\\\"value\\\":\\\"AN\\\"},{\\\"label\\\":\\\"New Caledonia\\\",\\\"value\\\":\\\"NC\\\"},{\\\"label\\\":\\\"New Zealand\\\",\\\"value\\\":\\\"NZ\\\"},{\\\"label\\\":\\\"Nicaragua\\\",\\\"value\\\":\\\"NI\\\"},{\\\"label\\\":\\\"Niger\\\",\\\"value\\\":\\\"NE\\\"},{\\\"label\\\":\\\"Nigeria\\\",\\\"value\\\":\\\"NG\\\"},{\\\"label\\\":\\\"Niue\\\",\\\"value\\\":\\\"NU\\\"},{\\\"label\\\":\\\"Norfolk Island\\\",\\\"value\\\":\\\"NF\\\"},{\\\"label\\\":\\\"North Korea\\\",\\\"value\\\":\\\"KP\\\"},{\\\"label\\\":\\\"Northern Mariana Islands\\\",\\\"value\\\":\\\"MP\\\"},{\\\"label\\\":\\\"Norway\\\",\\\"value\\\":\\\"NO\\\"},{\\\"label\\\":\\\"Oman\\\",\\\"value\\\":\\\"OM\\\"},{\\\"label\\\":\\\"Pakistan\\\",\\\"value\\\":\\\"PK\\\"},{\\\"label\\\":\\\"Palau\\\",\\\"value\\\":\\\"PW\\\"},{\\\"label\\\":\\\"Palestine\\\",\\\"value\\\":\\\"PS\\\"},{\\\"label\\\":\\\"Panama\\\",\\\"value\\\":\\\"PA\\\"},{\\\"label\\\":\\\"Papua New Guinea\\\",\\\"value\\\":\\\"PG\\\"},{\\\"label\\\":\\\"Paraguay\\\",\\\"value\\\":\\\"PY\\\"},{\\\"label\\\":\\\"Peru\\\",\\\"value\\\":\\\"PE\\\"},{\\\"label\\\":\\\"Philippines\\\",\\\"value\\\":\\\"PH\\\"},{\\\"label\\\":\\\"Pitcairn\\\",\\\"value\\\":\\\"PN\\\"},{\\\"label\\\":\\\"Poland\\\",\\\"value\\\":\\\"PL\\\"},{\\\"label\\\":\\\"Portugal\\\",\\\"value\\\":\\\"PT\\\"},{\\\"label\\\":\\\"Puerto Rico\\\",\\\"value\\\":\\\"PR\\\"},{\\\"label\\\":\\\"Qatar\\\",\\\"value\\\":\\\"QA\\\"},{\\\"label\\\":\\\"Reunion\\\",\\\"value\\\":\\\"RE\\\"},{\\\"label\\\":\\\"Romania\\\",\\\"value\\\":\\\"RO\\\"},{\\\"label\\\":\\\"Russia\\\",\\\"value\\\":\\\"RU\\\"},{\\\"label\\\":\\\"Rwanda\\\",\\\"value\\\":\\\"RW\\\"},{\\\"label\\\":\\\"Saint Barthélemy\\\",\\\"value\\\":\\\"BL\\\"},{\\\"label\\\":\\\"Saint Helena\\\",\\\"value\\\":\\\"SH\\\"},{\\\"label\\\":\\\"Saint Kitts And Nevis\\\",\\\"value\\\":\\\"KN\\\"},{\\\"label\\\":\\\"Saint Lucia\\\",\\\"value\\\":\\\"LC\\\"},{\\\"label\\\":\\\"Saint Martin\\\",\\\"value\\\":\\\"MF\\\"},{\\\"label\\\":\\\"Saint Pierre And Miquelon\\\",\\\"value\\\":\\\"PM\\\"},{\\\"label\\\":\\\"Saint Vincent And The Grenadines\\\",\\\"value\\\":\\\"VC\\\"},{\\\"label\\\":\\\"Samoa\\\",\\\"value\\\":\\\"WS\\\"},{\\\"label\\\":\\\"San Marino\\\",\\\"value\\\":\\\"SM\\\"},{\\\"label\\\":\\\"Sao Tome And Principe\\\",\\\"value\\\":\\\"ST\\\"},{\\\"label\\\":\\\"Saudi Arabia\\\",\\\"value\\\":\\\"SA\\\"},{\\\"label\\\":\\\"Senegal\\\",\\\"value\\\":\\\"SN\\\"},{\\\"label\\\":\\\"Serbia\\\",\\\"value\\\":\\\"RS\\\"},{\\\"label\\\":\\\"Seychelles\\\",\\\"value\\\":\\\"SC\\\"},{\\\"label\\\":\\\"Sierra Leone\\\",\\\"value\\\":\\\"SL\\\"},{\\\"label\\\":\\\"Singapore\\\",\\\"value\\\":\\\"SG\\\"},{\\\"label\\\":\\\"Sint Maarten (Dutch part)\\\",\\\"value\\\":\\\"SX\\\"},{\\\"label\\\":\\\"Slovakia\\\",\\\"value\\\":\\\"SK\\\"},{\\\"label\\\":\\\"Slovenia\\\",\\\"value\\\":\\\"SI\\\"},{\\\"label\\\":\\\"Solomon Islands\\\",\\\"value\\\":\\\"SB\\\"},{\\\"label\\\":\\\"Somalia\\\",\\\"value\\\":\\\"SO\\\"},{\\\"label\\\":\\\"South Africa\\\",\\\"value\\\":\\\"ZA\\\"},{\\\"label\\\":\\\"South Georgia And The South Sandwich Islands\\\",\\\"value\\\":\\\"GS\\\"},{\\\"label\\\":\\\"South Korea\\\",\\\"value\\\":\\\"KR\\\"},{\\\"label\\\":\\\"South Sudan\\\",\\\"value\\\":\\\"SS\\\"},{\\\"label\\\":\\\"Spain\\\",\\\"value\\\":\\\"ES\\\"},{\\\"label\\\":\\\"Sri Lanka\\\",\\\"value\\\":\\\"LK\\\"},{\\\"label\\\":\\\"Sudan\\\",\\\"value\\\":\\\"SD\\\"},{\\\"label\\\":\\\"Suriname\\\",\\\"value\\\":\\\"SR\\\"},{\\\"label\\\":\\\"Svalbard And Jan Mayen\\\",\\\"value\\\":\\\"SJ\\\"},{\\\"label\\\":\\\"Swaziland\\\",\\\"value\\\":\\\"SZ\\\"},{\\\"label\\\":\\\"Sweden\\\",\\\"value\\\":\\\"SE\\\"},{\\\"label\\\":\\\"Switzerland\\\",\\\"value\\\":\\\"CH\\\"},{\\\"label\\\":\\\"Syria\\\",\\\"value\\\":\\\"SY\\\"},{\\\"label\\\":\\\"Taiwan\\\",\\\"value\\\":\\\"TW\\\"},{\\\"label\\\":\\\"Tajikistan\\\",\\\"value\\\":\\\"TJ\\\"},{\\\"label\\\":\\\"Tanzania\\\",\\\"value\\\":\\\"TZ\\\"},{\\\"label\\\":\\\"Thailand\\\",\\\"value\\\":\\\"TH\\\"},{\\\"label\\\":\\\"The Democratic Republic Of Congo\\\",\\\"value\\\":\\\"CD\\\"},{\\\"label\\\":\\\"Timor-Leste\\\",\\\"value\\\":\\\"TL\\\"},{\\\"label\\\":\\\"Togo\\\",\\\"value\\\":\\\"TG\\\"},{\\\"label\\\":\\\"Tokelau\\\",\\\"value\\\":\\\"TK\\\"},{\\\"label\\\":\\\"Tonga\\\",\\\"value\\\":\\\"TO\\\"},{\\\"label\\\":\\\"Trinidad and Tobago\\\",\\\"value\\\":\\\"TT\\\"},{\\\"label\\\":\\\"Tunisia\\\",\\\"value\\\":\\\"TN\\\"},{\\\"label\\\":\\\"Turkey\\\",\\\"value\\\":\\\"TR\\\"},{\\\"label\\\":\\\"Turkmenistan\\\",\\\"value\\\":\\\"TM\\\"},{\\\"label\\\":\\\"Turks And Caicos Islands\\\",\\\"value\\\":\\\"TC\\\"},{\\\"label\\\":\\\"Tuvalu\\\",\\\"value\\\":\\\"TV\\\"},{\\\"label\\\":\\\"U.S. Virgin Islands\\\",\\\"value\\\":\\\"VI\\\"},{\\\"label\\\":\\\"Uganda\\\",\\\"value\\\":\\\"UG\\\"},{\\\"label\\\":\\\"Ukraine\\\",\\\"value\\\":\\\"UA\\\"},{\\\"label\\\":\\\"United Arab Emirates\\\",\\\"value\\\":\\\"AE\\\"},{\\\"label\\\":\\\"United Kingdom\\\",\\\"value\\\":\\\"GB\\\"},{\\\"label\\\":\\\"United States\\\",\\\"value\\\":\\\"US\\\"},{\\\"label\\\":\\\"United States Minor Outlying Islands\\\",\\\"value\\\":\\\"UM\\\"},{\\\"label\\\":\\\"Uruguay\\\",\\\"value\\\":\\\"UY\\\"},{\\\"label\\\":\\\"Uzbekistan\\\",\\\"value\\\":\\\"UZ\\\"},{\\\"label\\\":\\\"Vanuatu\\\",\\\"value\\\":\\\"VU\\\"},{\\\"label\\\":\\\"Vatican\\\",\\\"value\\\":\\\"VA\\\"},{\\\"label\\\":\\\"Venezuela\\\",\\\"value\\\":\\\"VE\\\"},{\\\"label\\\":\\\"Vietnam\\\",\\\"value\\\":\\\"VN\\\"},{\\\"label\\\":\\\"Wallis And Futuna\\\",\\\"value\\\":\\\"WF\\\"},{\\\"label\\\":\\\"Western Sahara\\\",\\\"value\\\":\\\"EH\\\"},{\\\"label\\\":\\\"Yemen\\\",\\\"value\\\":\\\"YE\\\"},{\\\"label\\\":\\\"Zambia\\\",\\\"value\\\":\\\"ZM\\\"},{\\\"label\\\":\\\"Zimbabwe\\\",\\\"value\\\":\\\"ZW\\\"},{\\\"label\\\":\\\"Åland Islands\\\",\\\"value\\\":\\\"AX\\\"}],\\\"answerValue\\\":null,\\\"isAnswered\\\":false},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"b2d634c4-2fc1-4a9d-b167-331469acf484\\\",\\\"label\\\":\\\"Please provide us the name of Hotel inside Kathmandu city for pick up and drop off service.  \\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"LONG_TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":null,\\\"isAnswered\\\":false},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"968c3d18-2fd5-483f-8d1a-3ad1b9e7a661\\\",\\\"label\\\":\\\"Would you like to go for Elephant back safari or canoe ride?\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":null,\\\"isAnswered\\\":false},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"b73103b2-4a79-4802-a218-b199723483f4\\\",\\\"label\\\":\\\"Room number\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":null,\\\"isAnswered\\\":false},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"f04ca5e5-125c-4510-912b-2e8eccd44481\\\",\\\"label\\\":\\\"Which airline?\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":null,\\\"isAnswered\\\":false},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"1264c45e-4545-4af4-b20a-ab9ce8f234c4\\\",\\\"label\\\":\\\"Which terminal?\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":null,\\\"isAnswered\\\":false},{\\\"properties\\\":\\\"bookingPersonQuestions\\\",\\\"id\\\":\\\"76f0e6aa-9ad7-472c-b923-e77b85efc1a8\\\",\\\"label\\\":\\\"First name\\\",\\\"pricingCategoryId\\\":\\\"1c9133b5-6c81-4279-bc87-4c1e5a0fd514\\\",\\\"pricingCategoryLabel\\\":\\\"Adult\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":null,\\\"isAnswered\\\":false},{\\\"properties\\\":\\\"bookingPersonQuestions\\\",\\\"id\\\":\\\"5477c88a-f3cb-4cd0-b5ba-3ae75316adc4\\\",\\\"label\\\":\\\"Last name\\\",\\\"pricingCategoryId\\\":\\\"1c9133b5-6c81-4279-bc87-4c1e5a0fd514\\\",\\\"pricingCategoryLabel\\\":\\\"Adult\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":null,\\\"isAnswered\\\":false},{\\\"properties\\\":\\\"bookingPersonQuestions\\\",\\\"id\\\":\\\"605f767e-a704-4f70-8e29-870e4e1fc141\\\",\\\"label\\\":\\\"Gender\\\",\\\"pricingCategoryId\\\":\\\"1c9133b5-6c81-4279-bc87-4c1e5a0fd514\\\",\\\"pricingCategoryLabel\\\":\\\"Adult\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"OPTIONS\\\",\\\"availableOptions\\\":[{\\\"label\\\":\\\"Female\\\",\\\"value\\\":\\\"f\\\"},{\\\"label\\\":\\\"Male\\\",\\\"value\\\":\\\"m\\\"}],\\\"answerValue\\\":null,\\\"isAnswered\\\":false},{\\\"properties\\\":\\\"bookingPersonQuestions\\\",\\\"id\\\":\\\"5c87ba38-a803-4db5-ae30-a7a9941d2ee3\\\",\\\"label\\\":\\\"Nationality\\\",\\\"pricingCategoryId\\\":\\\"1c9133b5-6c81-4279-bc87-4c1e5a0fd514\\\",\\\"pricingCategoryLabel\\\":\\\"Adult\\\",\\\"dataFormat\\\":\\\"COUNTRY\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"availableOptions\\\":[{\\\"label\\\":\\\"Afghanistan\\\",\\\"value\\\":\\\"AF\\\"},{\\\"label\\\":\\\"Albania\\\",\\\"value\\\":\\\"AL\\\"},{\\\"label\\\":\\\"Algeria\\\",\\\"value\\\":\\\"DZ\\\"},{\\\"label\\\":\\\"American Samoa\\\",\\\"value\\\":\\\"AS\\\"},{\\\"label\\\":\\\"Andorra\\\",\\\"value\\\":\\\"AD\\\"},{\\\"label\\\":\\\"Angola\\\",\\\"value\\\":\\\"AO\\\"},{\\\"label\\\":\\\"Anguilla\\\",\\\"value\\\":\\\"AI\\\"},{\\\"label\\\":\\\"Antarctica\\\",\\\"value\\\":\\\"AQ\\\"},{\\\"label\\\":\\\"Antigua and Barbuda\\\",\\\"value\\\":\\\"AG\\\"},{\\\"label\\\":\\\"Argentina\\\",\\\"value\\\":\\\"AR\\\"},{\\\"label\\\":\\\"Armenia\\\",\\\"value\\\":\\\"AM\\\"},{\\\"label\\\":\\\"Aruba\\\",\\\"value\\\":\\\"AW\\\"},{\\\"label\\\":\\\"Australia\\\",\\\"value\\\":\\\"AU\\\"},{\\\"label\\\":\\\"Austria\\\",\\\"value\\\":\\\"AT\\\"},{\\\"label\\\":\\\"Azerbaijan\\\",\\\"value\\\":\\\"AZ\\\"},{\\\"label\\\":\\\"Bahamas\\\",\\\"value\\\":\\\"BS\\\"},{\\\"label\\\":\\\"Bahrain\\\",\\\"value\\\":\\\"BH\\\"},{\\\"label\\\":\\\"Bangladesh\\\",\\\"value\\\":\\\"BD\\\"},{\\\"label\\\":\\\"Barbados\\\",\\\"value\\\":\\\"BB\\\"},{\\\"label\\\":\\\"Belarus\\\",\\\"value\\\":\\\"BY\\\"},{\\\"label\\\":\\\"Belgium\\\",\\\"value\\\":\\\"BE\\\"},{\\\"label\\\":\\\"Belize\\\",\\\"value\\\":\\\"BZ\\\"},{\\\"label\\\":\\\"Benin\\\",\\\"value\\\":\\\"BJ\\\"},{\\\"label\\\":\\\"Bermuda\\\",\\\"value\\\":\\\"BM\\\"},{\\\"label\\\":\\\"Bhutan\\\",\\\"value\\\":\\\"BT\\\"},{\\\"label\\\":\\\"Bolivia\\\",\\\"value\\\":\\\"BO\\\"},{\\\"label\\\":\\\"Bonaire, Sint Eustatius and Saba\\\",\\\"value\\\":\\\"BQ\\\"},{\\\"label\\\":\\\"Bosnia and Herzegovina\\\",\\\"value\\\":\\\"BA\\\"},{\\\"label\\\":\\\"Botswana\\\",\\\"value\\\":\\\"BW\\\"},{\\\"label\\\":\\\"Bouvet Island\\\",\\\"value\\\":\\\"BV\\\"},{\\\"label\\\":\\\"Brazil\\\",\\\"value\\\":\\\"BR\\\"},{\\\"label\\\":\\\"British Indian Ocean Territory\\\",\\\"value\\\":\\\"IO\\\"},{\\\"label\\\":\\\"British Virgin Islands\\\",\\\"value\\\":\\\"VG\\\"},{\\\"label\\\":\\\"Brunei\\\",\\\"value\\\":\\\"BN\\\"},{\\\"label\\\":\\\"Bulgaria\\\",\\\"value\\\":\\\"BG\\\"},{\\\"label\\\":\\\"Burkina Faso\\\",\\\"value\\\":\\\"BF\\\"},{\\\"label\\\":\\\"Burundi\\\",\\\"value\\\":\\\"BI\\\"},{\\\"label\\\":\\\"Cambodia\\\",\\\"value\\\":\\\"KH\\\"},{\\\"label\\\":\\\"Cameroon\\\",\\\"value\\\":\\\"CM\\\"},{\\\"label\\\":\\\"Canada\\\",\\\"value\\\":\\\"CA\\\"},{\\\"label\\\":\\\"Cape Verde\\\",\\\"value\\\":\\\"CV\\\"},{\\\"label\\\":\\\"Cayman Islands\\\",\\\"value\\\":\\\"KY\\\"},{\\\"label\\\":\\\"Central African Republic\\\",\\\"value\\\":\\\"CF\\\"},{\\\"label\\\":\\\"Chad\\\",\\\"value\\\":\\\"TD\\\"},{\\\"label\\\":\\\"Chile\\\",\\\"value\\\":\\\"CL\\\"},{\\\"label\\\":\\\"China\\\",\\\"value\\\":\\\"CN\\\"},{\\\"label\\\":\\\"Christmas Island\\\",\\\"value\\\":\\\"CX\\\"},{\\\"label\\\":\\\"Cocos Islands\\\",\\\"value\\\":\\\"CC\\\"},{\\\"label\\\":\\\"Colombia\\\",\\\"value\\\":\\\"CO\\\"},{\\\"label\\\":\\\"Comoros\\\",\\\"value\\\":\\\"KM\\\"},{\\\"label\\\":\\\"Congo\\\",\\\"value\\\":\\\"CG\\\"},{\\\"label\\\":\\\"Cook Islands\\\",\\\"value\\\":\\\"CK\\\"},{\\\"label\\\":\\\"Costa Rica\\\",\\\"value\\\":\\\"CR\\\"},{\\\"label\\\":\\\"Croatia\\\",\\\"value\\\":\\\"HR\\\"},{\\\"label\\\":\\\"Cuba\\\",\\\"value\\\":\\\"CU\\\"},{\\\"label\\\":\\\"Curaçao\\\",\\\"value\\\":\\\"CW\\\"},{\\\"label\\\":\\\"Cyprus\\\",\\\"value\\\":\\\"CY\\\"},{\\\"label\\\":\\\"Czech Republic\\\",\\\"value\\\":\\\"CZ\\\"},{\\\"label\\\":\\\"Côte d'Ivoire\\\",\\\"value\\\":\\\"CI\\\"},{\\\"label\\\":\\\"Denmark\\\",\\\"value\\\":\\\"DK\\\"},{\\\"label\\\":\\\"Djibouti\\\",\\\"value\\\":\\\"DJ\\\"},{\\\"label\\\":\\\"Dominica\\\",\\\"value\\\":\\\"DM\\\"},{\\\"label\\\":\\\"Dominican Republic\\\",\\\"value\\\":\\\"DO\\\"},{\\\"label\\\":\\\"Ecuador\\\",\\\"value\\\":\\\"EC\\\"},{\\\"label\\\":\\\"Egypt\\\",\\\"value\\\":\\\"EG\\\"},{\\\"label\\\":\\\"El Salvador\\\",\\\"value\\\":\\\"SV\\\"},{\\\"label\\\":\\\"Equatorial Guinea\\\",\\\"value\\\":\\\"GQ\\\"},{\\\"label\\\":\\\"Eritrea\\\",\\\"value\\\":\\\"ER\\\"},{\\\"label\\\":\\\"Estonia\\\",\\\"value\\\":\\\"EE\\\"},{\\\"label\\\":\\\"Ethiopia\\\",\\\"value\\\":\\\"ET\\\"},{\\\"label\\\":\\\"Falkland Islands\\\",\\\"value\\\":\\\"FK\\\"},{\\\"label\\\":\\\"Faroe Islands\\\",\\\"value\\\":\\\"FO\\\"},{\\\"label\\\":\\\"Fiji\\\",\\\"value\\\":\\\"FJ\\\"},{\\\"label\\\":\\\"Finland\\\",\\\"value\\\":\\\"FI\\\"},{\\\"label\\\":\\\"France\\\",\\\"value\\\":\\\"FR\\\"},{\\\"label\\\":\\\"French Guiana\\\",\\\"value\\\":\\\"GF\\\"},{\\\"label\\\":\\\"French Polynesia\\\",\\\"value\\\":\\\"PF\\\"},{\\\"label\\\":\\\"French Southern Territories\\\",\\\"value\\\":\\\"TF\\\"},{\\\"label\\\":\\\"Gabon\\\",\\\"value\\\":\\\"GA\\\"},{\\\"label\\\":\\\"Gambia\\\",\\\"value\\\":\\\"GM\\\"},{\\\"label\\\":\\\"Georgia\\\",\\\"value\\\":\\\"GE\\\"},{\\\"label\\\":\\\"Germany\\\",\\\"value\\\":\\\"DE\\\"},{\\\"label\\\":\\\"Ghana\\\",\\\"value\\\":\\\"GH\\\"},{\\\"label\\\":\\\"Gibraltar\\\",\\\"value\\\":\\\"GI\\\"},{\\\"label\\\":\\\"Greece\\\",\\\"value\\\":\\\"GR\\\"},{\\\"label\\\":\\\"Greenland\\\",\\\"value\\\":\\\"GL\\\"},{\\\"label\\\":\\\"Grenada\\\",\\\"value\\\":\\\"GD\\\"},{\\\"label\\\":\\\"Guadeloupe\\\",\\\"value\\\":\\\"GP\\\"},{\\\"label\\\":\\\"Guam\\\",\\\"value\\\":\\\"GU\\\"},{\\\"label\\\":\\\"Guatemala\\\",\\\"value\\\":\\\"GT\\\"},{\\\"label\\\":\\\"Guernsey\\\",\\\"value\\\":\\\"GG\\\"},{\\\"label\\\":\\\"Guinea\\\",\\\"value\\\":\\\"GN\\\"},{\\\"label\\\":\\\"Guinea-Bissau\\\",\\\"value\\\":\\\"GW\\\"},{\\\"label\\\":\\\"Guyana\\\",\\\"value\\\":\\\"GY\\\"},{\\\"label\\\":\\\"Haiti\\\",\\\"value\\\":\\\"HT\\\"},{\\\"label\\\":\\\"Heard Island And McDonald Islands\\\",\\\"value\\\":\\\"HM\\\"},{\\\"label\\\":\\\"Honduras\\\",\\\"value\\\":\\\"HN\\\"},{\\\"label\\\":\\\"Hong Kong\\\",\\\"value\\\":\\\"HK\\\"},{\\\"label\\\":\\\"Hungary\\\",\\\"value\\\":\\\"HU\\\"},{\\\"label\\\":\\\"Iceland\\\",\\\"value\\\":\\\"IS\\\"},{\\\"label\\\":\\\"India\\\",\\\"value\\\":\\\"IN\\\"},{\\\"label\\\":\\\"Indonesia\\\",\\\"value\\\":\\\"ID\\\"},{\\\"label\\\":\\\"Iran\\\",\\\"value\\\":\\\"IR\\\"},{\\\"label\\\":\\\"Iraq\\\",\\\"value\\\":\\\"IQ\\\"},{\\\"label\\\":\\\"Ireland\\\",\\\"value\\\":\\\"IE\\\"},{\\\"label\\\":\\\"Isle Of Man\\\",\\\"value\\\":\\\"IM\\\"},{\\\"label\\\":\\\"Israel\\\",\\\"value\\\":\\\"IL\\\"},{\\\"label\\\":\\\"Italy\\\",\\\"value\\\":\\\"IT\\\"},{\\\"label\\\":\\\"Jamaica\\\",\\\"value\\\":\\\"JM\\\"},{\\\"label\\\":\\\"Japan\\\",\\\"value\\\":\\\"JP\\\"},{\\\"label\\\":\\\"Jersey\\\",\\\"value\\\":\\\"JE\\\"},{\\\"label\\\":\\\"Jordan\\\",\\\"value\\\":\\\"JO\\\"},{\\\"label\\\":\\\"Kazakhstan\\\",\\\"value\\\":\\\"KZ\\\"},{\\\"label\\\":\\\"Kenya\\\",\\\"value\\\":\\\"KE\\\"},{\\\"label\\\":\\\"Kiribati\\\",\\\"value\\\":\\\"KI\\\"},{\\\"label\\\":\\\"Kuwait\\\",\\\"value\\\":\\\"KW\\\"},{\\\"label\\\":\\\"Kyrgyzstan\\\",\\\"value\\\":\\\"KG\\\"},{\\\"label\\\":\\\"Laos\\\",\\\"value\\\":\\\"LA\\\"},{\\\"label\\\":\\\"Latvia\\\",\\\"value\\\":\\\"LV\\\"},{\\\"label\\\":\\\"Lebanon\\\",\\\"value\\\":\\\"LB\\\"},{\\\"label\\\":\\\"Lesotho\\\",\\\"value\\\":\\\"LS\\\"},{\\\"label\\\":\\\"Liberia\\\",\\\"value\\\":\\\"LR\\\"},{\\\"label\\\":\\\"Libya\\\",\\\"value\\\":\\\"LY\\\"},{\\\"label\\\":\\\"Liechtenstein\\\",\\\"value\\\":\\\"LI\\\"},{\\\"label\\\":\\\"Lithuania\\\",\\\"value\\\":\\\"LT\\\"},{\\\"label\\\":\\\"Luxembourg\\\",\\\"value\\\":\\\"LU\\\"},{\\\"label\\\":\\\"Macao\\\",\\\"value\\\":\\\"MO\\\"},{\\\"label\\\":\\\"Macedonia\\\",\\\"value\\\":\\\"MK\\\"},{\\\"label\\\":\\\"Madagascar\\\",\\\"value\\\":\\\"MG\\\"},{\\\"label\\\":\\\"Malawi\\\",\\\"value\\\":\\\"MW\\\"},{\\\"label\\\":\\\"Malaysia\\\",\\\"value\\\":\\\"MY\\\"},{\\\"label\\\":\\\"Maldives\\\",\\\"value\\\":\\\"MV\\\"},{\\\"label\\\":\\\"Mali\\\",\\\"value\\\":\\\"ML\\\"},{\\\"label\\\":\\\"Malta\\\",\\\"value\\\":\\\"MT\\\"},{\\\"label\\\":\\\"Marshall Islands\\\",\\\"value\\\":\\\"MH\\\"},{\\\"label\\\":\\\"Martinique\\\",\\\"value\\\":\\\"MQ\\\"},{\\\"label\\\":\\\"Mauritania\\\",\\\"value\\\":\\\"MR\\\"},{\\\"label\\\":\\\"Mauritius\\\",\\\"value\\\":\\\"MU\\\"},{\\\"label\\\":\\\"Mayotte\\\",\\\"value\\\":\\\"YT\\\"},{\\\"label\\\":\\\"Mexico\\\",\\\"value\\\":\\\"MX\\\"},{\\\"label\\\":\\\"Micronesia\\\",\\\"value\\\":\\\"FM\\\"},{\\\"label\\\":\\\"Moldova\\\",\\\"value\\\":\\\"MD\\\"},{\\\"label\\\":\\\"Monaco\\\",\\\"value\\\":\\\"MC\\\"},{\\\"label\\\":\\\"Mongolia\\\",\\\"value\\\":\\\"MN\\\"},{\\\"label\\\":\\\"Montenegro\\\",\\\"value\\\":\\\"ME\\\"},{\\\"label\\\":\\\"Montserrat\\\",\\\"value\\\":\\\"MS\\\"},{\\\"label\\\":\\\"Morocco\\\",\\\"value\\\":\\\"MA\\\"},{\\\"label\\\":\\\"Mozambique\\\",\\\"value\\\":\\\"MZ\\\"},{\\\"label\\\":\\\"Myanmar\\\",\\\"value\\\":\\\"MM\\\"},{\\\"label\\\":\\\"Namibia\\\",\\\"value\\\":\\\"NA\\\"},{\\\"label\\\":\\\"Nauru\\\",\\\"value\\\":\\\"NR\\\"},{\\\"label\\\":\\\"Nepal\\\",\\\"value\\\":\\\"NP\\\"},{\\\"label\\\":\\\"Netherlands\\\",\\\"value\\\":\\\"NL\\\"},{\\\"label\\\":\\\"Netherlands Antilles\\\",\\\"value\\\":\\\"AN\\\"},{\\\"label\\\":\\\"New Caledonia\\\",\\\"value\\\":\\\"NC\\\"},{\\\"label\\\":\\\"New Zealand\\\",\\\"value\\\":\\\"NZ\\\"},{\\\"label\\\":\\\"Nicaragua\\\",\\\"value\\\":\\\"NI\\\"},{\\\"label\\\":\\\"Niger\\\",\\\"value\\\":\\\"NE\\\"},{\\\"label\\\":\\\"Nigeria\\\",\\\"value\\\":\\\"NG\\\"},{\\\"label\\\":\\\"Niue\\\",\\\"value\\\":\\\"NU\\\"},{\\\"label\\\":\\\"Norfolk Island\\\",\\\"value\\\":\\\"NF\\\"},{\\\"label\\\":\\\"North Korea\\\",\\\"value\\\":\\\"KP\\\"},{\\\"label\\\":\\\"Northern Mariana Islands\\\",\\\"value\\\":\\\"MP\\\"},{\\\"label\\\":\\\"Norway\\\",\\\"value\\\":\\\"NO\\\"},{\\\"label\\\":\\\"Oman\\\",\\\"value\\\":\\\"OM\\\"},{\\\"label\\\":\\\"Pakistan\\\",\\\"value\\\":\\\"PK\\\"},{\\\"label\\\":\\\"Palau\\\",\\\"value\\\":\\\"PW\\\"},{\\\"label\\\":\\\"Palestine\\\",\\\"value\\\":\\\"PS\\\"},{\\\"label\\\":\\\"Panama\\\",\\\"value\\\":\\\"PA\\\"},{\\\"label\\\":\\\"Papua New Guinea\\\",\\\"value\\\":\\\"PG\\\"},{\\\"label\\\":\\\"Paraguay\\\",\\\"value\\\":\\\"PY\\\"},{\\\"label\\\":\\\"Peru\\\",\\\"value\\\":\\\"PE\\\"},{\\\"label\\\":\\\"Philippines\\\",\\\"value\\\":\\\"PH\\\"},{\\\"label\\\":\\\"Pitcairn\\\",\\\"value\\\":\\\"PN\\\"},{\\\"label\\\":\\\"Poland\\\",\\\"value\\\":\\\"PL\\\"},{\\\"label\\\":\\\"Portugal\\\",\\\"value\\\":\\\"PT\\\"},{\\\"label\\\":\\\"Puerto Rico\\\",\\\"value\\\":\\\"PR\\\"},{\\\"label\\\":\\\"Qatar\\\",\\\"value\\\":\\\"QA\\\"},{\\\"label\\\":\\\"Reunion\\\",\\\"value\\\":\\\"RE\\\"},{\\\"label\\\":\\\"Romania\\\",\\\"value\\\":\\\"RO\\\"},{\\\"label\\\":\\\"Russia\\\",\\\"value\\\":\\\"RU\\\"},{\\\"label\\\":\\\"Rwanda\\\",\\\"value\\\":\\\"RW\\\"},{\\\"label\\\":\\\"Saint Barthélemy\\\",\\\"value\\\":\\\"BL\\\"},{\\\"label\\\":\\\"Saint Helena\\\",\\\"value\\\":\\\"SH\\\"},{\\\"label\\\":\\\"Saint Kitts And Nevis\\\",\\\"value\\\":\\\"KN\\\"},{\\\"label\\\":\\\"Saint Lucia\\\",\\\"value\\\":\\\"LC\\\"},{\\\"label\\\":\\\"Saint Martin\\\",\\\"value\\\":\\\"MF\\\"},{\\\"label\\\":\\\"Saint Pierre And Miquelon\\\",\\\"value\\\":\\\"PM\\\"},{\\\"label\\\":\\\"Saint Vincent And The Grenadines\\\",\\\"value\\\":\\\"VC\\\"},{\\\"label\\\":\\\"Samoa\\\",\\\"value\\\":\\\"WS\\\"},{\\\"label\\\":\\\"San Marino\\\",\\\"value\\\":\\\"SM\\\"},{\\\"label\\\":\\\"Sao Tome And Principe\\\",\\\"value\\\":\\\"ST\\\"},{\\\"label\\\":\\\"Saudi Arabia\\\",\\\"value\\\":\\\"SA\\\"},{\\\"label\\\":\\\"Senegal\\\",\\\"value\\\":\\\"SN\\\"},{\\\"label\\\":\\\"Serbia\\\",\\\"value\\\":\\\"RS\\\"},{\\\"label\\\":\\\"Seychelles\\\",\\\"value\\\":\\\"SC\\\"},{\\\"label\\\":\\\"Sierra Leone\\\",\\\"value\\\":\\\"SL\\\"},{\\\"label\\\":\\\"Singapore\\\",\\\"value\\\":\\\"SG\\\"},{\\\"label\\\":\\\"Sint Maarten (Dutch part)\\\",\\\"value\\\":\\\"SX\\\"},{\\\"label\\\":\\\"Slovakia\\\",\\\"value\\\":\\\"SK\\\"},{\\\"label\\\":\\\"Slovenia\\\",\\\"value\\\":\\\"SI\\\"},{\\\"label\\\":\\\"Solomon Islands\\\",\\\"value\\\":\\\"SB\\\"},{\\\"label\\\":\\\"Somalia\\\",\\\"value\\\":\\\"SO\\\"},{\\\"label\\\":\\\"South Africa\\\",\\\"value\\\":\\\"ZA\\\"},{\\\"label\\\":\\\"South Georgia And The South Sandwich Islands\\\",\\\"value\\\":\\\"GS\\\"},{\\\"label\\\":\\\"South Korea\\\",\\\"value\\\":\\\"KR\\\"},{\\\"label\\\":\\\"South Sudan\\\",\\\"value\\\":\\\"SS\\\"},{\\\"label\\\":\\\"Spain\\\",\\\"value\\\":\\\"ES\\\"},{\\\"label\\\":\\\"Sri Lanka\\\",\\\"value\\\":\\\"LK\\\"},{\\\"label\\\":\\\"Sudan\\\",\\\"value\\\":\\\"SD\\\"},{\\\"label\\\":\\\"Suriname\\\",\\\"value\\\":\\\"SR\\\"},{\\\"label\\\":\\\"Svalbard And Jan Mayen\\\",\\\"value\\\":\\\"SJ\\\"},{\\\"label\\\":\\\"Swaziland\\\",\\\"value\\\":\\\"SZ\\\"},{\\\"label\\\":\\\"Sweden\\\",\\\"value\\\":\\\"SE\\\"},{\\\"label\\\":\\\"Switzerland\\\",\\\"value\\\":\\\"CH\\\"},{\\\"label\\\":\\\"Syria\\\",\\\"value\\\":\\\"SY\\\"},{\\\"label\\\":\\\"Taiwan\\\",\\\"value\\\":\\\"TW\\\"},{\\\"label\\\":\\\"Tajikistan\\\",\\\"value\\\":\\\"TJ\\\"},{\\\"label\\\":\\\"Tanzania\\\",\\\"value\\\":\\\"TZ\\\"},{\\\"label\\\":\\\"Thailand\\\",\\\"value\\\":\\\"TH\\\"},{\\\"label\\\":\\\"The Democratic Republic Of Congo\\\",\\\"value\\\":\\\"CD\\\"},{\\\"label\\\":\\\"Timor-Leste\\\",\\\"value\\\":\\\"TL\\\"},{\\\"label\\\":\\\"Togo\\\",\\\"value\\\":\\\"TG\\\"},{\\\"label\\\":\\\"Tokelau\\\",\\\"value\\\":\\\"TK\\\"},{\\\"label\\\":\\\"Tonga\\\",\\\"value\\\":\\\"TO\\\"},{\\\"label\\\":\\\"Trinidad and Tobago\\\",\\\"value\\\":\\\"TT\\\"},{\\\"label\\\":\\\"Tunisia\\\",\\\"value\\\":\\\"TN\\\"},{\\\"label\\\":\\\"Turkey\\\",\\\"value\\\":\\\"TR\\\"},{\\\"label\\\":\\\"Turkmenistan\\\",\\\"value\\\":\\\"TM\\\"},{\\\"label\\\":\\\"Turks And Caicos Islands\\\",\\\"value\\\":\\\"TC\\\"},{\\\"label\\\":\\\"Tuvalu\\\",\\\"value\\\":\\\"TV\\\"},{\\\"label\\\":\\\"U.S. Virgin Islands\\\",\\\"value\\\":\\\"VI\\\"},{\\\"label\\\":\\\"Uganda\\\",\\\"value\\\":\\\"UG\\\"},{\\\"label\\\":\\\"Ukraine\\\",\\\"value\\\":\\\"UA\\\"},{\\\"label\\\":\\\"United Arab Emirates\\\",\\\"value\\\":\\\"AE\\\"},{\\\"label\\\":\\\"United Kingdom\\\",\\\"value\\\":\\\"GB\\\"},{\\\"label\\\":\\\"United States\\\",\\\"value\\\":\\\"US\\\"},{\\\"label\\\":\\\"United States Minor Outlying Islands\\\",\\\"value\\\":\\\"UM\\\"},{\\\"label\\\":\\\"Uruguay\\\",\\\"value\\\":\\\"UY\\\"},{\\\"label\\\":\\\"Uzbekistan\\\",\\\"value\\\":\\\"UZ\\\"},{\\\"label\\\":\\\"Vanuatu\\\",\\\"value\\\":\\\"VU\\\"},{\\\"label\\\":\\\"Vatican\\\",\\\"value\\\":\\\"VA\\\"},{\\\"label\\\":\\\"Venezuela\\\",\\\"value\\\":\\\"VE\\\"},{\\\"label\\\":\\\"Vietnam\\\",\\\"value\\\":\\\"VN\\\"},{\\\"label\\\":\\\"Wallis And Futuna\\\",\\\"value\\\":\\\"WF\\\"},{\\\"label\\\":\\\"Western Sahara\\\",\\\"value\\\":\\\"EH\\\"},{\\\"label\\\":\\\"Yemen\\\",\\\"value\\\":\\\"YE\\\"},{\\\"label\\\":\\\"Zambia\\\",\\\"value\\\":\\\"ZM\\\"},{\\\"label\\\":\\\"Zimbabwe\\\",\\\"value\\\":\\\"ZW\\\"},{\\\"label\\\":\\\"Åland Islands\\\",\\\"value\\\":\\\"AX\\\"}],\\\"answerValue\\\":null,\\\"isAnswered\\\":false}]}}\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Input Booking Answer",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('bookId', '33b72e44-2f24-4f85-8843-8f8534f72360')\r",
+							"pm.variables.set('questionId', '5c25a149-c3f1-40b2-baee-ac5d63469f62')\r",
+							"pm.variables.set('questionId1', '815d2446-26ba-467a-8bb3-4d5f19e249b8')\r",
+							"pm.variables.set('questionId2', '8e67fb1d-85aa-4d06-9832-3afd8f12d310')\r",
+							"pm.variables.set('questionId3', 'cd2d4ab7-6ef2-4a66-b366-abcc37b6c845')\r",
+							"pm.variables.set('questionId4', '1066ddef-2154-4d29-935f-ba1213186676')\r",
+							"pm.variables.set('questionId5', '39504a46-34fa-4ff3-a33e-d9b78d5b0101')\r",
+							"pm.variables.set('questionId6', 'b76cfd2c-19f6-48a3-8b38-7c0955338ad5')\r",
+							"pm.variables.set('questionId7', '2fb0d657-e325-406f-9170-ea07336f6acb')\r",
+							"pm.variables.set('questionId8', 'cf2f06f8-d608-47b0-ae51-af66848ffd59')\r",
+							"pm.variables.set('questionId9', 'b5049ac4-d41c-49a5-a9b0-a590deca1391')\r",
+							"pm.variables.set('questionId10', '70eaf826-e11f-4e8b-84fa-c04529a80b64')\r",
+							"pm.variables.set('value', 'Dinda')\r",
+							"pm.variables.set('value1', 'Ragil')\r",
+							"pm.variables.set('value2', 'Test@gmail.com')\r",
+							"pm.variables.set('value3', 'Narita')\r",
+							"pm.variables.set('value4', '+6281770649447')\r",
+							"pm.variables.set('value5', 'Dinda')\r",
+							"pm.variables.set('value6', 'Ragil')\r",
+							"pm.variables.set('value7', '42kg')\r",
+							"pm.variables.set('value8', 'Karina')\r",
+							"pm.variables.set('value9', 'Anggi')\r",
+							"pm.variables.set('value10', '45kg')\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getOrderStatus ( request: \\\"{\\\\\\\"input\\\\\\\":{\\\\\\\"answerList\\\\\\\":[{\\\\\\\"questionId\\\\\\\":\\\\\\\"{{questionId1}}\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"{{value}}\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"{{questionId1}}\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"{{value1}}\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"{{questionId2}}\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"{{value2}}\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"{{questionId3}}\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"{{value3}}\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"{{questionId4}}\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"{{value4}}\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"{{questionId5}}\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"{{value5}}\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"{{questionId6}}\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"{{value6}}\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"{{questionId7}}\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"{{value7}}\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"{{questionId8}}\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"{{value8}}\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"{{question9}}\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"Anggi\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"{{question10}}\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"45kg\\\\\\\"}]},\\\\\\\"bookId\\\\\\\":\\\\\\\"{{bookId}}\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "**Answer all of the questions from Fetch Booking.**\n\nVariable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| questionId | required | string |  | The chosen Availability Id from Get Product Status response. |\n| value | required | string |  | Option List Id, which is obtained from Fetch Availability with Option List response. |\n| bookId | required | string |  | Booking Id, which is obtained from Create Booking response. |\n\nNote:\n\n*   Both for questionId and value fields can be more than one.\n*   You have to make sure that all of the questions have been answered, by checking the response. If all of the questions are already been answered, continue to the **Place Order**."
+			},
+			"response": [
+				{
+					"name": "Input Booking Answer",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\":\"query { getOrderStatus ( request: \\\"{\\\\\\\"input\\\\\\\":{\\\\\\\"answerList\\\\\\\":[{\\\\\\\"questionId\\\\\\\":\\\\\\\"b38360f0-4161-45aa-872a-7e13cf6f9eca\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"Dinda\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"6f021683-94af-4e49-8d17-2d4eeba8bad4\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"Ragil\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"b0bef45f-958b-46c4-88f7-5db512a7877e\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"Test@gmail.com\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"22b8a904-3aab-4ecb-8457-5755c40e422a\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"f\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"c87882ef-f78e-4c44-96cc-49276fd55fcc\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"ID\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"b2d634c4-2fc1-4a9d-b167-331469acf484\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"The Dwarika's Hotel\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"968c3d18-2fd5-483f-8d1a-3ad1b9e7a661\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"Yes, please\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"b73103b2-4a79-4802-a218-b199723483f4\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"27\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"f04ca5e5-125c-4510-912b-2e8eccd44481\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"Malaysia Airlines\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"1264c45e-4545-4af4-b20a-ab9ce8f234c4\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"17A\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"76f0e6aa-9ad7-472c-b923-e77b85efc1a8\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"Dinda\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"5477c88a-f3cb-4cd0-b5ba-3ae75316adc4\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"Ragil\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"605f767e-a704-4f70-8e29-870e4e1fc141\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"f\\\\\\\"},{\\\\\\\"questionId\\\\\\\":\\\\\\\"5c87ba38-a803-4db5-ae30-a7a9941d2ee3\\\\\\\",\\\\\\\"value\\\\\\\":\\\\\\\"ID\\\\\\\"}]},\\\\\\\"bookId\\\\\\\":\\\\\\\"6e5dca62-c54e-4c4f-9910-82dde53ab876\\\\\\\"}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"getOrderStatus\": \"{\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Success\\\",\\\"data\\\":{\\\"id\\\":\\\"6e5dca62-c54e-4c4f-9910-82dde53ab876\\\",\\\"code\\\":\\\"FTAU3J\\\",\\\"state\\\":\\\"OPEN\\\",\\\"voucherUrl\\\":null,\\\"isSandboxed\\\":true,\\\"partnerChannelBookingUrl\\\":\\\"https://giift.booking.holibob.tech\\\",\\\"paymentState\\\":\\\"ON_ACCOUNT\\\",\\\"questionList\\\":[{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"b38360f0-4161-45aa-872a-7e13cf6f9eca\\\",\\\"label\\\":\\\"First name\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"Dinda\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"6f021683-94af-4e49-8d17-2d4eeba8bad4\\\",\\\"label\\\":\\\"Last name\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"Ragil\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"b0bef45f-958b-46c4-88f7-5db512a7877e\\\",\\\"label\\\":\\\"Your email address\\\",\\\"dataFormat\\\":\\\"EMAIL_ADDRESS\\\",\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"Test@gmail.com\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"22b8a904-3aab-4ecb-8457-5755c40e422a\\\",\\\"label\\\":\\\"Gender\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"OPTIONS\\\",\\\"availableOptions\\\":[{\\\"label\\\":\\\"Female\\\",\\\"value\\\":\\\"f\\\"},{\\\"label\\\":\\\"Male\\\",\\\"value\\\":\\\"m\\\"}],\\\"answerValue\\\":\\\"f\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"c87882ef-f78e-4c44-96cc-49276fd55fcc\\\",\\\"label\\\":\\\"Nationality\\\",\\\"dataFormat\\\":\\\"COUNTRY\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"availableOptions\\\":[{\\\"label\\\":\\\"Afghanistan\\\",\\\"value\\\":\\\"AF\\\"},{\\\"label\\\":\\\"Albania\\\",\\\"value\\\":\\\"AL\\\"},{\\\"label\\\":\\\"Algeria\\\",\\\"value\\\":\\\"DZ\\\"},{\\\"label\\\":\\\"American Samoa\\\",\\\"value\\\":\\\"AS\\\"},{\\\"label\\\":\\\"Andorra\\\",\\\"value\\\":\\\"AD\\\"},{\\\"label\\\":\\\"Angola\\\",\\\"value\\\":\\\"AO\\\"},{\\\"label\\\":\\\"Anguilla\\\",\\\"value\\\":\\\"AI\\\"},{\\\"label\\\":\\\"Antarctica\\\",\\\"value\\\":\\\"AQ\\\"},{\\\"label\\\":\\\"Antigua and Barbuda\\\",\\\"value\\\":\\\"AG\\\"},{\\\"label\\\":\\\"Argentina\\\",\\\"value\\\":\\\"AR\\\"},{\\\"label\\\":\\\"Armenia\\\",\\\"value\\\":\\\"AM\\\"},{\\\"label\\\":\\\"Aruba\\\",\\\"value\\\":\\\"AW\\\"},{\\\"label\\\":\\\"Australia\\\",\\\"value\\\":\\\"AU\\\"},{\\\"label\\\":\\\"Austria\\\",\\\"value\\\":\\\"AT\\\"},{\\\"label\\\":\\\"Azerbaijan\\\",\\\"value\\\":\\\"AZ\\\"},{\\\"label\\\":\\\"Bahamas\\\",\\\"value\\\":\\\"BS\\\"},{\\\"label\\\":\\\"Bahrain\\\",\\\"value\\\":\\\"BH\\\"},{\\\"label\\\":\\\"Bangladesh\\\",\\\"value\\\":\\\"BD\\\"},{\\\"label\\\":\\\"Barbados\\\",\\\"value\\\":\\\"BB\\\"},{\\\"label\\\":\\\"Belarus\\\",\\\"value\\\":\\\"BY\\\"},{\\\"label\\\":\\\"Belgium\\\",\\\"value\\\":\\\"BE\\\"},{\\\"label\\\":\\\"Belize\\\",\\\"value\\\":\\\"BZ\\\"},{\\\"label\\\":\\\"Benin\\\",\\\"value\\\":\\\"BJ\\\"},{\\\"label\\\":\\\"Bermuda\\\",\\\"value\\\":\\\"BM\\\"},{\\\"label\\\":\\\"Bhutan\\\",\\\"value\\\":\\\"BT\\\"},{\\\"label\\\":\\\"Bolivia\\\",\\\"value\\\":\\\"BO\\\"},{\\\"label\\\":\\\"Bonaire, Sint Eustatius and Saba\\\",\\\"value\\\":\\\"BQ\\\"},{\\\"label\\\":\\\"Bosnia and Herzegovina\\\",\\\"value\\\":\\\"BA\\\"},{\\\"label\\\":\\\"Botswana\\\",\\\"value\\\":\\\"BW\\\"},{\\\"label\\\":\\\"Bouvet Island\\\",\\\"value\\\":\\\"BV\\\"},{\\\"label\\\":\\\"Brazil\\\",\\\"value\\\":\\\"BR\\\"},{\\\"label\\\":\\\"British Indian Ocean Territory\\\",\\\"value\\\":\\\"IO\\\"},{\\\"label\\\":\\\"British Virgin Islands\\\",\\\"value\\\":\\\"VG\\\"},{\\\"label\\\":\\\"Brunei\\\",\\\"value\\\":\\\"BN\\\"},{\\\"label\\\":\\\"Bulgaria\\\",\\\"value\\\":\\\"BG\\\"},{\\\"label\\\":\\\"Burkina Faso\\\",\\\"value\\\":\\\"BF\\\"},{\\\"label\\\":\\\"Burundi\\\",\\\"value\\\":\\\"BI\\\"},{\\\"label\\\":\\\"Cambodia\\\",\\\"value\\\":\\\"KH\\\"},{\\\"label\\\":\\\"Cameroon\\\",\\\"value\\\":\\\"CM\\\"},{\\\"label\\\":\\\"Canada\\\",\\\"value\\\":\\\"CA\\\"},{\\\"label\\\":\\\"Cape Verde\\\",\\\"value\\\":\\\"CV\\\"},{\\\"label\\\":\\\"Cayman Islands\\\",\\\"value\\\":\\\"KY\\\"},{\\\"label\\\":\\\"Central African Republic\\\",\\\"value\\\":\\\"CF\\\"},{\\\"label\\\":\\\"Chad\\\",\\\"value\\\":\\\"TD\\\"},{\\\"label\\\":\\\"Chile\\\",\\\"value\\\":\\\"CL\\\"},{\\\"label\\\":\\\"China\\\",\\\"value\\\":\\\"CN\\\"},{\\\"label\\\":\\\"Christmas Island\\\",\\\"value\\\":\\\"CX\\\"},{\\\"label\\\":\\\"Cocos Islands\\\",\\\"value\\\":\\\"CC\\\"},{\\\"label\\\":\\\"Colombia\\\",\\\"value\\\":\\\"CO\\\"},{\\\"label\\\":\\\"Comoros\\\",\\\"value\\\":\\\"KM\\\"},{\\\"label\\\":\\\"Congo\\\",\\\"value\\\":\\\"CG\\\"},{\\\"label\\\":\\\"Cook Islands\\\",\\\"value\\\":\\\"CK\\\"},{\\\"label\\\":\\\"Costa Rica\\\",\\\"value\\\":\\\"CR\\\"},{\\\"label\\\":\\\"Croatia\\\",\\\"value\\\":\\\"HR\\\"},{\\\"label\\\":\\\"Cuba\\\",\\\"value\\\":\\\"CU\\\"},{\\\"label\\\":\\\"Curaçao\\\",\\\"value\\\":\\\"CW\\\"},{\\\"label\\\":\\\"Cyprus\\\",\\\"value\\\":\\\"CY\\\"},{\\\"label\\\":\\\"Czech Republic\\\",\\\"value\\\":\\\"CZ\\\"},{\\\"label\\\":\\\"Côte d'Ivoire\\\",\\\"value\\\":\\\"CI\\\"},{\\\"label\\\":\\\"Denmark\\\",\\\"value\\\":\\\"DK\\\"},{\\\"label\\\":\\\"Djibouti\\\",\\\"value\\\":\\\"DJ\\\"},{\\\"label\\\":\\\"Dominica\\\",\\\"value\\\":\\\"DM\\\"},{\\\"label\\\":\\\"Dominican Republic\\\",\\\"value\\\":\\\"DO\\\"},{\\\"label\\\":\\\"Ecuador\\\",\\\"value\\\":\\\"EC\\\"},{\\\"label\\\":\\\"Egypt\\\",\\\"value\\\":\\\"EG\\\"},{\\\"label\\\":\\\"El Salvador\\\",\\\"value\\\":\\\"SV\\\"},{\\\"label\\\":\\\"Equatorial Guinea\\\",\\\"value\\\":\\\"GQ\\\"},{\\\"label\\\":\\\"Eritrea\\\",\\\"value\\\":\\\"ER\\\"},{\\\"label\\\":\\\"Estonia\\\",\\\"value\\\":\\\"EE\\\"},{\\\"label\\\":\\\"Ethiopia\\\",\\\"value\\\":\\\"ET\\\"},{\\\"label\\\":\\\"Falkland Islands\\\",\\\"value\\\":\\\"FK\\\"},{\\\"label\\\":\\\"Faroe Islands\\\",\\\"value\\\":\\\"FO\\\"},{\\\"label\\\":\\\"Fiji\\\",\\\"value\\\":\\\"FJ\\\"},{\\\"label\\\":\\\"Finland\\\",\\\"value\\\":\\\"FI\\\"},{\\\"label\\\":\\\"France\\\",\\\"value\\\":\\\"FR\\\"},{\\\"label\\\":\\\"French Guiana\\\",\\\"value\\\":\\\"GF\\\"},{\\\"label\\\":\\\"French Polynesia\\\",\\\"value\\\":\\\"PF\\\"},{\\\"label\\\":\\\"French Southern Territories\\\",\\\"value\\\":\\\"TF\\\"},{\\\"label\\\":\\\"Gabon\\\",\\\"value\\\":\\\"GA\\\"},{\\\"label\\\":\\\"Gambia\\\",\\\"value\\\":\\\"GM\\\"},{\\\"label\\\":\\\"Georgia\\\",\\\"value\\\":\\\"GE\\\"},{\\\"label\\\":\\\"Germany\\\",\\\"value\\\":\\\"DE\\\"},{\\\"label\\\":\\\"Ghana\\\",\\\"value\\\":\\\"GH\\\"},{\\\"label\\\":\\\"Gibraltar\\\",\\\"value\\\":\\\"GI\\\"},{\\\"label\\\":\\\"Greece\\\",\\\"value\\\":\\\"GR\\\"},{\\\"label\\\":\\\"Greenland\\\",\\\"value\\\":\\\"GL\\\"},{\\\"label\\\":\\\"Grenada\\\",\\\"value\\\":\\\"GD\\\"},{\\\"label\\\":\\\"Guadeloupe\\\",\\\"value\\\":\\\"GP\\\"},{\\\"label\\\":\\\"Guam\\\",\\\"value\\\":\\\"GU\\\"},{\\\"label\\\":\\\"Guatemala\\\",\\\"value\\\":\\\"GT\\\"},{\\\"label\\\":\\\"Guernsey\\\",\\\"value\\\":\\\"GG\\\"},{\\\"label\\\":\\\"Guinea\\\",\\\"value\\\":\\\"GN\\\"},{\\\"label\\\":\\\"Guinea-Bissau\\\",\\\"value\\\":\\\"GW\\\"},{\\\"label\\\":\\\"Guyana\\\",\\\"value\\\":\\\"GY\\\"},{\\\"label\\\":\\\"Haiti\\\",\\\"value\\\":\\\"HT\\\"},{\\\"label\\\":\\\"Heard Island And McDonald Islands\\\",\\\"value\\\":\\\"HM\\\"},{\\\"label\\\":\\\"Honduras\\\",\\\"value\\\":\\\"HN\\\"},{\\\"label\\\":\\\"Hong Kong\\\",\\\"value\\\":\\\"HK\\\"},{\\\"label\\\":\\\"Hungary\\\",\\\"value\\\":\\\"HU\\\"},{\\\"label\\\":\\\"Iceland\\\",\\\"value\\\":\\\"IS\\\"},{\\\"label\\\":\\\"India\\\",\\\"value\\\":\\\"IN\\\"},{\\\"label\\\":\\\"Indonesia\\\",\\\"value\\\":\\\"ID\\\"},{\\\"label\\\":\\\"Iran\\\",\\\"value\\\":\\\"IR\\\"},{\\\"label\\\":\\\"Iraq\\\",\\\"value\\\":\\\"IQ\\\"},{\\\"label\\\":\\\"Ireland\\\",\\\"value\\\":\\\"IE\\\"},{\\\"label\\\":\\\"Isle Of Man\\\",\\\"value\\\":\\\"IM\\\"},{\\\"label\\\":\\\"Israel\\\",\\\"value\\\":\\\"IL\\\"},{\\\"label\\\":\\\"Italy\\\",\\\"value\\\":\\\"IT\\\"},{\\\"label\\\":\\\"Jamaica\\\",\\\"value\\\":\\\"JM\\\"},{\\\"label\\\":\\\"Japan\\\",\\\"value\\\":\\\"JP\\\"},{\\\"label\\\":\\\"Jersey\\\",\\\"value\\\":\\\"JE\\\"},{\\\"label\\\":\\\"Jordan\\\",\\\"value\\\":\\\"JO\\\"},{\\\"label\\\":\\\"Kazakhstan\\\",\\\"value\\\":\\\"KZ\\\"},{\\\"label\\\":\\\"Kenya\\\",\\\"value\\\":\\\"KE\\\"},{\\\"label\\\":\\\"Kiribati\\\",\\\"value\\\":\\\"KI\\\"},{\\\"label\\\":\\\"Kuwait\\\",\\\"value\\\":\\\"KW\\\"},{\\\"label\\\":\\\"Kyrgyzstan\\\",\\\"value\\\":\\\"KG\\\"},{\\\"label\\\":\\\"Laos\\\",\\\"value\\\":\\\"LA\\\"},{\\\"label\\\":\\\"Latvia\\\",\\\"value\\\":\\\"LV\\\"},{\\\"label\\\":\\\"Lebanon\\\",\\\"value\\\":\\\"LB\\\"},{\\\"label\\\":\\\"Lesotho\\\",\\\"value\\\":\\\"LS\\\"},{\\\"label\\\":\\\"Liberia\\\",\\\"value\\\":\\\"LR\\\"},{\\\"label\\\":\\\"Libya\\\",\\\"value\\\":\\\"LY\\\"},{\\\"label\\\":\\\"Liechtenstein\\\",\\\"value\\\":\\\"LI\\\"},{\\\"label\\\":\\\"Lithuania\\\",\\\"value\\\":\\\"LT\\\"},{\\\"label\\\":\\\"Luxembourg\\\",\\\"value\\\":\\\"LU\\\"},{\\\"label\\\":\\\"Macao\\\",\\\"value\\\":\\\"MO\\\"},{\\\"label\\\":\\\"Macedonia\\\",\\\"value\\\":\\\"MK\\\"},{\\\"label\\\":\\\"Madagascar\\\",\\\"value\\\":\\\"MG\\\"},{\\\"label\\\":\\\"Malawi\\\",\\\"value\\\":\\\"MW\\\"},{\\\"label\\\":\\\"Malaysia\\\",\\\"value\\\":\\\"MY\\\"},{\\\"label\\\":\\\"Maldives\\\",\\\"value\\\":\\\"MV\\\"},{\\\"label\\\":\\\"Mali\\\",\\\"value\\\":\\\"ML\\\"},{\\\"label\\\":\\\"Malta\\\",\\\"value\\\":\\\"MT\\\"},{\\\"label\\\":\\\"Marshall Islands\\\",\\\"value\\\":\\\"MH\\\"},{\\\"label\\\":\\\"Martinique\\\",\\\"value\\\":\\\"MQ\\\"},{\\\"label\\\":\\\"Mauritania\\\",\\\"value\\\":\\\"MR\\\"},{\\\"label\\\":\\\"Mauritius\\\",\\\"value\\\":\\\"MU\\\"},{\\\"label\\\":\\\"Mayotte\\\",\\\"value\\\":\\\"YT\\\"},{\\\"label\\\":\\\"Mexico\\\",\\\"value\\\":\\\"MX\\\"},{\\\"label\\\":\\\"Micronesia\\\",\\\"value\\\":\\\"FM\\\"},{\\\"label\\\":\\\"Moldova\\\",\\\"value\\\":\\\"MD\\\"},{\\\"label\\\":\\\"Monaco\\\",\\\"value\\\":\\\"MC\\\"},{\\\"label\\\":\\\"Mongolia\\\",\\\"value\\\":\\\"MN\\\"},{\\\"label\\\":\\\"Montenegro\\\",\\\"value\\\":\\\"ME\\\"},{\\\"label\\\":\\\"Montserrat\\\",\\\"value\\\":\\\"MS\\\"},{\\\"label\\\":\\\"Morocco\\\",\\\"value\\\":\\\"MA\\\"},{\\\"label\\\":\\\"Mozambique\\\",\\\"value\\\":\\\"MZ\\\"},{\\\"label\\\":\\\"Myanmar\\\",\\\"value\\\":\\\"MM\\\"},{\\\"label\\\":\\\"Namibia\\\",\\\"value\\\":\\\"NA\\\"},{\\\"label\\\":\\\"Nauru\\\",\\\"value\\\":\\\"NR\\\"},{\\\"label\\\":\\\"Nepal\\\",\\\"value\\\":\\\"NP\\\"},{\\\"label\\\":\\\"Netherlands\\\",\\\"value\\\":\\\"NL\\\"},{\\\"label\\\":\\\"Netherlands Antilles\\\",\\\"value\\\":\\\"AN\\\"},{\\\"label\\\":\\\"New Caledonia\\\",\\\"value\\\":\\\"NC\\\"},{\\\"label\\\":\\\"New Zealand\\\",\\\"value\\\":\\\"NZ\\\"},{\\\"label\\\":\\\"Nicaragua\\\",\\\"value\\\":\\\"NI\\\"},{\\\"label\\\":\\\"Niger\\\",\\\"value\\\":\\\"NE\\\"},{\\\"label\\\":\\\"Nigeria\\\",\\\"value\\\":\\\"NG\\\"},{\\\"label\\\":\\\"Niue\\\",\\\"value\\\":\\\"NU\\\"},{\\\"label\\\":\\\"Norfolk Island\\\",\\\"value\\\":\\\"NF\\\"},{\\\"label\\\":\\\"North Korea\\\",\\\"value\\\":\\\"KP\\\"},{\\\"label\\\":\\\"Northern Mariana Islands\\\",\\\"value\\\":\\\"MP\\\"},{\\\"label\\\":\\\"Norway\\\",\\\"value\\\":\\\"NO\\\"},{\\\"label\\\":\\\"Oman\\\",\\\"value\\\":\\\"OM\\\"},{\\\"label\\\":\\\"Pakistan\\\",\\\"value\\\":\\\"PK\\\"},{\\\"label\\\":\\\"Palau\\\",\\\"value\\\":\\\"PW\\\"},{\\\"label\\\":\\\"Palestine\\\",\\\"value\\\":\\\"PS\\\"},{\\\"label\\\":\\\"Panama\\\",\\\"value\\\":\\\"PA\\\"},{\\\"label\\\":\\\"Papua New Guinea\\\",\\\"value\\\":\\\"PG\\\"},{\\\"label\\\":\\\"Paraguay\\\",\\\"value\\\":\\\"PY\\\"},{\\\"label\\\":\\\"Peru\\\",\\\"value\\\":\\\"PE\\\"},{\\\"label\\\":\\\"Philippines\\\",\\\"value\\\":\\\"PH\\\"},{\\\"label\\\":\\\"Pitcairn\\\",\\\"value\\\":\\\"PN\\\"},{\\\"label\\\":\\\"Poland\\\",\\\"value\\\":\\\"PL\\\"},{\\\"label\\\":\\\"Portugal\\\",\\\"value\\\":\\\"PT\\\"},{\\\"label\\\":\\\"Puerto Rico\\\",\\\"value\\\":\\\"PR\\\"},{\\\"label\\\":\\\"Qatar\\\",\\\"value\\\":\\\"QA\\\"},{\\\"label\\\":\\\"Reunion\\\",\\\"value\\\":\\\"RE\\\"},{\\\"label\\\":\\\"Romania\\\",\\\"value\\\":\\\"RO\\\"},{\\\"label\\\":\\\"Russia\\\",\\\"value\\\":\\\"RU\\\"},{\\\"label\\\":\\\"Rwanda\\\",\\\"value\\\":\\\"RW\\\"},{\\\"label\\\":\\\"Saint Barthélemy\\\",\\\"value\\\":\\\"BL\\\"},{\\\"label\\\":\\\"Saint Helena\\\",\\\"value\\\":\\\"SH\\\"},{\\\"label\\\":\\\"Saint Kitts And Nevis\\\",\\\"value\\\":\\\"KN\\\"},{\\\"label\\\":\\\"Saint Lucia\\\",\\\"value\\\":\\\"LC\\\"},{\\\"label\\\":\\\"Saint Martin\\\",\\\"value\\\":\\\"MF\\\"},{\\\"label\\\":\\\"Saint Pierre And Miquelon\\\",\\\"value\\\":\\\"PM\\\"},{\\\"label\\\":\\\"Saint Vincent And The Grenadines\\\",\\\"value\\\":\\\"VC\\\"},{\\\"label\\\":\\\"Samoa\\\",\\\"value\\\":\\\"WS\\\"},{\\\"label\\\":\\\"San Marino\\\",\\\"value\\\":\\\"SM\\\"},{\\\"label\\\":\\\"Sao Tome And Principe\\\",\\\"value\\\":\\\"ST\\\"},{\\\"label\\\":\\\"Saudi Arabia\\\",\\\"value\\\":\\\"SA\\\"},{\\\"label\\\":\\\"Senegal\\\",\\\"value\\\":\\\"SN\\\"},{\\\"label\\\":\\\"Serbia\\\",\\\"value\\\":\\\"RS\\\"},{\\\"label\\\":\\\"Seychelles\\\",\\\"value\\\":\\\"SC\\\"},{\\\"label\\\":\\\"Sierra Leone\\\",\\\"value\\\":\\\"SL\\\"},{\\\"label\\\":\\\"Singapore\\\",\\\"value\\\":\\\"SG\\\"},{\\\"label\\\":\\\"Sint Maarten (Dutch part)\\\",\\\"value\\\":\\\"SX\\\"},{\\\"label\\\":\\\"Slovakia\\\",\\\"value\\\":\\\"SK\\\"},{\\\"label\\\":\\\"Slovenia\\\",\\\"value\\\":\\\"SI\\\"},{\\\"label\\\":\\\"Solomon Islands\\\",\\\"value\\\":\\\"SB\\\"},{\\\"label\\\":\\\"Somalia\\\",\\\"value\\\":\\\"SO\\\"},{\\\"label\\\":\\\"South Africa\\\",\\\"value\\\":\\\"ZA\\\"},{\\\"label\\\":\\\"South Georgia And The South Sandwich Islands\\\",\\\"value\\\":\\\"GS\\\"},{\\\"label\\\":\\\"South Korea\\\",\\\"value\\\":\\\"KR\\\"},{\\\"label\\\":\\\"South Sudan\\\",\\\"value\\\":\\\"SS\\\"},{\\\"label\\\":\\\"Spain\\\",\\\"value\\\":\\\"ES\\\"},{\\\"label\\\":\\\"Sri Lanka\\\",\\\"value\\\":\\\"LK\\\"},{\\\"label\\\":\\\"Sudan\\\",\\\"value\\\":\\\"SD\\\"},{\\\"label\\\":\\\"Suriname\\\",\\\"value\\\":\\\"SR\\\"},{\\\"label\\\":\\\"Svalbard And Jan Mayen\\\",\\\"value\\\":\\\"SJ\\\"},{\\\"label\\\":\\\"Swaziland\\\",\\\"value\\\":\\\"SZ\\\"},{\\\"label\\\":\\\"Sweden\\\",\\\"value\\\":\\\"SE\\\"},{\\\"label\\\":\\\"Switzerland\\\",\\\"value\\\":\\\"CH\\\"},{\\\"label\\\":\\\"Syria\\\",\\\"value\\\":\\\"SY\\\"},{\\\"label\\\":\\\"Taiwan\\\",\\\"value\\\":\\\"TW\\\"},{\\\"label\\\":\\\"Tajikistan\\\",\\\"value\\\":\\\"TJ\\\"},{\\\"label\\\":\\\"Tanzania\\\",\\\"value\\\":\\\"TZ\\\"},{\\\"label\\\":\\\"Thailand\\\",\\\"value\\\":\\\"TH\\\"},{\\\"label\\\":\\\"The Democratic Republic Of Congo\\\",\\\"value\\\":\\\"CD\\\"},{\\\"label\\\":\\\"Timor-Leste\\\",\\\"value\\\":\\\"TL\\\"},{\\\"label\\\":\\\"Togo\\\",\\\"value\\\":\\\"TG\\\"},{\\\"label\\\":\\\"Tokelau\\\",\\\"value\\\":\\\"TK\\\"},{\\\"label\\\":\\\"Tonga\\\",\\\"value\\\":\\\"TO\\\"},{\\\"label\\\":\\\"Trinidad and Tobago\\\",\\\"value\\\":\\\"TT\\\"},{\\\"label\\\":\\\"Tunisia\\\",\\\"value\\\":\\\"TN\\\"},{\\\"label\\\":\\\"Turkey\\\",\\\"value\\\":\\\"TR\\\"},{\\\"label\\\":\\\"Turkmenistan\\\",\\\"value\\\":\\\"TM\\\"},{\\\"label\\\":\\\"Turks And Caicos Islands\\\",\\\"value\\\":\\\"TC\\\"},{\\\"label\\\":\\\"Tuvalu\\\",\\\"value\\\":\\\"TV\\\"},{\\\"label\\\":\\\"U.S. Virgin Islands\\\",\\\"value\\\":\\\"VI\\\"},{\\\"label\\\":\\\"Uganda\\\",\\\"value\\\":\\\"UG\\\"},{\\\"label\\\":\\\"Ukraine\\\",\\\"value\\\":\\\"UA\\\"},{\\\"label\\\":\\\"United Arab Emirates\\\",\\\"value\\\":\\\"AE\\\"},{\\\"label\\\":\\\"United Kingdom\\\",\\\"value\\\":\\\"GB\\\"},{\\\"label\\\":\\\"United States\\\",\\\"value\\\":\\\"US\\\"},{\\\"label\\\":\\\"United States Minor Outlying Islands\\\",\\\"value\\\":\\\"UM\\\"},{\\\"label\\\":\\\"Uruguay\\\",\\\"value\\\":\\\"UY\\\"},{\\\"label\\\":\\\"Uzbekistan\\\",\\\"value\\\":\\\"UZ\\\"},{\\\"label\\\":\\\"Vanuatu\\\",\\\"value\\\":\\\"VU\\\"},{\\\"label\\\":\\\"Vatican\\\",\\\"value\\\":\\\"VA\\\"},{\\\"label\\\":\\\"Venezuela\\\",\\\"value\\\":\\\"VE\\\"},{\\\"label\\\":\\\"Vietnam\\\",\\\"value\\\":\\\"VN\\\"},{\\\"label\\\":\\\"Wallis And Futuna\\\",\\\"value\\\":\\\"WF\\\"},{\\\"label\\\":\\\"Western Sahara\\\",\\\"value\\\":\\\"EH\\\"},{\\\"label\\\":\\\"Yemen\\\",\\\"value\\\":\\\"YE\\\"},{\\\"label\\\":\\\"Zambia\\\",\\\"value\\\":\\\"ZM\\\"},{\\\"label\\\":\\\"Zimbabwe\\\",\\\"value\\\":\\\"ZW\\\"},{\\\"label\\\":\\\"Åland Islands\\\",\\\"value\\\":\\\"AX\\\"}],\\\"answerValue\\\":\\\"ID\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"b2d634c4-2fc1-4a9d-b167-331469acf484\\\",\\\"label\\\":\\\"Please provide us the name of Hotel inside Kathmandu city for pick up and drop off service.  \\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"LONG_TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"The Dwarika's Hotel\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"968c3d18-2fd5-483f-8d1a-3ad1b9e7a661\\\",\\\"label\\\":\\\"Would you like to go for Elephant back safari or canoe ride?\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"Yes, please\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"b73103b2-4a79-4802-a218-b199723483f4\\\",\\\"label\\\":\\\"Room number\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"27\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"f04ca5e5-125c-4510-912b-2e8eccd44481\\\",\\\"label\\\":\\\"Which airline?\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"Malaysia Airlines\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"1264c45e-4545-4af4-b20a-ab9ce8f234c4\\\",\\\"label\\\":\\\"Which terminal?\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"17A\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingPersonQuestions\\\",\\\"id\\\":\\\"76f0e6aa-9ad7-472c-b923-e77b85efc1a8\\\",\\\"label\\\":\\\"First name\\\",\\\"pricingCategoryId\\\":\\\"1c9133b5-6c81-4279-bc87-4c1e5a0fd514\\\",\\\"pricingCategoryLabel\\\":\\\"Adult\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"Dinda\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingPersonQuestions\\\",\\\"id\\\":\\\"5477c88a-f3cb-4cd0-b5ba-3ae75316adc4\\\",\\\"label\\\":\\\"Last name\\\",\\\"pricingCategoryId\\\":\\\"1c9133b5-6c81-4279-bc87-4c1e5a0fd514\\\",\\\"pricingCategoryLabel\\\":\\\"Adult\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"Ragil\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingPersonQuestions\\\",\\\"id\\\":\\\"605f767e-a704-4f70-8e29-870e4e1fc141\\\",\\\"label\\\":\\\"Gender\\\",\\\"pricingCategoryId\\\":\\\"1c9133b5-6c81-4279-bc87-4c1e5a0fd514\\\",\\\"pricingCategoryLabel\\\":\\\"Adult\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"OPTIONS\\\",\\\"availableOptions\\\":[{\\\"label\\\":\\\"Female\\\",\\\"value\\\":\\\"f\\\"},{\\\"label\\\":\\\"Male\\\",\\\"value\\\":\\\"m\\\"}],\\\"answerValue\\\":\\\"f\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingPersonQuestions\\\",\\\"id\\\":\\\"5c87ba38-a803-4db5-ae30-a7a9941d2ee3\\\",\\\"label\\\":\\\"Nationality\\\",\\\"pricingCategoryId\\\":\\\"1c9133b5-6c81-4279-bc87-4c1e5a0fd514\\\",\\\"pricingCategoryLabel\\\":\\\"Adult\\\",\\\"dataFormat\\\":\\\"COUNTRY\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"availableOptions\\\":[{\\\"label\\\":\\\"Afghanistan\\\",\\\"value\\\":\\\"AF\\\"},{\\\"label\\\":\\\"Albania\\\",\\\"value\\\":\\\"AL\\\"},{\\\"label\\\":\\\"Algeria\\\",\\\"value\\\":\\\"DZ\\\"},{\\\"label\\\":\\\"American Samoa\\\",\\\"value\\\":\\\"AS\\\"},{\\\"label\\\":\\\"Andorra\\\",\\\"value\\\":\\\"AD\\\"},{\\\"label\\\":\\\"Angola\\\",\\\"value\\\":\\\"AO\\\"},{\\\"label\\\":\\\"Anguilla\\\",\\\"value\\\":\\\"AI\\\"},{\\\"label\\\":\\\"Antarctica\\\",\\\"value\\\":\\\"AQ\\\"},{\\\"label\\\":\\\"Antigua and Barbuda\\\",\\\"value\\\":\\\"AG\\\"},{\\\"label\\\":\\\"Argentina\\\",\\\"value\\\":\\\"AR\\\"},{\\\"label\\\":\\\"Armenia\\\",\\\"value\\\":\\\"AM\\\"},{\\\"label\\\":\\\"Aruba\\\",\\\"value\\\":\\\"AW\\\"},{\\\"label\\\":\\\"Australia\\\",\\\"value\\\":\\\"AU\\\"},{\\\"label\\\":\\\"Austria\\\",\\\"value\\\":\\\"AT\\\"},{\\\"label\\\":\\\"Azerbaijan\\\",\\\"value\\\":\\\"AZ\\\"},{\\\"label\\\":\\\"Bahamas\\\",\\\"value\\\":\\\"BS\\\"},{\\\"label\\\":\\\"Bahrain\\\",\\\"value\\\":\\\"BH\\\"},{\\\"label\\\":\\\"Bangladesh\\\",\\\"value\\\":\\\"BD\\\"},{\\\"label\\\":\\\"Barbados\\\",\\\"value\\\":\\\"BB\\\"},{\\\"label\\\":\\\"Belarus\\\",\\\"value\\\":\\\"BY\\\"},{\\\"label\\\":\\\"Belgium\\\",\\\"value\\\":\\\"BE\\\"},{\\\"label\\\":\\\"Belize\\\",\\\"value\\\":\\\"BZ\\\"},{\\\"label\\\":\\\"Benin\\\",\\\"value\\\":\\\"BJ\\\"},{\\\"label\\\":\\\"Bermuda\\\",\\\"value\\\":\\\"BM\\\"},{\\\"label\\\":\\\"Bhutan\\\",\\\"value\\\":\\\"BT\\\"},{\\\"label\\\":\\\"Bolivia\\\",\\\"value\\\":\\\"BO\\\"},{\\\"label\\\":\\\"Bonaire, Sint Eustatius and Saba\\\",\\\"value\\\":\\\"BQ\\\"},{\\\"label\\\":\\\"Bosnia and Herzegovina\\\",\\\"value\\\":\\\"BA\\\"},{\\\"label\\\":\\\"Botswana\\\",\\\"value\\\":\\\"BW\\\"},{\\\"label\\\":\\\"Bouvet Island\\\",\\\"value\\\":\\\"BV\\\"},{\\\"label\\\":\\\"Brazil\\\",\\\"value\\\":\\\"BR\\\"},{\\\"label\\\":\\\"British Indian Ocean Territory\\\",\\\"value\\\":\\\"IO\\\"},{\\\"label\\\":\\\"British Virgin Islands\\\",\\\"value\\\":\\\"VG\\\"},{\\\"label\\\":\\\"Brunei\\\",\\\"value\\\":\\\"BN\\\"},{\\\"label\\\":\\\"Bulgaria\\\",\\\"value\\\":\\\"BG\\\"},{\\\"label\\\":\\\"Burkina Faso\\\",\\\"value\\\":\\\"BF\\\"},{\\\"label\\\":\\\"Burundi\\\",\\\"value\\\":\\\"BI\\\"},{\\\"label\\\":\\\"Cambodia\\\",\\\"value\\\":\\\"KH\\\"},{\\\"label\\\":\\\"Cameroon\\\",\\\"value\\\":\\\"CM\\\"},{\\\"label\\\":\\\"Canada\\\",\\\"value\\\":\\\"CA\\\"},{\\\"label\\\":\\\"Cape Verde\\\",\\\"value\\\":\\\"CV\\\"},{\\\"label\\\":\\\"Cayman Islands\\\",\\\"value\\\":\\\"KY\\\"},{\\\"label\\\":\\\"Central African Republic\\\",\\\"value\\\":\\\"CF\\\"},{\\\"label\\\":\\\"Chad\\\",\\\"value\\\":\\\"TD\\\"},{\\\"label\\\":\\\"Chile\\\",\\\"value\\\":\\\"CL\\\"},{\\\"label\\\":\\\"China\\\",\\\"value\\\":\\\"CN\\\"},{\\\"label\\\":\\\"Christmas Island\\\",\\\"value\\\":\\\"CX\\\"},{\\\"label\\\":\\\"Cocos Islands\\\",\\\"value\\\":\\\"CC\\\"},{\\\"label\\\":\\\"Colombia\\\",\\\"value\\\":\\\"CO\\\"},{\\\"label\\\":\\\"Comoros\\\",\\\"value\\\":\\\"KM\\\"},{\\\"label\\\":\\\"Congo\\\",\\\"value\\\":\\\"CG\\\"},{\\\"label\\\":\\\"Cook Islands\\\",\\\"value\\\":\\\"CK\\\"},{\\\"label\\\":\\\"Costa Rica\\\",\\\"value\\\":\\\"CR\\\"},{\\\"label\\\":\\\"Croatia\\\",\\\"value\\\":\\\"HR\\\"},{\\\"label\\\":\\\"Cuba\\\",\\\"value\\\":\\\"CU\\\"},{\\\"label\\\":\\\"Curaçao\\\",\\\"value\\\":\\\"CW\\\"},{\\\"label\\\":\\\"Cyprus\\\",\\\"value\\\":\\\"CY\\\"},{\\\"label\\\":\\\"Czech Republic\\\",\\\"value\\\":\\\"CZ\\\"},{\\\"label\\\":\\\"Côte d'Ivoire\\\",\\\"value\\\":\\\"CI\\\"},{\\\"label\\\":\\\"Denmark\\\",\\\"value\\\":\\\"DK\\\"},{\\\"label\\\":\\\"Djibouti\\\",\\\"value\\\":\\\"DJ\\\"},{\\\"label\\\":\\\"Dominica\\\",\\\"value\\\":\\\"DM\\\"},{\\\"label\\\":\\\"Dominican Republic\\\",\\\"value\\\":\\\"DO\\\"},{\\\"label\\\":\\\"Ecuador\\\",\\\"value\\\":\\\"EC\\\"},{\\\"label\\\":\\\"Egypt\\\",\\\"value\\\":\\\"EG\\\"},{\\\"label\\\":\\\"El Salvador\\\",\\\"value\\\":\\\"SV\\\"},{\\\"label\\\":\\\"Equatorial Guinea\\\",\\\"value\\\":\\\"GQ\\\"},{\\\"label\\\":\\\"Eritrea\\\",\\\"value\\\":\\\"ER\\\"},{\\\"label\\\":\\\"Estonia\\\",\\\"value\\\":\\\"EE\\\"},{\\\"label\\\":\\\"Ethiopia\\\",\\\"value\\\":\\\"ET\\\"},{\\\"label\\\":\\\"Falkland Islands\\\",\\\"value\\\":\\\"FK\\\"},{\\\"label\\\":\\\"Faroe Islands\\\",\\\"value\\\":\\\"FO\\\"},{\\\"label\\\":\\\"Fiji\\\",\\\"value\\\":\\\"FJ\\\"},{\\\"label\\\":\\\"Finland\\\",\\\"value\\\":\\\"FI\\\"},{\\\"label\\\":\\\"France\\\",\\\"value\\\":\\\"FR\\\"},{\\\"label\\\":\\\"French Guiana\\\",\\\"value\\\":\\\"GF\\\"},{\\\"label\\\":\\\"French Polynesia\\\",\\\"value\\\":\\\"PF\\\"},{\\\"label\\\":\\\"French Southern Territories\\\",\\\"value\\\":\\\"TF\\\"},{\\\"label\\\":\\\"Gabon\\\",\\\"value\\\":\\\"GA\\\"},{\\\"label\\\":\\\"Gambia\\\",\\\"value\\\":\\\"GM\\\"},{\\\"label\\\":\\\"Georgia\\\",\\\"value\\\":\\\"GE\\\"},{\\\"label\\\":\\\"Germany\\\",\\\"value\\\":\\\"DE\\\"},{\\\"label\\\":\\\"Ghana\\\",\\\"value\\\":\\\"GH\\\"},{\\\"label\\\":\\\"Gibraltar\\\",\\\"value\\\":\\\"GI\\\"},{\\\"label\\\":\\\"Greece\\\",\\\"value\\\":\\\"GR\\\"},{\\\"label\\\":\\\"Greenland\\\",\\\"value\\\":\\\"GL\\\"},{\\\"label\\\":\\\"Grenada\\\",\\\"value\\\":\\\"GD\\\"},{\\\"label\\\":\\\"Guadeloupe\\\",\\\"value\\\":\\\"GP\\\"},{\\\"label\\\":\\\"Guam\\\",\\\"value\\\":\\\"GU\\\"},{\\\"label\\\":\\\"Guatemala\\\",\\\"value\\\":\\\"GT\\\"},{\\\"label\\\":\\\"Guernsey\\\",\\\"value\\\":\\\"GG\\\"},{\\\"label\\\":\\\"Guinea\\\",\\\"value\\\":\\\"GN\\\"},{\\\"label\\\":\\\"Guinea-Bissau\\\",\\\"value\\\":\\\"GW\\\"},{\\\"label\\\":\\\"Guyana\\\",\\\"value\\\":\\\"GY\\\"},{\\\"label\\\":\\\"Haiti\\\",\\\"value\\\":\\\"HT\\\"},{\\\"label\\\":\\\"Heard Island And McDonald Islands\\\",\\\"value\\\":\\\"HM\\\"},{\\\"label\\\":\\\"Honduras\\\",\\\"value\\\":\\\"HN\\\"},{\\\"label\\\":\\\"Hong Kong\\\",\\\"value\\\":\\\"HK\\\"},{\\\"label\\\":\\\"Hungary\\\",\\\"value\\\":\\\"HU\\\"},{\\\"label\\\":\\\"Iceland\\\",\\\"value\\\":\\\"IS\\\"},{\\\"label\\\":\\\"India\\\",\\\"value\\\":\\\"IN\\\"},{\\\"label\\\":\\\"Indonesia\\\",\\\"value\\\":\\\"ID\\\"},{\\\"label\\\":\\\"Iran\\\",\\\"value\\\":\\\"IR\\\"},{\\\"label\\\":\\\"Iraq\\\",\\\"value\\\":\\\"IQ\\\"},{\\\"label\\\":\\\"Ireland\\\",\\\"value\\\":\\\"IE\\\"},{\\\"label\\\":\\\"Isle Of Man\\\",\\\"value\\\":\\\"IM\\\"},{\\\"label\\\":\\\"Israel\\\",\\\"value\\\":\\\"IL\\\"},{\\\"label\\\":\\\"Italy\\\",\\\"value\\\":\\\"IT\\\"},{\\\"label\\\":\\\"Jamaica\\\",\\\"value\\\":\\\"JM\\\"},{\\\"label\\\":\\\"Japan\\\",\\\"value\\\":\\\"JP\\\"},{\\\"label\\\":\\\"Jersey\\\",\\\"value\\\":\\\"JE\\\"},{\\\"label\\\":\\\"Jordan\\\",\\\"value\\\":\\\"JO\\\"},{\\\"label\\\":\\\"Kazakhstan\\\",\\\"value\\\":\\\"KZ\\\"},{\\\"label\\\":\\\"Kenya\\\",\\\"value\\\":\\\"KE\\\"},{\\\"label\\\":\\\"Kiribati\\\",\\\"value\\\":\\\"KI\\\"},{\\\"label\\\":\\\"Kuwait\\\",\\\"value\\\":\\\"KW\\\"},{\\\"label\\\":\\\"Kyrgyzstan\\\",\\\"value\\\":\\\"KG\\\"},{\\\"label\\\":\\\"Laos\\\",\\\"value\\\":\\\"LA\\\"},{\\\"label\\\":\\\"Latvia\\\",\\\"value\\\":\\\"LV\\\"},{\\\"label\\\":\\\"Lebanon\\\",\\\"value\\\":\\\"LB\\\"},{\\\"label\\\":\\\"Lesotho\\\",\\\"value\\\":\\\"LS\\\"},{\\\"label\\\":\\\"Liberia\\\",\\\"value\\\":\\\"LR\\\"},{\\\"label\\\":\\\"Libya\\\",\\\"value\\\":\\\"LY\\\"},{\\\"label\\\":\\\"Liechtenstein\\\",\\\"value\\\":\\\"LI\\\"},{\\\"label\\\":\\\"Lithuania\\\",\\\"value\\\":\\\"LT\\\"},{\\\"label\\\":\\\"Luxembourg\\\",\\\"value\\\":\\\"LU\\\"},{\\\"label\\\":\\\"Macao\\\",\\\"value\\\":\\\"MO\\\"},{\\\"label\\\":\\\"Macedonia\\\",\\\"value\\\":\\\"MK\\\"},{\\\"label\\\":\\\"Madagascar\\\",\\\"value\\\":\\\"MG\\\"},{\\\"label\\\":\\\"Malawi\\\",\\\"value\\\":\\\"MW\\\"},{\\\"label\\\":\\\"Malaysia\\\",\\\"value\\\":\\\"MY\\\"},{\\\"label\\\":\\\"Maldives\\\",\\\"value\\\":\\\"MV\\\"},{\\\"label\\\":\\\"Mali\\\",\\\"value\\\":\\\"ML\\\"},{\\\"label\\\":\\\"Malta\\\",\\\"value\\\":\\\"MT\\\"},{\\\"label\\\":\\\"Marshall Islands\\\",\\\"value\\\":\\\"MH\\\"},{\\\"label\\\":\\\"Martinique\\\",\\\"value\\\":\\\"MQ\\\"},{\\\"label\\\":\\\"Mauritania\\\",\\\"value\\\":\\\"MR\\\"},{\\\"label\\\":\\\"Mauritius\\\",\\\"value\\\":\\\"MU\\\"},{\\\"label\\\":\\\"Mayotte\\\",\\\"value\\\":\\\"YT\\\"},{\\\"label\\\":\\\"Mexico\\\",\\\"value\\\":\\\"MX\\\"},{\\\"label\\\":\\\"Micronesia\\\",\\\"value\\\":\\\"FM\\\"},{\\\"label\\\":\\\"Moldova\\\",\\\"value\\\":\\\"MD\\\"},{\\\"label\\\":\\\"Monaco\\\",\\\"value\\\":\\\"MC\\\"},{\\\"label\\\":\\\"Mongolia\\\",\\\"value\\\":\\\"MN\\\"},{\\\"label\\\":\\\"Montenegro\\\",\\\"value\\\":\\\"ME\\\"},{\\\"label\\\":\\\"Montserrat\\\",\\\"value\\\":\\\"MS\\\"},{\\\"label\\\":\\\"Morocco\\\",\\\"value\\\":\\\"MA\\\"},{\\\"label\\\":\\\"Mozambique\\\",\\\"value\\\":\\\"MZ\\\"},{\\\"label\\\":\\\"Myanmar\\\",\\\"value\\\":\\\"MM\\\"},{\\\"label\\\":\\\"Namibia\\\",\\\"value\\\":\\\"NA\\\"},{\\\"label\\\":\\\"Nauru\\\",\\\"value\\\":\\\"NR\\\"},{\\\"label\\\":\\\"Nepal\\\",\\\"value\\\":\\\"NP\\\"},{\\\"label\\\":\\\"Netherlands\\\",\\\"value\\\":\\\"NL\\\"},{\\\"label\\\":\\\"Netherlands Antilles\\\",\\\"value\\\":\\\"AN\\\"},{\\\"label\\\":\\\"New Caledonia\\\",\\\"value\\\":\\\"NC\\\"},{\\\"label\\\":\\\"New Zealand\\\",\\\"value\\\":\\\"NZ\\\"},{\\\"label\\\":\\\"Nicaragua\\\",\\\"value\\\":\\\"NI\\\"},{\\\"label\\\":\\\"Niger\\\",\\\"value\\\":\\\"NE\\\"},{\\\"label\\\":\\\"Nigeria\\\",\\\"value\\\":\\\"NG\\\"},{\\\"label\\\":\\\"Niue\\\",\\\"value\\\":\\\"NU\\\"},{\\\"label\\\":\\\"Norfolk Island\\\",\\\"value\\\":\\\"NF\\\"},{\\\"label\\\":\\\"North Korea\\\",\\\"value\\\":\\\"KP\\\"},{\\\"label\\\":\\\"Northern Mariana Islands\\\",\\\"value\\\":\\\"MP\\\"},{\\\"label\\\":\\\"Norway\\\",\\\"value\\\":\\\"NO\\\"},{\\\"label\\\":\\\"Oman\\\",\\\"value\\\":\\\"OM\\\"},{\\\"label\\\":\\\"Pakistan\\\",\\\"value\\\":\\\"PK\\\"},{\\\"label\\\":\\\"Palau\\\",\\\"value\\\":\\\"PW\\\"},{\\\"label\\\":\\\"Palestine\\\",\\\"value\\\":\\\"PS\\\"},{\\\"label\\\":\\\"Panama\\\",\\\"value\\\":\\\"PA\\\"},{\\\"label\\\":\\\"Papua New Guinea\\\",\\\"value\\\":\\\"PG\\\"},{\\\"label\\\":\\\"Paraguay\\\",\\\"value\\\":\\\"PY\\\"},{\\\"label\\\":\\\"Peru\\\",\\\"value\\\":\\\"PE\\\"},{\\\"label\\\":\\\"Philippines\\\",\\\"value\\\":\\\"PH\\\"},{\\\"label\\\":\\\"Pitcairn\\\",\\\"value\\\":\\\"PN\\\"},{\\\"label\\\":\\\"Poland\\\",\\\"value\\\":\\\"PL\\\"},{\\\"label\\\":\\\"Portugal\\\",\\\"value\\\":\\\"PT\\\"},{\\\"label\\\":\\\"Puerto Rico\\\",\\\"value\\\":\\\"PR\\\"},{\\\"label\\\":\\\"Qatar\\\",\\\"value\\\":\\\"QA\\\"},{\\\"label\\\":\\\"Reunion\\\",\\\"value\\\":\\\"RE\\\"},{\\\"label\\\":\\\"Romania\\\",\\\"value\\\":\\\"RO\\\"},{\\\"label\\\":\\\"Russia\\\",\\\"value\\\":\\\"RU\\\"},{\\\"label\\\":\\\"Rwanda\\\",\\\"value\\\":\\\"RW\\\"},{\\\"label\\\":\\\"Saint Barthélemy\\\",\\\"value\\\":\\\"BL\\\"},{\\\"label\\\":\\\"Saint Helena\\\",\\\"value\\\":\\\"SH\\\"},{\\\"label\\\":\\\"Saint Kitts And Nevis\\\",\\\"value\\\":\\\"KN\\\"},{\\\"label\\\":\\\"Saint Lucia\\\",\\\"value\\\":\\\"LC\\\"},{\\\"label\\\":\\\"Saint Martin\\\",\\\"value\\\":\\\"MF\\\"},{\\\"label\\\":\\\"Saint Pierre And Miquelon\\\",\\\"value\\\":\\\"PM\\\"},{\\\"label\\\":\\\"Saint Vincent And The Grenadines\\\",\\\"value\\\":\\\"VC\\\"},{\\\"label\\\":\\\"Samoa\\\",\\\"value\\\":\\\"WS\\\"},{\\\"label\\\":\\\"San Marino\\\",\\\"value\\\":\\\"SM\\\"},{\\\"label\\\":\\\"Sao Tome And Principe\\\",\\\"value\\\":\\\"ST\\\"},{\\\"label\\\":\\\"Saudi Arabia\\\",\\\"value\\\":\\\"SA\\\"},{\\\"label\\\":\\\"Senegal\\\",\\\"value\\\":\\\"SN\\\"},{\\\"label\\\":\\\"Serbia\\\",\\\"value\\\":\\\"RS\\\"},{\\\"label\\\":\\\"Seychelles\\\",\\\"value\\\":\\\"SC\\\"},{\\\"label\\\":\\\"Sierra Leone\\\",\\\"value\\\":\\\"SL\\\"},{\\\"label\\\":\\\"Singapore\\\",\\\"value\\\":\\\"SG\\\"},{\\\"label\\\":\\\"Sint Maarten (Dutch part)\\\",\\\"value\\\":\\\"SX\\\"},{\\\"label\\\":\\\"Slovakia\\\",\\\"value\\\":\\\"SK\\\"},{\\\"label\\\":\\\"Slovenia\\\",\\\"value\\\":\\\"SI\\\"},{\\\"label\\\":\\\"Solomon Islands\\\",\\\"value\\\":\\\"SB\\\"},{\\\"label\\\":\\\"Somalia\\\",\\\"value\\\":\\\"SO\\\"},{\\\"label\\\":\\\"South Africa\\\",\\\"value\\\":\\\"ZA\\\"},{\\\"label\\\":\\\"South Georgia And The South Sandwich Islands\\\",\\\"value\\\":\\\"GS\\\"},{\\\"label\\\":\\\"South Korea\\\",\\\"value\\\":\\\"KR\\\"},{\\\"label\\\":\\\"South Sudan\\\",\\\"value\\\":\\\"SS\\\"},{\\\"label\\\":\\\"Spain\\\",\\\"value\\\":\\\"ES\\\"},{\\\"label\\\":\\\"Sri Lanka\\\",\\\"value\\\":\\\"LK\\\"},{\\\"label\\\":\\\"Sudan\\\",\\\"value\\\":\\\"SD\\\"},{\\\"label\\\":\\\"Suriname\\\",\\\"value\\\":\\\"SR\\\"},{\\\"label\\\":\\\"Svalbard And Jan Mayen\\\",\\\"value\\\":\\\"SJ\\\"},{\\\"label\\\":\\\"Swaziland\\\",\\\"value\\\":\\\"SZ\\\"},{\\\"label\\\":\\\"Sweden\\\",\\\"value\\\":\\\"SE\\\"},{\\\"label\\\":\\\"Switzerland\\\",\\\"value\\\":\\\"CH\\\"},{\\\"label\\\":\\\"Syria\\\",\\\"value\\\":\\\"SY\\\"},{\\\"label\\\":\\\"Taiwan\\\",\\\"value\\\":\\\"TW\\\"},{\\\"label\\\":\\\"Tajikistan\\\",\\\"value\\\":\\\"TJ\\\"},{\\\"label\\\":\\\"Tanzania\\\",\\\"value\\\":\\\"TZ\\\"},{\\\"label\\\":\\\"Thailand\\\",\\\"value\\\":\\\"TH\\\"},{\\\"label\\\":\\\"The Democratic Republic Of Congo\\\",\\\"value\\\":\\\"CD\\\"},{\\\"label\\\":\\\"Timor-Leste\\\",\\\"value\\\":\\\"TL\\\"},{\\\"label\\\":\\\"Togo\\\",\\\"value\\\":\\\"TG\\\"},{\\\"label\\\":\\\"Tokelau\\\",\\\"value\\\":\\\"TK\\\"},{\\\"label\\\":\\\"Tonga\\\",\\\"value\\\":\\\"TO\\\"},{\\\"label\\\":\\\"Trinidad and Tobago\\\",\\\"value\\\":\\\"TT\\\"},{\\\"label\\\":\\\"Tunisia\\\",\\\"value\\\":\\\"TN\\\"},{\\\"label\\\":\\\"Turkey\\\",\\\"value\\\":\\\"TR\\\"},{\\\"label\\\":\\\"Turkmenistan\\\",\\\"value\\\":\\\"TM\\\"},{\\\"label\\\":\\\"Turks And Caicos Islands\\\",\\\"value\\\":\\\"TC\\\"},{\\\"label\\\":\\\"Tuvalu\\\",\\\"value\\\":\\\"TV\\\"},{\\\"label\\\":\\\"U.S. Virgin Islands\\\",\\\"value\\\":\\\"VI\\\"},{\\\"label\\\":\\\"Uganda\\\",\\\"value\\\":\\\"UG\\\"},{\\\"label\\\":\\\"Ukraine\\\",\\\"value\\\":\\\"UA\\\"},{\\\"label\\\":\\\"United Arab Emirates\\\",\\\"value\\\":\\\"AE\\\"},{\\\"label\\\":\\\"United Kingdom\\\",\\\"value\\\":\\\"GB\\\"},{\\\"label\\\":\\\"United States\\\",\\\"value\\\":\\\"US\\\"},{\\\"label\\\":\\\"United States Minor Outlying Islands\\\",\\\"value\\\":\\\"UM\\\"},{\\\"label\\\":\\\"Uruguay\\\",\\\"value\\\":\\\"UY\\\"},{\\\"label\\\":\\\"Uzbekistan\\\",\\\"value\\\":\\\"UZ\\\"},{\\\"label\\\":\\\"Vanuatu\\\",\\\"value\\\":\\\"VU\\\"},{\\\"label\\\":\\\"Vatican\\\",\\\"value\\\":\\\"VA\\\"},{\\\"label\\\":\\\"Venezuela\\\",\\\"value\\\":\\\"VE\\\"},{\\\"label\\\":\\\"Vietnam\\\",\\\"value\\\":\\\"VN\\\"},{\\\"label\\\":\\\"Wallis And Futuna\\\",\\\"value\\\":\\\"WF\\\"},{\\\"label\\\":\\\"Western Sahara\\\",\\\"value\\\":\\\"EH\\\"},{\\\"label\\\":\\\"Yemen\\\",\\\"value\\\":\\\"YE\\\"},{\\\"label\\\":\\\"Zambia\\\",\\\"value\\\":\\\"ZM\\\"},{\\\"label\\\":\\\"Zimbabwe\\\",\\\"value\\\":\\\"ZW\\\"},{\\\"label\\\":\\\"Åland Islands\\\",\\\"value\\\":\\\"AX\\\"}],\\\"answerValue\\\":\\\"ID\\\",\\\"isAnswered\\\":true}]}}\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Place Order",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('orderId', '1628654370kQnI5')\r",
+							"pm.variables.set('orderItemId', '2084796587007')\r",
+							"pm.variables.set('productId', '000b734a-b399-4ff1-84ca-06c7ad25be64')\r",
+							"pm.variables.set('availabilityId', 'af40b560-5466-4e1b-a49f-c249fe5bd84a') \r",
+							"pm.variables.set('bookId', '33b72e44-2f24-4f85-8843-8f8534f72360') \r",
+							"pm.variables.set('startDate', '2022-01-20') // = product Id\r",
+							"pm.variables.set('endDate', '2022-01-21') // = product Id\r",
+							"pm.variables.set('cardId', '1628654370iEiar')\r",
+							"pm.variables.set('cardUserId', '1558690029TxLhw')\r",
+							"pm.variables.set('cardUserEmail', 'xiebing@giift.com')\r",
+							"pm.variables.set('cardUserNickname', 'bing xie')\r",
+							"pm.variables.set('cardUserFamilyname', 'xie')\r",
+							"pm.variables.set('cardUserGivenname', 'bing')\r",
+							"pm.variables.set('cardFieldsNumber', '082234413346')\r",
+							"pm.variables.set('cardFieldsStatus', '135024633118xiinl')"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { placeOrder ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"{{orderId}}\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"{{orderItemId}}\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"{{orderId}}\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"Holibob\\\\\\\":\\\\\\\"{{productId}}\\\\\\\",\\\\\\\"start_date\\\\\\\":\\\\\\\"{{startDate}}\\\\\\\",\\\\\\\"end_date\\\\\\\":\\\\\\\"{{endDate}}\\\\\\\",\\\\\\\"availability_id\\\\\\\":\\\\\\\"{{availabilityId}}\\\\\\\",\\\\\\\"book_id\\\\\\\":\\\\\\\"{{bookId}}\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"{{cardId}}\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"{{cardUserId}}\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"{{cardUserEmail}}\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"{{cardUserNickname}}\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"{{cardUserFamilyname}}\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"{{cardUserGivenname}}\\\\\\\"},\\\\\\\"fields\\\\\\\":{\\\\\\\"number\\\\\\\":\\\\\\\"{{cardFieldsNumber}}\\\\\\\",\\\\\\\"password\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"number2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"password2\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"value\\\\\\\":0,\\\\\\\"expiry\\\\\\\":null},\\\\\\\"status\\\\\\\":\\\\\\\"\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "**Commit Booking.**\n\nVariable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Description** |\n| --- | --- | --- | --- |\n| orderId | optional | string |  |\n| orderItemId | optional | string |  |\n| productId | required | string | This is the chosen product Id. |\n| availabilityId | required | string | This is the chosen availability Id from the chosen product Id. |\n| bookId | required | string | Booking Id which is obtained from Create Booking Order |\n| startDate | optional | string | Start Date order based on the chosen availability. |\n| endDate | optional | string | End Date order based on the chosen availability. |\n| cardId | optional | string |  |\n| cardUserId | optional | string |  |\n| cardUserEmail | optional | string |  |\n| cardUserNickname | optional | string |  |\n| cardUserFamilyname | optional | string |  |\n| cardUserGivenname | optional | string |  |\n| cardFieldsNumber | optional | string |  |\n| cardFieldsStatus | optional | string |  |\n\nNotes:\n\n*   This API is to commit the booking to the vendor as an order.\n*   After successfully committing booking, the state will change into 'PENDING'"
+			},
+			"response": [
+				{
+					"name": "Place Order",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\":\"query { placeOrder ( request: \\\"{\\\\\\\"orderId\\\\\\\":\\\\\\\"1628654370kQnI5\\\\\\\",\\\\\\\"orderItemId\\\\\\\":\\\\\\\"2084796587007\\\\\\\",\\\\\\\"program\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1627279873bg55v\\\\\\\",\\\\\\\"references\\\\\\\":{\\\\\\\"Holibob\\\\\\\":\\\\\\\"e3f3a0dc-64ee-4540-aec2-623968b138a8\\\\\\\",\\\\\\\"start_date\\\\\\\":\\\\\\\"2022-01-29\\\\\\\",\\\\\\\"end_date\\\\\\\":\\\\\\\"2022-01-29\\\\\\\",\\\\\\\"availability_id\\\\\\\":\\\\\\\"69f11cc8-6094-4aa6-a61d-277f8237686e\\\\\\\",\\\\\\\"book_id\\\\\\\":\\\\\\\"6e5dca62-c54e-4c4f-9910-82dde53ab876\\\\\\\"}},\\\\\\\"amount\\\\\\\":5000,\\\\\\\"metadatas\\\\\\\":{},\\\\\\\"buyable_metadatas\\\\\\\":{},\\\\\\\"card\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1628654370iEiar\\\\\\\",\\\\\\\"user\\\\\\\":{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"dinda@gmail.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"Dinda Ragil\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"Ragil\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"Dinda\\\\\\\"},\\\\\\\"fields\\\\\\\":{},\\\\\\\"status\\\\\\\":\\\\\\\"\\\\\\\"},\\\\\\\"value\\\\\\\":5800,\\\\\\\"value_ccy\\\\\\\":\\\\\\\"GBP\\\\\\\"}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"placeOrder\": \"{\\\"status\\\":\\\"success\\\",\\\"orderId\\\":\\\"1628654370kQnI5\\\",\\\"message\\\":\\\"Success\\\",\\\"data\\\":[{\\\"id\\\":\\\"1628654370kQnI5\\\",\\\"user\\\":\\\"{\\\\\\\"id\\\\\\\":\\\\\\\"1558690029TxLhw\\\\\\\",\\\\\\\"email\\\\\\\":\\\\\\\"dinda@gmail.com\\\\\\\",\\\\\\\"nickname\\\\\\\":\\\\\\\"Dinda Ragil\\\\\\\",\\\\\\\"familyName\\\\\\\":\\\\\\\"Ragil\\\\\\\",\\\\\\\"givenName\\\\\\\":\\\\\\\"Dinda\\\\\\\"}\\\",\\\"program\\\":\\\"1628654370iEiar\\\",\\\"status\\\":\\\"PENDING\\\",\\\"fields\\\":{\\\"book_id\\\":\\\"\\\",\\\"number\\\":\\\"\\\",\\\"number2\\\":\\\"\\\",\\\"password\\\":\\\"\\\",\\\"password2\\\":\\\"\\\",\\\"expiry\\\":\\\"\\\",\\\"value\\\":\\\"\\\"}}],\\\"rawData\\\":{}}\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Order Status",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('bookId', '33b72e44-2f24-4f85-8843-8f8534f72360')"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getOrderStatus ( request: \\\"{\\\\\\\"bookId\\\\\\\":\\\\\\\"{{bookId}}\\\\\\\"}\\\" )}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+					"protocol": "https",
+					"host": [
+						"cvk9qctq59",
+						"execute-api",
+						"ap-south-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"stagingApis",
+						"supplier_manager_bka"
+					]
+				},
+				"description": "**Get the latest order status.**\n\nVariable List for request body:\n\n| **Variables** | **Attributes** | **Types** | **Default** | **Description** |\n| --- | --- | --- | --- | --- |\n| bookId | required | string |  | Booking Id, which is obtained from Create Booking response. |\n\nNote: The response will return the latest order status."
+			},
+			"response": [
+				{
+					"name": "Get Order Status",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vendor\": \"Holibob\",\r\n    \"query\": \"query { getOrderStatus ( request: \\\"{\\\\\\\"bookId\\\\\\\":\\\\\\\"6e5dca62-c54e-4c4f-9910-82dde53ab876\\\\\\\"}\\\" )}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cvk9qctq59.execute-api.ap-south-1.amazonaws.com/stagingApis/supplier_manager_bka",
+							"protocol": "https",
+							"host": [
+								"cvk9qctq59",
+								"execute-api",
+								"ap-south-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"stagingApis",
+								"supplier_manager_bka"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"getOrderStatus\": \"{\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Success\\\",\\\"data\\\":{\\\"id\\\":\\\"6e5dca62-c54e-4c4f-9910-82dde53ab876\\\",\\\"code\\\":\\\"FTAU3J\\\",\\\"state\\\":\\\"PENDING\\\",\\\"voucherUrl\\\":null,\\\"isSandboxed\\\":true,\\\"partnerChannelBookingUrl\\\":\\\"https://giift.booking.holibob.tech\\\",\\\"paymentState\\\":\\\"ON_ACCOUNT\\\",\\\"questionList\\\":[{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"b38360f0-4161-45aa-872a-7e13cf6f9eca\\\",\\\"label\\\":\\\"First name\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"Dinda\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"6f021683-94af-4e49-8d17-2d4eeba8bad4\\\",\\\"label\\\":\\\"Last name\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"Ragil\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"b0bef45f-958b-46c4-88f7-5db512a7877e\\\",\\\"label\\\":\\\"Your email address\\\",\\\"dataFormat\\\":\\\"EMAIL_ADDRESS\\\",\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"Test@gmail.com\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"22b8a904-3aab-4ecb-8457-5755c40e422a\\\",\\\"label\\\":\\\"Gender\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"OPTIONS\\\",\\\"availableOptions\\\":[{\\\"label\\\":\\\"Female\\\",\\\"value\\\":\\\"f\\\"},{\\\"label\\\":\\\"Male\\\",\\\"value\\\":\\\"m\\\"}],\\\"answerValue\\\":\\\"f\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingQuestions\\\",\\\"id\\\":\\\"c87882ef-f78e-4c44-96cc-49276fd55fcc\\\",\\\"label\\\":\\\"Nationality\\\",\\\"dataFormat\\\":\\\"COUNTRY\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"availableOptions\\\":[{\\\"label\\\":\\\"Afghanistan\\\",\\\"value\\\":\\\"AF\\\"},{\\\"label\\\":\\\"Albania\\\",\\\"value\\\":\\\"AL\\\"},{\\\"label\\\":\\\"Algeria\\\",\\\"value\\\":\\\"DZ\\\"},{\\\"label\\\":\\\"American Samoa\\\",\\\"value\\\":\\\"AS\\\"},{\\\"label\\\":\\\"Andorra\\\",\\\"value\\\":\\\"AD\\\"},{\\\"label\\\":\\\"Angola\\\",\\\"value\\\":\\\"AO\\\"},{\\\"label\\\":\\\"Anguilla\\\",\\\"value\\\":\\\"AI\\\"},{\\\"label\\\":\\\"Antarctica\\\",\\\"value\\\":\\\"AQ\\\"},{\\\"label\\\":\\\"Antigua and Barbuda\\\",\\\"value\\\":\\\"AG\\\"},{\\\"label\\\":\\\"Argentina\\\",\\\"value\\\":\\\"AR\\\"},{\\\"label\\\":\\\"Armenia\\\",\\\"value\\\":\\\"AM\\\"},{\\\"label\\\":\\\"Aruba\\\",\\\"value\\\":\\\"AW\\\"},{\\\"label\\\":\\\"Australia\\\",\\\"value\\\":\\\"AU\\\"},{\\\"label\\\":\\\"Austria\\\",\\\"value\\\":\\\"AT\\\"},{\\\"label\\\":\\\"Azerbaijan\\\",\\\"value\\\":\\\"AZ\\\"},{\\\"label\\\":\\\"Bahamas\\\",\\\"value\\\":\\\"BS\\\"},{\\\"label\\\":\\\"Bahrain\\\",\\\"value\\\":\\\"BH\\\"},{\\\"label\\\":\\\"Bangladesh\\\",\\\"value\\\":\\\"BD\\\"},{\\\"label\\\":\\\"Barbados\\\",\\\"value\\\":\\\"BB\\\"},{\\\"label\\\":\\\"Belarus\\\",\\\"value\\\":\\\"BY\\\"},{\\\"label\\\":\\\"Belgium\\\",\\\"value\\\":\\\"BE\\\"},{\\\"label\\\":\\\"Belize\\\",\\\"value\\\":\\\"BZ\\\"},{\\\"label\\\":\\\"Benin\\\",\\\"value\\\":\\\"BJ\\\"},{\\\"label\\\":\\\"Bermuda\\\",\\\"value\\\":\\\"BM\\\"},{\\\"label\\\":\\\"Bhutan\\\",\\\"value\\\":\\\"BT\\\"},{\\\"label\\\":\\\"Bolivia\\\",\\\"value\\\":\\\"BO\\\"},{\\\"label\\\":\\\"Bonaire, Sint Eustatius and Saba\\\",\\\"value\\\":\\\"BQ\\\"},{\\\"label\\\":\\\"Bosnia and Herzegovina\\\",\\\"value\\\":\\\"BA\\\"},{\\\"label\\\":\\\"Botswana\\\",\\\"value\\\":\\\"BW\\\"},{\\\"label\\\":\\\"Bouvet Island\\\",\\\"value\\\":\\\"BV\\\"},{\\\"label\\\":\\\"Brazil\\\",\\\"value\\\":\\\"BR\\\"},{\\\"label\\\":\\\"British Indian Ocean Territory\\\",\\\"value\\\":\\\"IO\\\"},{\\\"label\\\":\\\"British Virgin Islands\\\",\\\"value\\\":\\\"VG\\\"},{\\\"label\\\":\\\"Brunei\\\",\\\"value\\\":\\\"BN\\\"},{\\\"label\\\":\\\"Bulgaria\\\",\\\"value\\\":\\\"BG\\\"},{\\\"label\\\":\\\"Burkina Faso\\\",\\\"value\\\":\\\"BF\\\"},{\\\"label\\\":\\\"Burundi\\\",\\\"value\\\":\\\"BI\\\"},{\\\"label\\\":\\\"Cambodia\\\",\\\"value\\\":\\\"KH\\\"},{\\\"label\\\":\\\"Cameroon\\\",\\\"value\\\":\\\"CM\\\"},{\\\"label\\\":\\\"Canada\\\",\\\"value\\\":\\\"CA\\\"},{\\\"label\\\":\\\"Cape Verde\\\",\\\"value\\\":\\\"CV\\\"},{\\\"label\\\":\\\"Cayman Islands\\\",\\\"value\\\":\\\"KY\\\"},{\\\"label\\\":\\\"Central African Republic\\\",\\\"value\\\":\\\"CF\\\"},{\\\"label\\\":\\\"Chad\\\",\\\"value\\\":\\\"TD\\\"},{\\\"label\\\":\\\"Chile\\\",\\\"value\\\":\\\"CL\\\"},{\\\"label\\\":\\\"China\\\",\\\"value\\\":\\\"CN\\\"},{\\\"label\\\":\\\"Christmas Island\\\",\\\"value\\\":\\\"CX\\\"},{\\\"label\\\":\\\"Cocos Islands\\\",\\\"value\\\":\\\"CC\\\"},{\\\"label\\\":\\\"Colombia\\\",\\\"value\\\":\\\"CO\\\"},{\\\"label\\\":\\\"Comoros\\\",\\\"value\\\":\\\"KM\\\"},{\\\"label\\\":\\\"Congo\\\",\\\"value\\\":\\\"CG\\\"},{\\\"label\\\":\\\"Cook Islands\\\",\\\"value\\\":\\\"CK\\\"},{\\\"label\\\":\\\"Costa Rica\\\",\\\"value\\\":\\\"CR\\\"},{\\\"label\\\":\\\"Croatia\\\",\\\"value\\\":\\\"HR\\\"},{\\\"label\\\":\\\"Cuba\\\",\\\"value\\\":\\\"CU\\\"},{\\\"label\\\":\\\"Curaçao\\\",\\\"value\\\":\\\"CW\\\"},{\\\"label\\\":\\\"Cyprus\\\",\\\"value\\\":\\\"CY\\\"},{\\\"label\\\":\\\"Czech Republic\\\",\\\"value\\\":\\\"CZ\\\"},{\\\"label\\\":\\\"Côte d'Ivoire\\\",\\\"value\\\":\\\"CI\\\"},{\\\"label\\\":\\\"Denmark\\\",\\\"value\\\":\\\"DK\\\"},{\\\"label\\\":\\\"Djibouti\\\",\\\"value\\\":\\\"DJ\\\"},{\\\"label\\\":\\\"Dominica\\\",\\\"value\\\":\\\"DM\\\"},{\\\"label\\\":\\\"Dominican Republic\\\",\\\"value\\\":\\\"DO\\\"},{\\\"label\\\":\\\"Ecuador\\\",\\\"value\\\":\\\"EC\\\"},{\\\"label\\\":\\\"Egypt\\\",\\\"value\\\":\\\"EG\\\"},{\\\"label\\\":\\\"El Salvador\\\",\\\"value\\\":\\\"SV\\\"},{\\\"label\\\":\\\"Equatorial Guinea\\\",\\\"value\\\":\\\"GQ\\\"},{\\\"label\\\":\\\"Eritrea\\\",\\\"value\\\":\\\"ER\\\"},{\\\"label\\\":\\\"Estonia\\\",\\\"value\\\":\\\"EE\\\"},{\\\"label\\\":\\\"Ethiopia\\\",\\\"value\\\":\\\"ET\\\"},{\\\"label\\\":\\\"Falkland Islands\\\",\\\"value\\\":\\\"FK\\\"},{\\\"label\\\":\\\"Faroe Islands\\\",\\\"value\\\":\\\"FO\\\"},{\\\"label\\\":\\\"Fiji\\\",\\\"value\\\":\\\"FJ\\\"},{\\\"label\\\":\\\"Finland\\\",\\\"value\\\":\\\"FI\\\"},{\\\"label\\\":\\\"France\\\",\\\"value\\\":\\\"FR\\\"},{\\\"label\\\":\\\"French Guiana\\\",\\\"value\\\":\\\"GF\\\"},{\\\"label\\\":\\\"French Polynesia\\\",\\\"value\\\":\\\"PF\\\"},{\\\"label\\\":\\\"French Southern Territories\\\",\\\"value\\\":\\\"TF\\\"},{\\\"label\\\":\\\"Gabon\\\",\\\"value\\\":\\\"GA\\\"},{\\\"label\\\":\\\"Gambia\\\",\\\"value\\\":\\\"GM\\\"},{\\\"label\\\":\\\"Georgia\\\",\\\"value\\\":\\\"GE\\\"},{\\\"label\\\":\\\"Germany\\\",\\\"value\\\":\\\"DE\\\"},{\\\"label\\\":\\\"Ghana\\\",\\\"value\\\":\\\"GH\\\"},{\\\"label\\\":\\\"Gibraltar\\\",\\\"value\\\":\\\"GI\\\"},{\\\"label\\\":\\\"Greece\\\",\\\"value\\\":\\\"GR\\\"},{\\\"label\\\":\\\"Greenland\\\",\\\"value\\\":\\\"GL\\\"},{\\\"label\\\":\\\"Grenada\\\",\\\"value\\\":\\\"GD\\\"},{\\\"label\\\":\\\"Guadeloupe\\\",\\\"value\\\":\\\"GP\\\"},{\\\"label\\\":\\\"Guam\\\",\\\"value\\\":\\\"GU\\\"},{\\\"label\\\":\\\"Guatemala\\\",\\\"value\\\":\\\"GT\\\"},{\\\"label\\\":\\\"Guernsey\\\",\\\"value\\\":\\\"GG\\\"},{\\\"label\\\":\\\"Guinea\\\",\\\"value\\\":\\\"GN\\\"},{\\\"label\\\":\\\"Guinea-Bissau\\\",\\\"value\\\":\\\"GW\\\"},{\\\"label\\\":\\\"Guyana\\\",\\\"value\\\":\\\"GY\\\"},{\\\"label\\\":\\\"Haiti\\\",\\\"value\\\":\\\"HT\\\"},{\\\"label\\\":\\\"Heard Island And McDonald Islands\\\",\\\"value\\\":\\\"HM\\\"},{\\\"label\\\":\\\"Honduras\\\",\\\"value\\\":\\\"HN\\\"},{\\\"label\\\":\\\"Hong Kong\\\",\\\"value\\\":\\\"HK\\\"},{\\\"label\\\":\\\"Hungary\\\",\\\"value\\\":\\\"HU\\\"},{\\\"label\\\":\\\"Iceland\\\",\\\"value\\\":\\\"IS\\\"},{\\\"label\\\":\\\"India\\\",\\\"value\\\":\\\"IN\\\"},{\\\"label\\\":\\\"Indonesia\\\",\\\"value\\\":\\\"ID\\\"},{\\\"label\\\":\\\"Iran\\\",\\\"value\\\":\\\"IR\\\"},{\\\"label\\\":\\\"Iraq\\\",\\\"value\\\":\\\"IQ\\\"},{\\\"label\\\":\\\"Ireland\\\",\\\"value\\\":\\\"IE\\\"},{\\\"label\\\":\\\"Isle Of Man\\\",\\\"value\\\":\\\"IM\\\"},{\\\"label\\\":\\\"Israel\\\",\\\"value\\\":\\\"IL\\\"},{\\\"label\\\":\\\"Italy\\\",\\\"value\\\":\\\"IT\\\"},{\\\"label\\\":\\\"Jamaica\\\",\\\"value\\\":\\\"JM\\\"},{\\\"label\\\":\\\"Japan\\\",\\\"value\\\":\\\"JP\\\"},{\\\"label\\\":\\\"Jersey\\\",\\\"value\\\":\\\"JE\\\"},{\\\"label\\\":\\\"Jordan\\\",\\\"value\\\":\\\"JO\\\"},{\\\"label\\\":\\\"Kazakhstan\\\",\\\"value\\\":\\\"KZ\\\"},{\\\"label\\\":\\\"Kenya\\\",\\\"value\\\":\\\"KE\\\"},{\\\"label\\\":\\\"Kiribati\\\",\\\"value\\\":\\\"KI\\\"},{\\\"label\\\":\\\"Kuwait\\\",\\\"value\\\":\\\"KW\\\"},{\\\"label\\\":\\\"Kyrgyzstan\\\",\\\"value\\\":\\\"KG\\\"},{\\\"label\\\":\\\"Laos\\\",\\\"value\\\":\\\"LA\\\"},{\\\"label\\\":\\\"Latvia\\\",\\\"value\\\":\\\"LV\\\"},{\\\"label\\\":\\\"Lebanon\\\",\\\"value\\\":\\\"LB\\\"},{\\\"label\\\":\\\"Lesotho\\\",\\\"value\\\":\\\"LS\\\"},{\\\"label\\\":\\\"Liberia\\\",\\\"value\\\":\\\"LR\\\"},{\\\"label\\\":\\\"Libya\\\",\\\"value\\\":\\\"LY\\\"},{\\\"label\\\":\\\"Liechtenstein\\\",\\\"value\\\":\\\"LI\\\"},{\\\"label\\\":\\\"Lithuania\\\",\\\"value\\\":\\\"LT\\\"},{\\\"label\\\":\\\"Luxembourg\\\",\\\"value\\\":\\\"LU\\\"},{\\\"label\\\":\\\"Macao\\\",\\\"value\\\":\\\"MO\\\"},{\\\"label\\\":\\\"Macedonia\\\",\\\"value\\\":\\\"MK\\\"},{\\\"label\\\":\\\"Madagascar\\\",\\\"value\\\":\\\"MG\\\"},{\\\"label\\\":\\\"Malawi\\\",\\\"value\\\":\\\"MW\\\"},{\\\"label\\\":\\\"Malaysia\\\",\\\"value\\\":\\\"MY\\\"},{\\\"label\\\":\\\"Maldives\\\",\\\"value\\\":\\\"MV\\\"},{\\\"label\\\":\\\"Mali\\\",\\\"value\\\":\\\"ML\\\"},{\\\"label\\\":\\\"Malta\\\",\\\"value\\\":\\\"MT\\\"},{\\\"label\\\":\\\"Marshall Islands\\\",\\\"value\\\":\\\"MH\\\"},{\\\"label\\\":\\\"Martinique\\\",\\\"value\\\":\\\"MQ\\\"},{\\\"label\\\":\\\"Mauritania\\\",\\\"value\\\":\\\"MR\\\"},{\\\"label\\\":\\\"Mauritius\\\",\\\"value\\\":\\\"MU\\\"},{\\\"label\\\":\\\"Mayotte\\\",\\\"value\\\":\\\"YT\\\"},{\\\"label\\\":\\\"Mexico\\\",\\\"value\\\":\\\"MX\\\"},{\\\"label\\\":\\\"Micronesia\\\",\\\"value\\\":\\\"FM\\\"},{\\\"label\\\":\\\"Moldova\\\",\\\"value\\\":\\\"MD\\\"},{\\\"label\\\":\\\"Monaco\\\",\\\"value\\\":\\\"MC\\\"},{\\\"label\\\":\\\"Mongolia\\\",\\\"value\\\":\\\"MN\\\"},{\\\"label\\\":\\\"Montenegro\\\",\\\"value\\\":\\\"ME\\\"},{\\\"label\\\":\\\"Montserrat\\\",\\\"value\\\":\\\"MS\\\"},{\\\"label\\\":\\\"Morocco\\\",\\\"value\\\":\\\"MA\\\"},{\\\"label\\\":\\\"Mozambique\\\",\\\"value\\\":\\\"MZ\\\"},{\\\"label\\\":\\\"Myanmar\\\",\\\"value\\\":\\\"MM\\\"},{\\\"label\\\":\\\"Namibia\\\",\\\"value\\\":\\\"NA\\\"},{\\\"label\\\":\\\"Nauru\\\",\\\"value\\\":\\\"NR\\\"},{\\\"label\\\":\\\"Nepal\\\",\\\"value\\\":\\\"NP\\\"},{\\\"label\\\":\\\"Netherlands\\\",\\\"value\\\":\\\"NL\\\"},{\\\"label\\\":\\\"Netherlands Antilles\\\",\\\"value\\\":\\\"AN\\\"},{\\\"label\\\":\\\"New Caledonia\\\",\\\"value\\\":\\\"NC\\\"},{\\\"label\\\":\\\"New Zealand\\\",\\\"value\\\":\\\"NZ\\\"},{\\\"label\\\":\\\"Nicaragua\\\",\\\"value\\\":\\\"NI\\\"},{\\\"label\\\":\\\"Niger\\\",\\\"value\\\":\\\"NE\\\"},{\\\"label\\\":\\\"Nigeria\\\",\\\"value\\\":\\\"NG\\\"},{\\\"label\\\":\\\"Niue\\\",\\\"value\\\":\\\"NU\\\"},{\\\"label\\\":\\\"Norfolk Island\\\",\\\"value\\\":\\\"NF\\\"},{\\\"label\\\":\\\"North Korea\\\",\\\"value\\\":\\\"KP\\\"},{\\\"label\\\":\\\"Northern Mariana Islands\\\",\\\"value\\\":\\\"MP\\\"},{\\\"label\\\":\\\"Norway\\\",\\\"value\\\":\\\"NO\\\"},{\\\"label\\\":\\\"Oman\\\",\\\"value\\\":\\\"OM\\\"},{\\\"label\\\":\\\"Pakistan\\\",\\\"value\\\":\\\"PK\\\"},{\\\"label\\\":\\\"Palau\\\",\\\"value\\\":\\\"PW\\\"},{\\\"label\\\":\\\"Palestine\\\",\\\"value\\\":\\\"PS\\\"},{\\\"label\\\":\\\"Panama\\\",\\\"value\\\":\\\"PA\\\"},{\\\"label\\\":\\\"Papua New Guinea\\\",\\\"value\\\":\\\"PG\\\"},{\\\"label\\\":\\\"Paraguay\\\",\\\"value\\\":\\\"PY\\\"},{\\\"label\\\":\\\"Peru\\\",\\\"value\\\":\\\"PE\\\"},{\\\"label\\\":\\\"Philippines\\\",\\\"value\\\":\\\"PH\\\"},{\\\"label\\\":\\\"Pitcairn\\\",\\\"value\\\":\\\"PN\\\"},{\\\"label\\\":\\\"Poland\\\",\\\"value\\\":\\\"PL\\\"},{\\\"label\\\":\\\"Portugal\\\",\\\"value\\\":\\\"PT\\\"},{\\\"label\\\":\\\"Puerto Rico\\\",\\\"value\\\":\\\"PR\\\"},{\\\"label\\\":\\\"Qatar\\\",\\\"value\\\":\\\"QA\\\"},{\\\"label\\\":\\\"Reunion\\\",\\\"value\\\":\\\"RE\\\"},{\\\"label\\\":\\\"Romania\\\",\\\"value\\\":\\\"RO\\\"},{\\\"label\\\":\\\"Russia\\\",\\\"value\\\":\\\"RU\\\"},{\\\"label\\\":\\\"Rwanda\\\",\\\"value\\\":\\\"RW\\\"},{\\\"label\\\":\\\"Saint Barthélemy\\\",\\\"value\\\":\\\"BL\\\"},{\\\"label\\\":\\\"Saint Helena\\\",\\\"value\\\":\\\"SH\\\"},{\\\"label\\\":\\\"Saint Kitts And Nevis\\\",\\\"value\\\":\\\"KN\\\"},{\\\"label\\\":\\\"Saint Lucia\\\",\\\"value\\\":\\\"LC\\\"},{\\\"label\\\":\\\"Saint Martin\\\",\\\"value\\\":\\\"MF\\\"},{\\\"label\\\":\\\"Saint Pierre And Miquelon\\\",\\\"value\\\":\\\"PM\\\"},{\\\"label\\\":\\\"Saint Vincent And The Grenadines\\\",\\\"value\\\":\\\"VC\\\"},{\\\"label\\\":\\\"Samoa\\\",\\\"value\\\":\\\"WS\\\"},{\\\"label\\\":\\\"San Marino\\\",\\\"value\\\":\\\"SM\\\"},{\\\"label\\\":\\\"Sao Tome And Principe\\\",\\\"value\\\":\\\"ST\\\"},{\\\"label\\\":\\\"Saudi Arabia\\\",\\\"value\\\":\\\"SA\\\"},{\\\"label\\\":\\\"Senegal\\\",\\\"value\\\":\\\"SN\\\"},{\\\"label\\\":\\\"Serbia\\\",\\\"value\\\":\\\"RS\\\"},{\\\"label\\\":\\\"Seychelles\\\",\\\"value\\\":\\\"SC\\\"},{\\\"label\\\":\\\"Sierra Leone\\\",\\\"value\\\":\\\"SL\\\"},{\\\"label\\\":\\\"Singapore\\\",\\\"value\\\":\\\"SG\\\"},{\\\"label\\\":\\\"Sint Maarten (Dutch part)\\\",\\\"value\\\":\\\"SX\\\"},{\\\"label\\\":\\\"Slovakia\\\",\\\"value\\\":\\\"SK\\\"},{\\\"label\\\":\\\"Slovenia\\\",\\\"value\\\":\\\"SI\\\"},{\\\"label\\\":\\\"Solomon Islands\\\",\\\"value\\\":\\\"SB\\\"},{\\\"label\\\":\\\"Somalia\\\",\\\"value\\\":\\\"SO\\\"},{\\\"label\\\":\\\"South Africa\\\",\\\"value\\\":\\\"ZA\\\"},{\\\"label\\\":\\\"South Georgia And The South Sandwich Islands\\\",\\\"value\\\":\\\"GS\\\"},{\\\"label\\\":\\\"South Korea\\\",\\\"value\\\":\\\"KR\\\"},{\\\"label\\\":\\\"South Sudan\\\",\\\"value\\\":\\\"SS\\\"},{\\\"label\\\":\\\"Spain\\\",\\\"value\\\":\\\"ES\\\"},{\\\"label\\\":\\\"Sri Lanka\\\",\\\"value\\\":\\\"LK\\\"},{\\\"label\\\":\\\"Sudan\\\",\\\"value\\\":\\\"SD\\\"},{\\\"label\\\":\\\"Suriname\\\",\\\"value\\\":\\\"SR\\\"},{\\\"label\\\":\\\"Svalbard And Jan Mayen\\\",\\\"value\\\":\\\"SJ\\\"},{\\\"label\\\":\\\"Swaziland\\\",\\\"value\\\":\\\"SZ\\\"},{\\\"label\\\":\\\"Sweden\\\",\\\"value\\\":\\\"SE\\\"},{\\\"label\\\":\\\"Switzerland\\\",\\\"value\\\":\\\"CH\\\"},{\\\"label\\\":\\\"Syria\\\",\\\"value\\\":\\\"SY\\\"},{\\\"label\\\":\\\"Taiwan\\\",\\\"value\\\":\\\"TW\\\"},{\\\"label\\\":\\\"Tajikistan\\\",\\\"value\\\":\\\"TJ\\\"},{\\\"label\\\":\\\"Tanzania\\\",\\\"value\\\":\\\"TZ\\\"},{\\\"label\\\":\\\"Thailand\\\",\\\"value\\\":\\\"TH\\\"},{\\\"label\\\":\\\"The Democratic Republic Of Congo\\\",\\\"value\\\":\\\"CD\\\"},{\\\"label\\\":\\\"Timor-Leste\\\",\\\"value\\\":\\\"TL\\\"},{\\\"label\\\":\\\"Togo\\\",\\\"value\\\":\\\"TG\\\"},{\\\"label\\\":\\\"Tokelau\\\",\\\"value\\\":\\\"TK\\\"},{\\\"label\\\":\\\"Tonga\\\",\\\"value\\\":\\\"TO\\\"},{\\\"label\\\":\\\"Trinidad and Tobago\\\",\\\"value\\\":\\\"TT\\\"},{\\\"label\\\":\\\"Tunisia\\\",\\\"value\\\":\\\"TN\\\"},{\\\"label\\\":\\\"Turkey\\\",\\\"value\\\":\\\"TR\\\"},{\\\"label\\\":\\\"Turkmenistan\\\",\\\"value\\\":\\\"TM\\\"},{\\\"label\\\":\\\"Turks And Caicos Islands\\\",\\\"value\\\":\\\"TC\\\"},{\\\"label\\\":\\\"Tuvalu\\\",\\\"value\\\":\\\"TV\\\"},{\\\"label\\\":\\\"U.S. Virgin Islands\\\",\\\"value\\\":\\\"VI\\\"},{\\\"label\\\":\\\"Uganda\\\",\\\"value\\\":\\\"UG\\\"},{\\\"label\\\":\\\"Ukraine\\\",\\\"value\\\":\\\"UA\\\"},{\\\"label\\\":\\\"United Arab Emirates\\\",\\\"value\\\":\\\"AE\\\"},{\\\"label\\\":\\\"United Kingdom\\\",\\\"value\\\":\\\"GB\\\"},{\\\"label\\\":\\\"United States\\\",\\\"value\\\":\\\"US\\\"},{\\\"label\\\":\\\"United States Minor Outlying Islands\\\",\\\"value\\\":\\\"UM\\\"},{\\\"label\\\":\\\"Uruguay\\\",\\\"value\\\":\\\"UY\\\"},{\\\"label\\\":\\\"Uzbekistan\\\",\\\"value\\\":\\\"UZ\\\"},{\\\"label\\\":\\\"Vanuatu\\\",\\\"value\\\":\\\"VU\\\"},{\\\"label\\\":\\\"Vatican\\\",\\\"value\\\":\\\"VA\\\"},{\\\"label\\\":\\\"Venezuela\\\",\\\"value\\\":\\\"VE\\\"},{\\\"label\\\":\\\"Vietnam\\\",\\\"value\\\":\\\"VN\\\"},{\\\"label\\\":\\\"Wallis And Futuna\\\",\\\"value\\\":\\\"WF\\\"},{\\\"label\\\":\\\"Western Sahara\\\",\\\"value\\\":\\\"EH\\\"},{\\\"label\\\":\\\"Yemen\\\",\\\"value\\\":\\\"YE\\\"},{\\\"label\\\":\\\"Zambia\\\",\\\"value\\\":\\\"ZM\\\"},{\\\"label\\\":\\\"Zimbabwe\\\",\\\"value\\\":\\\"ZW\\\"},{\\\"label\\\":\\\"Åland Islands\\\",\\\"value\\\":\\\"AX\\\"}],\\\"answerValue\\\":\\\"ID\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"b2d634c4-2fc1-4a9d-b167-331469acf484\\\",\\\"label\\\":\\\"Please provide us the name of Hotel inside Kathmandu city for pick up and drop off service.  \\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"LONG_TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"The Dwarika's Hotel\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"968c3d18-2fd5-483f-8d1a-3ad1b9e7a661\\\",\\\"label\\\":\\\"Would you like to go for Elephant back safari or canoe ride?\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"Yes, please\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"b73103b2-4a79-4802-a218-b199723483f4\\\",\\\"label\\\":\\\"Room number\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"27\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"f04ca5e5-125c-4510-912b-2e8eccd44481\\\",\\\"label\\\":\\\"Which airline?\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"Malaysia Airlines\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingAvailabilityQuestions\\\",\\\"id\\\":\\\"1264c45e-4545-4af4-b20a-ab9ce8f234c4\\\",\\\"label\\\":\\\"Which terminal?\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"17A\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingPersonQuestions\\\",\\\"id\\\":\\\"76f0e6aa-9ad7-472c-b923-e77b85efc1a8\\\",\\\"label\\\":\\\"First name\\\",\\\"pricingCategoryId\\\":\\\"1c9133b5-6c81-4279-bc87-4c1e5a0fd514\\\",\\\"pricingCategoryLabel\\\":\\\"Adult\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"Dinda\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingPersonQuestions\\\",\\\"id\\\":\\\"5477c88a-f3cb-4cd0-b5ba-3ae75316adc4\\\",\\\"label\\\":\\\"Last name\\\",\\\"pricingCategoryId\\\":\\\"1c9133b5-6c81-4279-bc87-4c1e5a0fd514\\\",\\\"pricingCategoryLabel\\\":\\\"Adult\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"TEXT\\\",\\\"availableOptions\\\":[],\\\"answerValue\\\":\\\"Ragil\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingPersonQuestions\\\",\\\"id\\\":\\\"605f767e-a704-4f70-8e29-870e4e1fc141\\\",\\\"label\\\":\\\"Gender\\\",\\\"pricingCategoryId\\\":\\\"1c9133b5-6c81-4279-bc87-4c1e5a0fd514\\\",\\\"pricingCategoryLabel\\\":\\\"Adult\\\",\\\"dataFormat\\\":null,\\\"dataType\\\":\\\"OPTIONS\\\",\\\"availableOptions\\\":[{\\\"label\\\":\\\"Female\\\",\\\"value\\\":\\\"f\\\"},{\\\"label\\\":\\\"Male\\\",\\\"value\\\":\\\"m\\\"}],\\\"answerValue\\\":\\\"f\\\",\\\"isAnswered\\\":true},{\\\"properties\\\":\\\"bookingPersonQuestions\\\",\\\"id\\\":\\\"5c87ba38-a803-4db5-ae30-a7a9941d2ee3\\\",\\\"label\\\":\\\"Nationality\\\",\\\"pricingCategoryId\\\":\\\"1c9133b5-6c81-4279-bc87-4c1e5a0fd514\\\",\\\"pricingCategoryLabel\\\":\\\"Adult\\\",\\\"dataFormat\\\":\\\"COUNTRY\\\",\\\"dataType\\\":\\\"OPTIONS\\\",\\\"availableOptions\\\":[{\\\"label\\\":\\\"Afghanistan\\\",\\\"value\\\":\\\"AF\\\"},{\\\"label\\\":\\\"Albania\\\",\\\"value\\\":\\\"AL\\\"},{\\\"label\\\":\\\"Algeria\\\",\\\"value\\\":\\\"DZ\\\"},{\\\"label\\\":\\\"American Samoa\\\",\\\"value\\\":\\\"AS\\\"},{\\\"label\\\":\\\"Andorra\\\",\\\"value\\\":\\\"AD\\\"},{\\\"label\\\":\\\"Angola\\\",\\\"value\\\":\\\"AO\\\"},{\\\"label\\\":\\\"Anguilla\\\",\\\"value\\\":\\\"AI\\\"},{\\\"label\\\":\\\"Antarctica\\\",\\\"value\\\":\\\"AQ\\\"},{\\\"label\\\":\\\"Antigua and Barbuda\\\",\\\"value\\\":\\\"AG\\\"},{\\\"label\\\":\\\"Argentina\\\",\\\"value\\\":\\\"AR\\\"},{\\\"label\\\":\\\"Armenia\\\",\\\"value\\\":\\\"AM\\\"},{\\\"label\\\":\\\"Aruba\\\",\\\"value\\\":\\\"AW\\\"},{\\\"label\\\":\\\"Australia\\\",\\\"value\\\":\\\"AU\\\"},{\\\"label\\\":\\\"Austria\\\",\\\"value\\\":\\\"AT\\\"},{\\\"label\\\":\\\"Azerbaijan\\\",\\\"value\\\":\\\"AZ\\\"},{\\\"label\\\":\\\"Bahamas\\\",\\\"value\\\":\\\"BS\\\"},{\\\"label\\\":\\\"Bahrain\\\",\\\"value\\\":\\\"BH\\\"},{\\\"label\\\":\\\"Bangladesh\\\",\\\"value\\\":\\\"BD\\\"},{\\\"label\\\":\\\"Barbados\\\",\\\"value\\\":\\\"BB\\\"},{\\\"label\\\":\\\"Belarus\\\",\\\"value\\\":\\\"BY\\\"},{\\\"label\\\":\\\"Belgium\\\",\\\"value\\\":\\\"BE\\\"},{\\\"label\\\":\\\"Belize\\\",\\\"value\\\":\\\"BZ\\\"},{\\\"label\\\":\\\"Benin\\\",\\\"value\\\":\\\"BJ\\\"},{\\\"label\\\":\\\"Bermuda\\\",\\\"value\\\":\\\"BM\\\"},{\\\"label\\\":\\\"Bhutan\\\",\\\"value\\\":\\\"BT\\\"},{\\\"label\\\":\\\"Bolivia\\\",\\\"value\\\":\\\"BO\\\"},{\\\"label\\\":\\\"Bonaire, Sint Eustatius and Saba\\\",\\\"value\\\":\\\"BQ\\\"},{\\\"label\\\":\\\"Bosnia and Herzegovina\\\",\\\"value\\\":\\\"BA\\\"},{\\\"label\\\":\\\"Botswana\\\",\\\"value\\\":\\\"BW\\\"},{\\\"label\\\":\\\"Bouvet Island\\\",\\\"value\\\":\\\"BV\\\"},{\\\"label\\\":\\\"Brazil\\\",\\\"value\\\":\\\"BR\\\"},{\\\"label\\\":\\\"British Indian Ocean Territory\\\",\\\"value\\\":\\\"IO\\\"},{\\\"label\\\":\\\"British Virgin Islands\\\",\\\"value\\\":\\\"VG\\\"},{\\\"label\\\":\\\"Brunei\\\",\\\"value\\\":\\\"BN\\\"},{\\\"label\\\":\\\"Bulgaria\\\",\\\"value\\\":\\\"BG\\\"},{\\\"label\\\":\\\"Burkina Faso\\\",\\\"value\\\":\\\"BF\\\"},{\\\"label\\\":\\\"Burundi\\\",\\\"value\\\":\\\"BI\\\"},{\\\"label\\\":\\\"Cambodia\\\",\\\"value\\\":\\\"KH\\\"},{\\\"label\\\":\\\"Cameroon\\\",\\\"value\\\":\\\"CM\\\"},{\\\"label\\\":\\\"Canada\\\",\\\"value\\\":\\\"CA\\\"},{\\\"label\\\":\\\"Cape Verde\\\",\\\"value\\\":\\\"CV\\\"},{\\\"label\\\":\\\"Cayman Islands\\\",\\\"value\\\":\\\"KY\\\"},{\\\"label\\\":\\\"Central African Republic\\\",\\\"value\\\":\\\"CF\\\"},{\\\"label\\\":\\\"Chad\\\",\\\"value\\\":\\\"TD\\\"},{\\\"label\\\":\\\"Chile\\\",\\\"value\\\":\\\"CL\\\"},{\\\"label\\\":\\\"China\\\",\\\"value\\\":\\\"CN\\\"},{\\\"label\\\":\\\"Christmas Island\\\",\\\"value\\\":\\\"CX\\\"},{\\\"label\\\":\\\"Cocos Islands\\\",\\\"value\\\":\\\"CC\\\"},{\\\"label\\\":\\\"Colombia\\\",\\\"value\\\":\\\"CO\\\"},{\\\"label\\\":\\\"Comoros\\\",\\\"value\\\":\\\"KM\\\"},{\\\"label\\\":\\\"Congo\\\",\\\"value\\\":\\\"CG\\\"},{\\\"label\\\":\\\"Cook Islands\\\",\\\"value\\\":\\\"CK\\\"},{\\\"label\\\":\\\"Costa Rica\\\",\\\"value\\\":\\\"CR\\\"},{\\\"label\\\":\\\"Croatia\\\",\\\"value\\\":\\\"HR\\\"},{\\\"label\\\":\\\"Cuba\\\",\\\"value\\\":\\\"CU\\\"},{\\\"label\\\":\\\"Curaçao\\\",\\\"value\\\":\\\"CW\\\"},{\\\"label\\\":\\\"Cyprus\\\",\\\"value\\\":\\\"CY\\\"},{\\\"label\\\":\\\"Czech Republic\\\",\\\"value\\\":\\\"CZ\\\"},{\\\"label\\\":\\\"Côte d'Ivoire\\\",\\\"value\\\":\\\"CI\\\"},{\\\"label\\\":\\\"Denmark\\\",\\\"value\\\":\\\"DK\\\"},{\\\"label\\\":\\\"Djibouti\\\",\\\"value\\\":\\\"DJ\\\"},{\\\"label\\\":\\\"Dominica\\\",\\\"value\\\":\\\"DM\\\"},{\\\"label\\\":\\\"Dominican Republic\\\",\\\"value\\\":\\\"DO\\\"},{\\\"label\\\":\\\"Ecuador\\\",\\\"value\\\":\\\"EC\\\"},{\\\"label\\\":\\\"Egypt\\\",\\\"value\\\":\\\"EG\\\"},{\\\"label\\\":\\\"El Salvador\\\",\\\"value\\\":\\\"SV\\\"},{\\\"label\\\":\\\"Equatorial Guinea\\\",\\\"value\\\":\\\"GQ\\\"},{\\\"label\\\":\\\"Eritrea\\\",\\\"value\\\":\\\"ER\\\"},{\\\"label\\\":\\\"Estonia\\\",\\\"value\\\":\\\"EE\\\"},{\\\"label\\\":\\\"Ethiopia\\\",\\\"value\\\":\\\"ET\\\"},{\\\"label\\\":\\\"Falkland Islands\\\",\\\"value\\\":\\\"FK\\\"},{\\\"label\\\":\\\"Faroe Islands\\\",\\\"value\\\":\\\"FO\\\"},{\\\"label\\\":\\\"Fiji\\\",\\\"value\\\":\\\"FJ\\\"},{\\\"label\\\":\\\"Finland\\\",\\\"value\\\":\\\"FI\\\"},{\\\"label\\\":\\\"France\\\",\\\"value\\\":\\\"FR\\\"},{\\\"label\\\":\\\"French Guiana\\\",\\\"value\\\":\\\"GF\\\"},{\\\"label\\\":\\\"French Polynesia\\\",\\\"value\\\":\\\"PF\\\"},{\\\"label\\\":\\\"French Southern Territories\\\",\\\"value\\\":\\\"TF\\\"},{\\\"label\\\":\\\"Gabon\\\",\\\"value\\\":\\\"GA\\\"},{\\\"label\\\":\\\"Gambia\\\",\\\"value\\\":\\\"GM\\\"},{\\\"label\\\":\\\"Georgia\\\",\\\"value\\\":\\\"GE\\\"},{\\\"label\\\":\\\"Germany\\\",\\\"value\\\":\\\"DE\\\"},{\\\"label\\\":\\\"Ghana\\\",\\\"value\\\":\\\"GH\\\"},{\\\"label\\\":\\\"Gibraltar\\\",\\\"value\\\":\\\"GI\\\"},{\\\"label\\\":\\\"Greece\\\",\\\"value\\\":\\\"GR\\\"},{\\\"label\\\":\\\"Greenland\\\",\\\"value\\\":\\\"GL\\\"},{\\\"label\\\":\\\"Grenada\\\",\\\"value\\\":\\\"GD\\\"},{\\\"label\\\":\\\"Guadeloupe\\\",\\\"value\\\":\\\"GP\\\"},{\\\"label\\\":\\\"Guam\\\",\\\"value\\\":\\\"GU\\\"},{\\\"label\\\":\\\"Guatemala\\\",\\\"value\\\":\\\"GT\\\"},{\\\"label\\\":\\\"Guernsey\\\",\\\"value\\\":\\\"GG\\\"},{\\\"label\\\":\\\"Guinea\\\",\\\"value\\\":\\\"GN\\\"},{\\\"label\\\":\\\"Guinea-Bissau\\\",\\\"value\\\":\\\"GW\\\"},{\\\"label\\\":\\\"Guyana\\\",\\\"value\\\":\\\"GY\\\"},{\\\"label\\\":\\\"Haiti\\\",\\\"value\\\":\\\"HT\\\"},{\\\"label\\\":\\\"Heard Island And McDonald Islands\\\",\\\"value\\\":\\\"HM\\\"},{\\\"label\\\":\\\"Honduras\\\",\\\"value\\\":\\\"HN\\\"},{\\\"label\\\":\\\"Hong Kong\\\",\\\"value\\\":\\\"HK\\\"},{\\\"label\\\":\\\"Hungary\\\",\\\"value\\\":\\\"HU\\\"},{\\\"label\\\":\\\"Iceland\\\",\\\"value\\\":\\\"IS\\\"},{\\\"label\\\":\\\"India\\\",\\\"value\\\":\\\"IN\\\"},{\\\"label\\\":\\\"Indonesia\\\",\\\"value\\\":\\\"ID\\\"},{\\\"label\\\":\\\"Iran\\\",\\\"value\\\":\\\"IR\\\"},{\\\"label\\\":\\\"Iraq\\\",\\\"value\\\":\\\"IQ\\\"},{\\\"label\\\":\\\"Ireland\\\",\\\"value\\\":\\\"IE\\\"},{\\\"label\\\":\\\"Isle Of Man\\\",\\\"value\\\":\\\"IM\\\"},{\\\"label\\\":\\\"Israel\\\",\\\"value\\\":\\\"IL\\\"},{\\\"label\\\":\\\"Italy\\\",\\\"value\\\":\\\"IT\\\"},{\\\"label\\\":\\\"Jamaica\\\",\\\"value\\\":\\\"JM\\\"},{\\\"label\\\":\\\"Japan\\\",\\\"value\\\":\\\"JP\\\"},{\\\"label\\\":\\\"Jersey\\\",\\\"value\\\":\\\"JE\\\"},{\\\"label\\\":\\\"Jordan\\\",\\\"value\\\":\\\"JO\\\"},{\\\"label\\\":\\\"Kazakhstan\\\",\\\"value\\\":\\\"KZ\\\"},{\\\"label\\\":\\\"Kenya\\\",\\\"value\\\":\\\"KE\\\"},{\\\"label\\\":\\\"Kiribati\\\",\\\"value\\\":\\\"KI\\\"},{\\\"label\\\":\\\"Kuwait\\\",\\\"value\\\":\\\"KW\\\"},{\\\"label\\\":\\\"Kyrgyzstan\\\",\\\"value\\\":\\\"KG\\\"},{\\\"label\\\":\\\"Laos\\\",\\\"value\\\":\\\"LA\\\"},{\\\"label\\\":\\\"Latvia\\\",\\\"value\\\":\\\"LV\\\"},{\\\"label\\\":\\\"Lebanon\\\",\\\"value\\\":\\\"LB\\\"},{\\\"label\\\":\\\"Lesotho\\\",\\\"value\\\":\\\"LS\\\"},{\\\"label\\\":\\\"Liberia\\\",\\\"value\\\":\\\"LR\\\"},{\\\"label\\\":\\\"Libya\\\",\\\"value\\\":\\\"LY\\\"},{\\\"label\\\":\\\"Liechtenstein\\\",\\\"value\\\":\\\"LI\\\"},{\\\"label\\\":\\\"Lithuania\\\",\\\"value\\\":\\\"LT\\\"},{\\\"label\\\":\\\"Luxembourg\\\",\\\"value\\\":\\\"LU\\\"},{\\\"label\\\":\\\"Macao\\\",\\\"value\\\":\\\"MO\\\"},{\\\"label\\\":\\\"Macedonia\\\",\\\"value\\\":\\\"MK\\\"},{\\\"label\\\":\\\"Madagascar\\\",\\\"value\\\":\\\"MG\\\"},{\\\"label\\\":\\\"Malawi\\\",\\\"value\\\":\\\"MW\\\"},{\\\"label\\\":\\\"Malaysia\\\",\\\"value\\\":\\\"MY\\\"},{\\\"label\\\":\\\"Maldives\\\",\\\"value\\\":\\\"MV\\\"},{\\\"label\\\":\\\"Mali\\\",\\\"value\\\":\\\"ML\\\"},{\\\"label\\\":\\\"Malta\\\",\\\"value\\\":\\\"MT\\\"},{\\\"label\\\":\\\"Marshall Islands\\\",\\\"value\\\":\\\"MH\\\"},{\\\"label\\\":\\\"Martinique\\\",\\\"value\\\":\\\"MQ\\\"},{\\\"label\\\":\\\"Mauritania\\\",\\\"value\\\":\\\"MR\\\"},{\\\"label\\\":\\\"Mauritius\\\",\\\"value\\\":\\\"MU\\\"},{\\\"label\\\":\\\"Mayotte\\\",\\\"value\\\":\\\"YT\\\"},{\\\"label\\\":\\\"Mexico\\\",\\\"value\\\":\\\"MX\\\"},{\\\"label\\\":\\\"Micronesia\\\",\\\"value\\\":\\\"FM\\\"},{\\\"label\\\":\\\"Moldova\\\",\\\"value\\\":\\\"MD\\\"},{\\\"label\\\":\\\"Monaco\\\",\\\"value\\\":\\\"MC\\\"},{\\\"label\\\":\\\"Mongolia\\\",\\\"value\\\":\\\"MN\\\"},{\\\"label\\\":\\\"Montenegro\\\",\\\"value\\\":\\\"ME\\\"},{\\\"label\\\":\\\"Montserrat\\\",\\\"value\\\":\\\"MS\\\"},{\\\"label\\\":\\\"Morocco\\\",\\\"value\\\":\\\"MA\\\"},{\\\"label\\\":\\\"Mozambique\\\",\\\"value\\\":\\\"MZ\\\"},{\\\"label\\\":\\\"Myanmar\\\",\\\"value\\\":\\\"MM\\\"},{\\\"label\\\":\\\"Namibia\\\",\\\"value\\\":\\\"NA\\\"},{\\\"label\\\":\\\"Nauru\\\",\\\"value\\\":\\\"NR\\\"},{\\\"label\\\":\\\"Nepal\\\",\\\"value\\\":\\\"NP\\\"},{\\\"label\\\":\\\"Netherlands\\\",\\\"value\\\":\\\"NL\\\"},{\\\"label\\\":\\\"Netherlands Antilles\\\",\\\"value\\\":\\\"AN\\\"},{\\\"label\\\":\\\"New Caledonia\\\",\\\"value\\\":\\\"NC\\\"},{\\\"label\\\":\\\"New Zealand\\\",\\\"value\\\":\\\"NZ\\\"},{\\\"label\\\":\\\"Nicaragua\\\",\\\"value\\\":\\\"NI\\\"},{\\\"label\\\":\\\"Niger\\\",\\\"value\\\":\\\"NE\\\"},{\\\"label\\\":\\\"Nigeria\\\",\\\"value\\\":\\\"NG\\\"},{\\\"label\\\":\\\"Niue\\\",\\\"value\\\":\\\"NU\\\"},{\\\"label\\\":\\\"Norfolk Island\\\",\\\"value\\\":\\\"NF\\\"},{\\\"label\\\":\\\"North Korea\\\",\\\"value\\\":\\\"KP\\\"},{\\\"label\\\":\\\"Northern Mariana Islands\\\",\\\"value\\\":\\\"MP\\\"},{\\\"label\\\":\\\"Norway\\\",\\\"value\\\":\\\"NO\\\"},{\\\"label\\\":\\\"Oman\\\",\\\"value\\\":\\\"OM\\\"},{\\\"label\\\":\\\"Pakistan\\\",\\\"value\\\":\\\"PK\\\"},{\\\"label\\\":\\\"Palau\\\",\\\"value\\\":\\\"PW\\\"},{\\\"label\\\":\\\"Palestine\\\",\\\"value\\\":\\\"PS\\\"},{\\\"label\\\":\\\"Panama\\\",\\\"value\\\":\\\"PA\\\"},{\\\"label\\\":\\\"Papua New Guinea\\\",\\\"value\\\":\\\"PG\\\"},{\\\"label\\\":\\\"Paraguay\\\",\\\"value\\\":\\\"PY\\\"},{\\\"label\\\":\\\"Peru\\\",\\\"value\\\":\\\"PE\\\"},{\\\"label\\\":\\\"Philippines\\\",\\\"value\\\":\\\"PH\\\"},{\\\"label\\\":\\\"Pitcairn\\\",\\\"value\\\":\\\"PN\\\"},{\\\"label\\\":\\\"Poland\\\",\\\"value\\\":\\\"PL\\\"},{\\\"label\\\":\\\"Portugal\\\",\\\"value\\\":\\\"PT\\\"},{\\\"label\\\":\\\"Puerto Rico\\\",\\\"value\\\":\\\"PR\\\"},{\\\"label\\\":\\\"Qatar\\\",\\\"value\\\":\\\"QA\\\"},{\\\"label\\\":\\\"Reunion\\\",\\\"value\\\":\\\"RE\\\"},{\\\"label\\\":\\\"Romania\\\",\\\"value\\\":\\\"RO\\\"},{\\\"label\\\":\\\"Russia\\\",\\\"value\\\":\\\"RU\\\"},{\\\"label\\\":\\\"Rwanda\\\",\\\"value\\\":\\\"RW\\\"},{\\\"label\\\":\\\"Saint Barthélemy\\\",\\\"value\\\":\\\"BL\\\"},{\\\"label\\\":\\\"Saint Helena\\\",\\\"value\\\":\\\"SH\\\"},{\\\"label\\\":\\\"Saint Kitts And Nevis\\\",\\\"value\\\":\\\"KN\\\"},{\\\"label\\\":\\\"Saint Lucia\\\",\\\"value\\\":\\\"LC\\\"},{\\\"label\\\":\\\"Saint Martin\\\",\\\"value\\\":\\\"MF\\\"},{\\\"label\\\":\\\"Saint Pierre And Miquelon\\\",\\\"value\\\":\\\"PM\\\"},{\\\"label\\\":\\\"Saint Vincent And The Grenadines\\\",\\\"value\\\":\\\"VC\\\"},{\\\"label\\\":\\\"Samoa\\\",\\\"value\\\":\\\"WS\\\"},{\\\"label\\\":\\\"San Marino\\\",\\\"value\\\":\\\"SM\\\"},{\\\"label\\\":\\\"Sao Tome And Principe\\\",\\\"value\\\":\\\"ST\\\"},{\\\"label\\\":\\\"Saudi Arabia\\\",\\\"value\\\":\\\"SA\\\"},{\\\"label\\\":\\\"Senegal\\\",\\\"value\\\":\\\"SN\\\"},{\\\"label\\\":\\\"Serbia\\\",\\\"value\\\":\\\"RS\\\"},{\\\"label\\\":\\\"Seychelles\\\",\\\"value\\\":\\\"SC\\\"},{\\\"label\\\":\\\"Sierra Leone\\\",\\\"value\\\":\\\"SL\\\"},{\\\"label\\\":\\\"Singapore\\\",\\\"value\\\":\\\"SG\\\"},{\\\"label\\\":\\\"Sint Maarten (Dutch part)\\\",\\\"value\\\":\\\"SX\\\"},{\\\"label\\\":\\\"Slovakia\\\",\\\"value\\\":\\\"SK\\\"},{\\\"label\\\":\\\"Slovenia\\\",\\\"value\\\":\\\"SI\\\"},{\\\"label\\\":\\\"Solomon Islands\\\",\\\"value\\\":\\\"SB\\\"},{\\\"label\\\":\\\"Somalia\\\",\\\"value\\\":\\\"SO\\\"},{\\\"label\\\":\\\"South Africa\\\",\\\"value\\\":\\\"ZA\\\"},{\\\"label\\\":\\\"South Georgia And The South Sandwich Islands\\\",\\\"value\\\":\\\"GS\\\"},{\\\"label\\\":\\\"South Korea\\\",\\\"value\\\":\\\"KR\\\"},{\\\"label\\\":\\\"South Sudan\\\",\\\"value\\\":\\\"SS\\\"},{\\\"label\\\":\\\"Spain\\\",\\\"value\\\":\\\"ES\\\"},{\\\"label\\\":\\\"Sri Lanka\\\",\\\"value\\\":\\\"LK\\\"},{\\\"label\\\":\\\"Sudan\\\",\\\"value\\\":\\\"SD\\\"},{\\\"label\\\":\\\"Suriname\\\",\\\"value\\\":\\\"SR\\\"},{\\\"label\\\":\\\"Svalbard And Jan Mayen\\\",\\\"value\\\":\\\"SJ\\\"},{\\\"label\\\":\\\"Swaziland\\\",\\\"value\\\":\\\"SZ\\\"},{\\\"label\\\":\\\"Sweden\\\",\\\"value\\\":\\\"SE\\\"},{\\\"label\\\":\\\"Switzerland\\\",\\\"value\\\":\\\"CH\\\"},{\\\"label\\\":\\\"Syria\\\",\\\"value\\\":\\\"SY\\\"},{\\\"label\\\":\\\"Taiwan\\\",\\\"value\\\":\\\"TW\\\"},{\\\"label\\\":\\\"Tajikistan\\\",\\\"value\\\":\\\"TJ\\\"},{\\\"label\\\":\\\"Tanzania\\\",\\\"value\\\":\\\"TZ\\\"},{\\\"label\\\":\\\"Thailand\\\",\\\"value\\\":\\\"TH\\\"},{\\\"label\\\":\\\"The Democratic Republic Of Congo\\\",\\\"value\\\":\\\"CD\\\"},{\\\"label\\\":\\\"Timor-Leste\\\",\\\"value\\\":\\\"TL\\\"},{\\\"label\\\":\\\"Togo\\\",\\\"value\\\":\\\"TG\\\"},{\\\"label\\\":\\\"Tokelau\\\",\\\"value\\\":\\\"TK\\\"},{\\\"label\\\":\\\"Tonga\\\",\\\"value\\\":\\\"TO\\\"},{\\\"label\\\":\\\"Trinidad and Tobago\\\",\\\"value\\\":\\\"TT\\\"},{\\\"label\\\":\\\"Tunisia\\\",\\\"value\\\":\\\"TN\\\"},{\\\"label\\\":\\\"Turkey\\\",\\\"value\\\":\\\"TR\\\"},{\\\"label\\\":\\\"Turkmenistan\\\",\\\"value\\\":\\\"TM\\\"},{\\\"label\\\":\\\"Turks And Caicos Islands\\\",\\\"value\\\":\\\"TC\\\"},{\\\"label\\\":\\\"Tuvalu\\\",\\\"value\\\":\\\"TV\\\"},{\\\"label\\\":\\\"U.S. Virgin Islands\\\",\\\"value\\\":\\\"VI\\\"},{\\\"label\\\":\\\"Uganda\\\",\\\"value\\\":\\\"UG\\\"},{\\\"label\\\":\\\"Ukraine\\\",\\\"value\\\":\\\"UA\\\"},{\\\"label\\\":\\\"United Arab Emirates\\\",\\\"value\\\":\\\"AE\\\"},{\\\"label\\\":\\\"United Kingdom\\\",\\\"value\\\":\\\"GB\\\"},{\\\"label\\\":\\\"United States\\\",\\\"value\\\":\\\"US\\\"},{\\\"label\\\":\\\"United States Minor Outlying Islands\\\",\\\"value\\\":\\\"UM\\\"},{\\\"label\\\":\\\"Uruguay\\\",\\\"value\\\":\\\"UY\\\"},{\\\"label\\\":\\\"Uzbekistan\\\",\\\"value\\\":\\\"UZ\\\"},{\\\"label\\\":\\\"Vanuatu\\\",\\\"value\\\":\\\"VU\\\"},{\\\"label\\\":\\\"Vatican\\\",\\\"value\\\":\\\"VA\\\"},{\\\"label\\\":\\\"Venezuela\\\",\\\"value\\\":\\\"VE\\\"},{\\\"label\\\":\\\"Vietnam\\\",\\\"value\\\":\\\"VN\\\"},{\\\"label\\\":\\\"Wallis And Futuna\\\",\\\"value\\\":\\\"WF\\\"},{\\\"label\\\":\\\"Western Sahara\\\",\\\"value\\\":\\\"EH\\\"},{\\\"label\\\":\\\"Yemen\\\",\\\"value\\\":\\\"YE\\\"},{\\\"label\\\":\\\"Zambia\\\",\\\"value\\\":\\\"ZM\\\"},{\\\"label\\\":\\\"Zimbabwe\\\",\\\"value\\\":\\\"ZW\\\"},{\\\"label\\\":\\\"Åland Islands\\\",\\\"value\\\":\\\"AX\\\"}],\\\"answerValue\\\":\\\"ID\\\",\\\"isAnswered\\\":true}]}}\"\n    }\n}"
+				}
+			]
+		}
+	]
+}
